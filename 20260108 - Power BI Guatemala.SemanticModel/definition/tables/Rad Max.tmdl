@@ -1,0 +1,38 @@
+table 'Rad Max'
+	lineageTag: 452cfec4-6546-40c2-8668-827b76c76c47
+
+	measure 'Valor Rad Max' = SELECTEDVALUE('Rad Max'[Rad Max])
+		formatString: 0
+		lineageTag: f1e0910d-48bd-4597-b2d3-5c34213d3ce6
+
+	measure 'Valor Rad Max menos Valor Rad Med' =
+			
+			[Valor Rad Max] - [Valor Rad Med]
+		formatString: 0
+		lineageTag: a6ae45c9-70af-4e3b-b65b-5c8f357827f6
+
+		extendedProperty MeasureTemplate =
+				{
+				  "version": 0,
+				  "daxTemplateName": "MathematicalSubtraction"
+				}
+
+	column 'Rad Max'
+		formatString: 0
+		lineageTag: 9421493f-e402-475c-ab77-fdc32633637e
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Rad Max-adeb2e7a-62be-4fbe-bef4-71d7ebd00a05' = calculated
+		mode: import
+		source = GENERATESERIES(0, 32, 1)
+
+	annotation PBI_Id = 8d7bcfaa8417472e9b390d25a8357fab
+

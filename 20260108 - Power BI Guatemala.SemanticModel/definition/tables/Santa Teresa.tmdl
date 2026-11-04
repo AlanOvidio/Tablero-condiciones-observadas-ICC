@@ -1,0 +1,259 @@
+table 'Santa Teresa'
+	lineageTag: ada74978-31ba-421e-895e-5758c0721512
+
+	column Día
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6179be0e-377f-4a08-8a81-a9918c917620
+		summarizeBy: none
+		sourceColumn: Día
+
+		variation Variación
+			isDefault
+			relationship: 47a698b2-2ba2-40a0-a845-8fad5bcffaef
+			defaultHierarchy: LocalDateTable_cbf49051-8824-49dc-9d23-a8c88a532330.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Temperatura Media '
+		dataType: double
+		lineageTag: 66562cf2-4764-4f18-841c-29f101683a9e
+		summarizeBy: sum
+		sourceColumn: "Temperatura Media "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Temperatura Minima '
+		dataType: double
+		lineageTag: 02dcf0db-bdde-444c-b2c3-a9a088790f2f
+		summarizeBy: sum
+		sourceColumn: "Temperatura Minima "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Temperatura Máxima '
+		dataType: double
+		lineageTag: 44ec250d-8f70-47d7-8810-501b560073b9
+		summarizeBy: sum
+		sourceColumn: "Temperatura Máxima "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Radiacion Total '
+		dataType: double
+		lineageTag: a4c8b332-08d8-454f-8e4a-1e39c07741c9
+		summarizeBy: sum
+		sourceColumn: "Radiacion Total "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Humedad Minima '
+		dataType: double
+		lineageTag: 6b834275-5c8e-45b3-b852-9ed4d946cf52
+		summarizeBy: sum
+		sourceColumn: "Humedad Minima "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Humedad Máxima '
+		dataType: double
+		lineageTag: 59d8eed6-30d7-4d12-b7db-df91bc7e5321
+		summarizeBy: sum
+		sourceColumn: "Humedad Máxima "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Viento Promedio '
+		dataType: double
+		lineageTag: 27ed04a8-e577-4ce4-85f6-995a9e40ffae
+		summarizeBy: sum
+		sourceColumn: "Viento Promedio "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Precipitacion Acumulada '
+		dataType: double
+		lineageTag: e9b5fb5f-f1d7-4668-baa7-4604d6baa35f
+		summarizeBy: sum
+		sourceColumn: "Precipitacion Acumulada "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Evapotranspiracion Acumulada '
+		dataType: double
+		lineageTag: ac8d7e82-4897-4da6-aa00-32abac47c2d8
+		summarizeBy: sum
+		sourceColumn: "Evapotranspiracion Acumulada "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Radiacion MJ/dia'
+		dataType: double
+		lineageTag: 312b55aa-787b-4bc1-98a5-03c30f1f5d95
+		summarizeBy: sum
+		sourceColumn: Radiacion MJ/dia
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Amplitud Termica'
+		dataType: double
+		lineageTag: adda8b1a-1405-4bd0-8c4a-1610eb058912
+		summarizeBy: sum
+		sourceColumn: Amplitud Termica
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Día - Copia'
+		dataType: double
+		lineageTag: d5838984-e83f-45a5-a97a-e07e965dfa95
+		summarizeBy: sum
+		sourceColumn: Día - Copia
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Inicio de año'
+		dataType: double
+		lineageTag: 3f94409d-e4b6-4ee9-9de4-246a5736d6e2
+		summarizeBy: sum
+		sourceColumn: Inicio de año
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Pentada
+		dataType: int64
+		formatString: 0
+		lineageTag: 431f6a3d-ce1a-42f5-b5de-6959e50d0083
+		summarizeBy: sum
+		sourceColumn: Pentada
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Día Juliano'
+		dataType: int64
+		formatString: 0
+		lineageTag: 304b8349-8027-4086-8011-333f3bba3f80
+		summarizeBy: sum
+		sourceColumn: Día Juliano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nombre
+		dataType: string
+		lineageTag: b1496ac7-913d-491c-9dc1-970308eb5414
+		summarizeBy: none
+		sourceColumn: Nombre
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Índice calor prom'
+		dataType: double
+		lineageTag: a3e8bbe3-4c58-41b0-b67e-01411d12f851
+		summarizeBy: sum
+		sourceColumn: Índice calor prom
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Índice calor mín'
+		dataType: double
+		lineageTag: 5ea558d3-b4ea-41e3-a772-b39feab55a4e
+		summarizeBy: sum
+		sourceColumn: Índice calor mín
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Índice calor máx'
+		dataType: double
+		lineageTag: 7c7f48fb-5ec8-458a-972a-cdcd542ae44d
+		summarizeBy: sum
+		sourceColumn: Índice calor máx
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Santa Teresa-43c2b1a5-b838-411e-8184-04dea9fbc8f8' = m
+		mode: import
+		source =
+				let
+				    Nombre= "",
+				    Origen = Json.Document(Web.Contents("https://redmet.icc.org.gt/ws/getlecturasdia?fechaini=2010-01-01&fechafin=2031-12-31&estacionid=36")),
+				    #"Convertido en tabla" = Record.ToTable(Origen),
+				    Value = #"Convertido en tabla"{2}[Value],
+				    #"Convertida en tabla" = Table.FromList(Value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Se expandió Column1" = Table.ExpandRecordColumn(#"Convertida en tabla", "Column1", {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "humedadmin", "humedadmax", "vientoavg", "lluviasum", "etosum",  "indicecaloravg", "indicecalormin", "indicecalormax"}, {"Column1.dia", "Column1.tempavg", "Column1.tempmin", "Column1.tempmax", "Column1.radiaciontotal", "Column1.humedadmin", "Column1.humedadmax", "Column1.vientoavg", "Column1.lluviasum", "Column1.etosum", "Índice calor prom", "Índice calor mín", "Índice calor máx"}),
+				    #"Tipo cambiado" = Table.TransformColumnTypes(#"Se expandió Column1",{{"Column1.tempavg", type number}, {"Column1.tempmin", type number}, {"Column1.tempmax", type number}, {"Column1.radiaciontotal", type number}, {"Column1.humedadmin", type number}, {"Column1.humedadmax", type number}, {"Column1.vientoavg", type number}, {"Column1.lluviasum", type number}, {"Column1.etosum", type number}}),
+				    #"Personalizada agregada" = Table.AddColumn(#"Tipo cambiado", "Radiacion MJ/dia", each [Column1.radiaciontotal]/97*0.086400),
+				    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Personalizada agregada",{{"Radiacion MJ/dia", type number}}),
+				    #"Personalizada agregada1" = Table.AddColumn(#"Tipo cambiado1", "Amplitud Termica", each [Column1.tempmax]-[Column1.tempmin]),
+				    #"Tipo cambiado2" = Table.TransformColumnTypes(#"Personalizada agregada1",{{"Amplitud Termica", type number}}),
+				    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Tipo cambiado2",{{"Column1.tempavg", "Temperatura Media "& Nombre}, {"Column1.tempmin", "Temperatura Minima "& Nombre}, {"Column1.tempmax", "Temperatura Máxima "& Nombre}, {"Column1.radiaciontotal", "Radiacion Total "& Nombre}, {"Column1.humedadmin", "Humedad Minima "& Nombre}, {"Column1.humedadmax", "Humedad Máxima "& Nombre}, {"Column1.vientoavg", "Viento Promedio "& Nombre}, {"Column1.lluviasum", "Precipitacion Acumulada "& Nombre}, {"Column1.etosum", "Evapotranspiracion Acumulada "& Nombre}, {"Column1.dia", "Día"}}),
+				    #"Tipo cambiado3" = Table.TransformColumnTypes(#"Columnas con nombre cambiado",{{"Día", type date}}),
+				    #"Personalizada agregada2" = Table.AddColumn(#"Tipo cambiado3", "Déficit "&Nombre, each if [Evapotranspiracion Acumulada ]<[Precipitacion Acumulada ]
+				then 0
+				else [Evapotranspiracion Acumulada ]-[Precipitacion Acumulada ]),
+				    #"Tipo cambiado4" = Table.TransformColumnTypes(#"Personalizada agregada2",{{"Déficit "&Nombre, type number}}),
+				    #"Personalizada agregada3" = Table.AddColumn(#"Tipo cambiado4", "Superavit "&Nombre, each if [Evapotranspiracion Acumulada ]>[Precipitacion Acumulada ]
+				then 0
+				else [Precipitacion Acumulada ]-[Evapotranspiracion Acumulada ]),
+				    #"Tipo cambiado5" = Table.TransformColumnTypes(#"Personalizada agregada3",{{"Superavit "&Nombre, type number}}),
+				    #"Personalizada agregada4" = Table.AddColumn(#"Tipo cambiado5", "Nombre", each ""),
+				    #"Columnas quitadas" = Table.RemoveColumns(#"Personalizada agregada4",{"Nombre"}),
+				    #"Columna duplicada" = Table.DuplicateColumn(#"Columnas quitadas", "Día", "Día - Copia"),
+				    #"Tipo cambiado6" = Table.TransformColumnTypes(#"Columna duplicada",{{"Día - Copia", type number}}),
+				    #"Personalizada agregada5" = Table.AddColumn(#"Tipo cambiado6", "Personalizado", each Date.Year([Día])),
+				    #"Columnas quitadas1" = Table.RemoveColumns(#"Personalizada agregada5",{"Personalizado"}),
+				    #"Personalizada agregada6" = Table.AddColumn(#"Columnas quitadas1", "Pentadas", each ([Día]-Date.StartOfYear([Día])+1)/5),
+				    #"Tipo cambiado7" = Table.TransformColumnTypes(#"Personalizada agregada6",{{"Pentadas", Int64.Type}}),
+				    #"Columnas quitadas2" = Table.RemoveColumns(#"Tipo cambiado7",{"Pentadas"}),
+				    #"Personalizada agregada7" = Table.AddColumn(#"Columnas quitadas2", "Inicio de año", each Date.StartOfYear([Día])),
+				    #"Tipo cambiado8" = Table.TransformColumnTypes(#"Personalizada agregada7",{{"Inicio de año", type number}}),
+				    #"Personalizada agregada8" = Table.AddColumn(#"Tipo cambiado8", "Pentada", each Number.RoundUp((([#"Día - Copia"]-[Inicio de año]+1
+				)/5),0)),
+				    #"Personalizada agregada9" = Table.AddColumn(#"Personalizada agregada8", "Día Juliano", each [#"Día - Copia"]-[Inicio de año]+1),
+				    #"Tipo cambiado9" = Table.TransformColumnTypes(#"Personalizada agregada9",{{"Día Juliano", Int64.Type}, {"Pentada", Int64.Type}}),
+				    #"Personalizada agregada10" = Table.AddColumn(#"Tipo cambiado9", "Nombre", each ""),
+				    #"Columnas quitadas3" = Table.RemoveColumns(#"Personalizada agregada10",{"Déficit ", "Superavit ", "Nombre"}),
+				    #"Personalizada agregada11" = Table.AddColumn(#"Columnas quitadas3", "Nombre", each "Cengicaña"),
+				    #"Personalizada agregada12" = Table.AddColumn(#"Personalizada agregada11", "Rad Min", each 12),
+				    #"Columnas quitadas4" = Table.RemoveColumns(#"Personalizada agregada12",{"Rad Min", "Nombre"}),
+				    #"Personalizada agregada13" = Table.AddColumn(#"Columnas quitadas4", "Nombre", each "Santa Teresa"),
+				    #"Tipo cambiado10" = Table.TransformColumnTypes(#"Personalizada agregada13",{{"Índice calor prom", type number}, {"Índice calor mín", type number}, {"Índice calor máx", type number}})
+				in
+				    #"Tipo cambiado10"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
+

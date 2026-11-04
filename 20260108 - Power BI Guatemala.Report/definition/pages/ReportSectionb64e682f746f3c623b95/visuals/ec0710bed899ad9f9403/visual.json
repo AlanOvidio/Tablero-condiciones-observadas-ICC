@@ -1,0 +1,146 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "ec0710bed899ad9f9403",
+  "position": {
+    "x": 11.54308617234469,
+    "y": 391.02204408817636,
+    "z": 1000,
+    "height": 328.97795591182364,
+    "width": 1010.0200400801604
+  },
+  "visual": {
+    "visualType": "lineStackedColumnComboChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Anexar1"
+                    }
+                  },
+                  "Property": "Días"
+                }
+              },
+              "queryRef": "Anexar1.Dias",
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Anexar1"
+                    }
+                  },
+                  "Property": "Estación"
+                }
+              },
+              "queryRef": "Anexar1.Nombre"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Anexar1"
+                        }
+                      },
+                      "Property": "Radiación MJ/dia"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Sum(Anexar1.Radiacion MJ/dia)"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Anexar1"
+                        }
+                      },
+                      "Property": "Radiación MJ/dia"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Anexar1.Radiacion MJ/dia)1"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Anexar1"
+                  }
+                },
+                "Property": "Días"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Radiación (MJ/día)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Radiación acumulada en  MJ/dia'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

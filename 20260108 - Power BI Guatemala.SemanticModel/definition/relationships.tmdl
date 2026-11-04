@@ -1,0 +1,345 @@
+relationship 9245cdfd-775f-4cdc-921d-7c896dceaecf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Cengicaña.Día
+	toColumn: LocalDateTable_c92bdb9b-b20e-4680-803a-d55fccc76098.Date
+
+relationship 83f75198-e2f4-4192-acd1-c3f9da6aaa44
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'El Platanar'.Día
+	toColumn: LocalDateTable_f092bd72-7282-453b-bed7-48000e552b1f.Date
+
+relationship 9af14003-418f-48ac-8ad8-bf3cd89ae93d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Bonanza.Día
+	toColumn: LocalDateTable_b07f4aad-2ac9-4e81-8bee-d7cf6d6ed616.Date
+
+relationship 59bd0a75-6b5b-423c-b517-02cb373323ef
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Tehuantepeq.Día
+	toColumn: LocalDateTable_8d901115-cf8a-4a2c-8e67-e7e4a9cda345.Date
+
+relationship d583a5ba-2b1a-4fe9-9c65-efe3f8736a3a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Bouganvilia.Día
+	toColumn: LocalDateTable_0865fcae-acaf-45b9-ba2f-e953429230ee.Date
+
+relationship 159f1d13-6325-4c8c-ad4e-28a93749a6f7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Antonio EV'.Día
+	toColumn: LocalDateTable_7f2a6aba-210d-4bb6-9680-e82e5e701e04.Date
+
+relationship d152906a-6740-4fca-b1ba-576928f94469
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Nicolás'.Día
+	toColumn: LocalDateTable_c519b546-e414-49e6-b629-9bb5b631d23f.Date
+
+relationship b503fc85-4aca-4cfa-b356-7a61071269a1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Trinidad Magdalena'.Día
+	toColumn: LocalDateTable_0debcfd2-d1c0-4685-bc13-20ebf761ca24.Date
+
+relationship cd8428de-060c-4bd0-8003-622c8985c8b3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Xoluta.Día
+	toColumn: LocalDateTable_129dff0c-e580-4cc6-9c01-470e1154b16f.Date
+
+relationship a01b21ad-ec0c-4317-b5df-ff04b900a6eb
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Petén Oficina'.Día
+	toColumn: LocalDateTable_e535c95f-6fc0-495c-bbb6-0404022c1382.Date
+
+relationship 9d4b9112-a091-4315-b014-aa3d11e2a9a4
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Lorena.Día
+	toColumn: LocalDateTable_93f55bc3-9358-426b-aaad-b93a40f62820.Date
+
+relationship bb49ab50-0942-4f03-b2fd-60e6d4bcace1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Naranjales.Día
+	toColumn: LocalDateTable_2ebfec95-5e2e-4ec8-9456-0b5d9a5897e4.Date
+
+relationship e982d584-7fc0-4197-aaab-10d6dc481eac
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'El Bálsamo'.Día
+	toColumn: LocalDateTable_53580bf3-29b7-4a78-87c5-8b32a09421f7.Date
+
+relationship 49eeab82-f624-48d8-8a3c-8ed530e8854d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Rafael'.Día
+	toColumn: LocalDateTable_b26aa940-c90b-4bd3-a649-6d4a3dfb1310.Date
+
+relationship 4da418bd-35d2-40dc-bf59-c0d1d77bfe87
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Periodo A'.Date
+	toColumn: LocalDateTable_74f7b46a-4a20-4c32-a174-bb0206926224.Date
+
+relationship e73f3a2f-004f-4da0-8201-13106f6b13ec
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Periodo B'.Date
+	toColumn: LocalDateTable_577f407e-162a-4ba9-b377-5827b9c0bf2b.Date
+
+relationship aea85514-c84d-4b2c-9e22-8350753915ce
+	isActive: false
+	fromColumn: Anexar1.Fecha
+	toColumn: 'Periodo A'.Date
+
+relationship 60ca92b4-c10a-492c-8ce2-6488165b4391
+	isActive: false
+	fromColumn: Anexar1.Fecha
+	toColumn: 'Periodo B'.Date
+
+relationship 7c974396-798f-40e1-bcdc-deab3a169e23
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Amazonas.Día
+	toColumn: LocalDateTable_2de83890-692b-4ef4-8474-a7ad69ec4556.Date
+
+relationship 2c312fea-8bc1-49d1-a9c6-c5528cb742dd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Costa Brava'.Día
+	toColumn: LocalDateTable_7ac9a918-8fb0-4dbb-96c9-6d36e44bc358.Date
+
+relationship dfa1614a-489b-4418-a6e8-cb1da8fce32f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Trinidad.Día
+	toColumn: LocalDateTable_03804639-71f5-4e9a-bce6-80d401b866a7.Date
+
+relationship 6d07a60b-b47b-4c91-8836-0d6068c5be9c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Irlanda.Día
+	toColumn: LocalDateTable_2d593c79-1340-4dec-abf7-28c8b82acdd9.Date
+
+relationship 859f54da-2fa4-409b-8419-031c8224df66
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Puyumate.Día
+	toColumn: LocalDateTable_0de748c0-1188-48f9-a80c-44c3c59619c8.Date
+
+relationship 5b797786-1ed4-42e5-b1b4-2bd109d63b31
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Tululá.Día
+	toColumn: LocalDateTable_92a3e541-c8aa-49d0-ad46-094c34e85049.Date
+
+relationship c3089faa-6b86-409c-917b-2b49016e30f3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Giralda'.Día
+	toColumn: LocalDateTable_7df4650f-82aa-484c-af3a-e57c8d9a93ec.Date
+
+relationship 1f5d311e-9586-481d-9eec-7e30487d8043
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Candelaria'.Día
+	toColumn: LocalDateTable_8ffc1be1-b326-4b5e-800a-cf10d9384781.Date
+
+relationship d6ec848c-0a09-4c7f-8acd-bf6d6e6a3800
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Chiquirines.Día
+	toColumn: LocalDateTable_7f24befc-db24-46ac-bade-2b109fa488ad.Date
+
+relationship fdb07557-4661-4ded-8aa2-eeac8778b54a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Providencia.Día
+	toColumn: LocalDateTable_f9b6bffa-0af1-4116-8dc3-27d935b32804.Date
+
+relationship b31e962d-4c30-4043-b360-4e25e9e325bf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Alamo.Día
+	toColumn: LocalDateTable_de86bf9a-ece3-4c05-be88-554ab9b4598d.Date
+
+relationship 4f5a8f69-c5c5-4c6f-aad1-f06b32d843cd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Cocales.Día
+	toColumn: LocalDateTable_6f62382f-7646-405b-85ca-1d349c7b668c.Date
+
+relationship 483b662c-c9d9-4293-a8c9-07acc80ec78a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Concepción.Día
+	toColumn: LocalDateTable_38b5dfc4-5a27-4818-9602-bae70eefb227.Date
+
+relationship ffeed6b6-b521-4438-a233-8f142ea2d36d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Máquina'.Día
+	toColumn: LocalDateTable_12718081-ff81-4d87-b4fb-34e7b2d711de.Date
+
+relationship 47a698b2-2ba2-40a0-a845-8fad5bcffaef
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Santa Teresa'.Día
+	toColumn: LocalDateTable_cbf49051-8824-49dc-9d23-a8c88a532330.Date
+
+relationship 4e2a53a6-8ef6-4c56-9202-af4fd0727579
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Yepocapa (FCA-CATIE)'.Día
+	toColumn: LocalDateTable_16a985d6-daee-4c3e-8d70-06667b4786b1.Date
+
+relationship 936240d8-edeb-4bab-91ae-897f5e383368
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Monte Alegre'.Día
+	toColumn: LocalDateTable_7f382a55-6014-4a60-8805-29c2a765706b.Date
+
+relationship acb5d3b8-babc-466d-abf8-d10b03b0ae97
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Joya'.Día
+	toColumn: LocalDateTable_ca8878a6-d591-4cee-af26-1e82ce669803.Date
+
+relationship b5105e88-0a62-48b2-9766-b1f353585d1c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Sotz''il - Waqxaqi'' B''alam'.Día
+	toColumn: LocalDateTable_9b9529fe-d9a5-43b8-a237-49c4de9a4b0e.Date
+
+relationship 904475ad-e14f-4cdb-9999-980992b34da3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Pueblo Real (ACAX-TNC)'.Día
+	toColumn: LocalDateTable_e975e487-7c26-4b77-8028-949e657f38b1.Date
+
+relationship 88b1bd0d-5fff-4b78-8095-8b5226470503
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'El Carmen'.Día
+	toColumn: LocalDateTable_d92a7ee6-38b6-4ce2-8b69-c22a4e12f54e.Date
+
+relationship 41b6adeb-1795-41d9-837e-d251d41dda80
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Anexar1.Días
+	toColumn: LocalDateTable_8900cde8-94c0-4cf6-84cc-8b252e9b6cff.Date
+
+relationship b9774c19-ae4f-45b2-802b-a30c8867b2b0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Central Izalco'.Día
+	toColumn: LocalDateTable_00199bdb-4c28-4c99-83db-e68db42fcbd4.Date
+
+relationship b25a26b7-3444-4409-813f-afd57cd120be
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Copal.Día
+	toColumn: LocalDateTable_bff1e2a8-84ba-4193-acd4-d59f042122b4.Date
+
+relationship 372dbebe-80f3-48e4-967a-1f70bd83fe37
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Chaparrastique.Día
+	toColumn: LocalDateTable_dee341cb-16ea-412d-b21a-8244fa83a1cb.Date
+
+relationship e784dab1-3359-447c-9160-314f9cd42f7e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Agua Santa'.Día
+	toColumn: LocalDateTable_35f73170-d79d-47e7-bd8a-991e169c8cce.Date
+
+relationship 7c32d8a0-9508-4187-8c52-946f477e4498
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Clemente'.Día
+	toColumn: LocalDateTable_10e4f532-7c3e-4cdb-87f1-e5969536cbaf.Date
+
+relationship 786c30a4-86b0-4cdd-9449-8528f3e6f0ca
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: Anexar1.Estación
+	toColumn: Cuencas.Estación
+
+relationship fa37844c-0768-4d9b-a84e-e0587268082b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Mirandilla.Día
+	toColumn: LocalDateTable_e77e9e40-42a1-4f2c-ab70-de9422551dbf.Date
+
+relationship 44ff2c85-6e7c-4564-a03b-cb78ba2aa05e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Las Vegas'.Día
+	toColumn: LocalDateTable_8c5019a5-b375-45c7-9c55-bc032ae45c39.Date
+
+relationship 93652f44-530c-46dd-960c-9801ec25904c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Las Conchas'.Día
+	toColumn: LocalDateTable_f060632d-4a74-4038-b299-ad09b4ac2bdd.Date
+
+relationship 2b8099e8-4053-48e9-82dc-564f0bc146c6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Juan La Selva'.Día
+	toColumn: LocalDateTable_723b3bde-4a07-4956-8c04-8cd18e93d19e.Date
+
+relationship 0a4a132a-cbca-4f86-9818-fae7b8372b29
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Coqueta'.Día
+	toColumn: LocalDateTable_484bef27-e38f-4f08-8abc-0229a02fbbed.Date
+
+relationship 47c9a0a1-48d1-42fb-9c87-bcbd237ac95e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Miguel Mapán'.Día
+	toColumn: LocalDateTable_23c60184-f3a9-4472-bc7a-c2a4b9d0d276.Date
+
+relationship f3094f2f-2394-44da-9246-a6d1e1e9e564
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Sierra'.Día
+	toColumn: LocalDateTable_c12eaf93-a78d-4b15-b556-e301de94a305.Date
+
+relationship 72acf919-f67b-467b-88a8-6551bf42a4b8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Confianza'.Día
+	toColumn: LocalDateTable_9dfabca4-9c6d-4be2-9163-6955521f79d6.Date
+
+relationship 1fecfbcb-a57b-407a-8940-d3f898f832de
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Carrizales.Día
+	toColumn: LocalDateTable_768138a2-91bd-4a0f-b4dc-03d22321c2b1.Date
+
+relationship c9a8d117-0ec7-4822-b57f-636f3a6ba0d3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Santa Elena Tikal'.Día
+	toColumn: LocalDateTable_ce43a7a9-e9c8-4051-bf5e-be3329d2b0c5.Date
+
+relationship 98ba9e63-9657-4478-bd65-2ffc6e20a51a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Belén.Día
+	toColumn: LocalDateTable_facab9b9-834d-4017-9ef4-ed2dd5fa6f4a.Date
+
+relationship ffa6281d-782c-4598-b270-60baa5e74016
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Los Tarros'.Día
+	toColumn: LocalDateTable_c815cab3-9dee-41d1-a167-d6b9d5c49f63.Date
+
+relationship c13b1f5a-f04f-47b9-a7ad-582765e450ae
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Rafael - Patzún'.Día
+	toColumn: LocalDateTable_7360fef6-46f9-41c2-920b-c421fd22b4ca.Date
+
+relationship 67e731b0-4f6c-45a5-b312-02e7fff7877b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'El Jute'.Día
+	toColumn: LocalDateTable_f2a2c739-1008-4ddf-b651-7385f828161f.Date
+
+relationship 0907207f-d4fc-4f39-8f8b-d6bf47db94da
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Cristobal.Día
+	toColumn: LocalDateTable_d0e95e9d-a982-43e5-849b-5aa4a0ac9abe.Date
+
+relationship 61f817cf-90a2-435d-91af-3ae022f7bd51
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Margaritas.Día
+	toColumn: LocalDateTable_723e1ef4-8532-4a48-93f3-002ae89fa30f.Date
+
+relationship ada2c904-6e2f-4609-b594-d96bfb4d7366
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Luis'.Día
+	toColumn: LocalDateTable_3fe2386c-1aaa-424a-9cdd-7fb07f00f88e.Date
+
+relationship bab1d2ca-6125-4db2-b7eb-da5458c6be48
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'La Perla'.Día
+	toColumn: LocalDateTable_7565addf-76c5-475e-a803-dd7f75c6da39.Date
+
+relationship be59bc60-3021-fa6c-83f8-93506de8299a
+	fromColumn: Anexar1.Estación
+	toColumn: Coordenadas.Estación
+
+relationship 7da47feb-5ab0-49d3-8328-668d561d757f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Miravalle.Día
+	toColumn: LocalDateTable_37bc5c37-2a11-498e-82fc-6b38ffc22dea.Date
+
+relationship 5675bfb2-8b01-4cd6-99c6-369ceae87b1a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'El Cipitillo'.Día
+	toColumn: LocalDateTable_860c8e55-abb0-410c-981b-25ce5a5a0815.Date
+
+relationship f42818db-7fd0-4b6f-88e6-95fe860d6ab3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'San Ildefonso'.Día
+	toColumn: LocalDateTable_9a90973a-1759-43b7-b224-af38f186c5bf.Date
+
+relationship b4027aab-6c02-4c2e-7883-25c203381ee3
+	crossFilteringBehavior: bothDirections
+	fromColumn: Anexar1.Estación
+	toColumn: Cuencas_real.finca
+

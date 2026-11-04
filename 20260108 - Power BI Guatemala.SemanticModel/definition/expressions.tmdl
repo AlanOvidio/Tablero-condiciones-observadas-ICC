@@ -1,0 +1,62 @@
+expression Convencionales =
+		let
+		    Origen = SharePoint.Files("https://asazgua.sharepoint.com/sites/LluviaSantaRosa", [ApiVersion = 15]),
+		    #"EstacionesConvencionales_2023 xlsx_https://asazgua sharepoint com/sites/LluviaSantaRosa/Documentos compartidos/" = Origen{[Name="EstacionesConvencionales_2023.xlsx",#"Folder Path"="https://asazgua.sharepoint.com/sites/LluviaSantaRosa/Documentos compartidos/"]}[Content],
+		    #"Libro de Excel importado" = Excel.Workbook(#"EstacionesConvencionales_2023 xlsx_https://asazgua sharepoint com/sites/LluviaSantaRosa/Documentos compartidos/"),
+		    Data_Sheet = #"Libro de Excel importado"{[Item="Data",Kind="Sheet"]}[Data],
+		    #"Encabezados promovidos" = Table.PromoteHeaders(Data_Sheet, [PromoteAllScalars=true]),
+		    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"Column1.dia", type date}, {"Column1.tempavg", type number}, {"Column1.tempmin", type number}, {"Column1.tempmax", type number}, {"Column1.radiaciontotal", type text}, {"Column1.humedadmin", type text}, {"Column1.humedadmax", type text}, {"Column1.vientoavg", type text}, {"Column1.lluviasum", type number}, {"Column1.etosum", type text}, {"Column1.nombre", type text}}),
+		    #"Personalizada agregada" = Table.AddColumn(#"Tipo cambiado", "Radiacion MJ/dia", each [Column1.radiaciontotal]/97*0.086400),
+		    #"Tipo cambiado1" = Table.TransformColumnTypes(#"Personalizada agregada",{{"Radiacion MJ/dia", type number}}),
+		    #"Personalizada agregada1" = Table.AddColumn(#"Tipo cambiado1", "Amplitud Termica", each [Column1.tempmax]-[Column1.tempmin]),
+		    #"Tipo cambiado2" = Table.TransformColumnTypes(#"Personalizada agregada1",{{"Amplitud Termica", type number}}),
+		    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Tipo cambiado2",{{"Column1.tempavg", "Temperatura Media "}, {"Column1.tempmin", "Temperatura Minima "}, {"Column1.tempmax", "Temperatura Máxima "}, {"Column1.radiaciontotal", "Radiacion Total "}, {"Column1.humedadmin", "Humedad Minima "}, {"Column1.humedadmax", "Humedad Máxima "}, {"Column1.vientoavg", "Viento Promedio "}, {"Column1.lluviasum", "Precipitacion Acumulada "}, {"Column1.etosum", "Evapotranspiracion Acumulada "}, {"Column1.dia", "Día"}}),
+		    #"Tipo cambiado3" = Table.TransformColumnTypes(#"Columnas con nombre cambiado",{{"Día", type date}}),
+		    #"Personalizada agregada2" = Table.AddColumn(#"Tipo cambiado3", "Déficit ", each if [Evapotranspiracion Acumulada ]<[Precipitacion Acumulada ]
+		then 0
+		else [Evapotranspiracion Acumulada ]-[Precipitacion Acumulada ]),
+		    #"Tipo cambiado4" = Table.TransformColumnTypes(#"Personalizada agregada2",{{"Déficit ", type number}}),
+		    #"Personalizada agregada3" = Table.AddColumn(#"Tipo cambiado4", "Superavit ", each if [Evapotranspiracion Acumulada ]>[Precipitacion Acumulada ]
+		then 0
+		else [Precipitacion Acumulada ]-[Evapotranspiracion Acumulada ]),
+		    #"Tipo cambiado5" = Table.TransformColumnTypes(#"Personalizada agregada3",{{"Superavit ", type number}}),
+		    #"Personalizada agregada4" = Table.AddColumn(#"Tipo cambiado5", "Nombre", each ""),
+		    #"Columnas quitadas" = Table.RemoveColumns(#"Personalizada agregada4",{"Nombre"}),
+		    #"Columna duplicada" = Table.DuplicateColumn(#"Columnas quitadas", "Día", "Día - Copia"),
+		    #"Tipo cambiado6" = Table.TransformColumnTypes(#"Columna duplicada",{{"Día - Copia", type number}}),
+		    #"Personalizada agregada5" = Table.AddColumn(#"Tipo cambiado6", "Personalizado", each Date.Year([Día])),
+		    #"Columnas quitadas1" = Table.RemoveColumns(#"Personalizada agregada5",{"Personalizado"}),
+		    #"Personalizada agregada6" = Table.AddColumn(#"Columnas quitadas1", "Pentadas", each ([Día]-Date.StartOfYear([Día])+1)/5),
+		    #"Tipo cambiado7" = Table.TransformColumnTypes(#"Personalizada agregada6",{{"Pentadas", Int64.Type}}),
+		    #"Columnas quitadas2" = Table.RemoveColumns(#"Tipo cambiado7",{"Pentadas"}),
+		    #"Personalizada agregada7" = Table.AddColumn(#"Columnas quitadas2", "Inicio de año", each Date.StartOfYear([Día])),
+		    #"Tipo cambiado8" = Table.TransformColumnTypes(#"Personalizada agregada7",{{"Inicio de año", type number}}),
+		    #"Personalizada agregada8" = Table.AddColumn(#"Tipo cambiado8", "Pentada", each Number.RoundUp((([#"Día - Copia"]-[Inicio de año]+1)/5),0)),
+		    #"Personalizada agregada9" = Table.AddColumn(#"Personalizada agregada8", "Día Juliano", each [#"Día - Copia"]-[Inicio de año]+1),
+		    #"Tipo cambiado9" = Table.TransformColumnTypes(#"Personalizada agregada9",{{"Día Juliano", Int64.Type}, {"Pentada", Int64.Type}}),
+		    #"Personalizada agregada10" = Table.AddColumn(#"Tipo cambiado9", "Nombre", each ""),
+		    #"Columnas quitadas3" = Table.RemoveColumns(#"Personalizada agregada10",{"Déficit ", "Superavit ", "Nombre"}),
+		    #"Personalizada agregada11" = Table.AddColumn(#"Columnas quitadas3", "Nombre", each "Cengicaña"),
+		    #"Personalizada agregada12" = Table.AddColumn(#"Personalizada agregada11", "Rad Min", each 12),
+		    #"Columnas quitadas4" = Table.RemoveColumns(#"Personalizada agregada12",{"Rad Min", "Nombre"}),
+		    #"Columnas con nombre cambiado1" = Table.RenameColumns(#"Columnas quitadas4",{{"Column1.nombre", "Nombre"}})
+		in
+		#"Columnas con nombre cambiado1"
+	lineageTag: 4801c0fc-5e28-42ef-96e6-85146375c0e8
+
+	annotation PBI_ResultType = Table
+
+expression Coordenadas_INSIVUMEH =
+		let
+		    Origen = SharePoint.Files("https://asazgua.sharepoint.com/sites/LluviaSantaRosa", [ApiVersion = 15]),
+		    #"EstacionesConvencionales_2023 xlsx_https://asazgua sharepoint com/sites/LluviaSantaRosa/Documentos compartidos/" = Origen{[Name="EstacionesConvencionales_2023.xlsx",#"Folder Path"="https://asazgua.sharepoint.com/sites/LluviaSantaRosa/Documentos compartidos/"]}[Content],
+		    #"Libro de Excel importado" = Excel.Workbook(#"EstacionesConvencionales_2023 xlsx_https://asazgua sharepoint com/sites/LluviaSantaRosa/Documentos compartidos/"),
+		    Coordenadas_Sheet = #"Libro de Excel importado"{[Item="Coordenadas",Kind="Sheet"]}[Data],
+		    #"Encabezados promovidos" = Table.PromoteHeaders(Coordenadas_Sheet, [PromoteAllScalars=true]),
+		    #"Tipo cambiado" = Table.TransformColumnTypes(#"Encabezados promovidos",{{"Estación", type text}, {"Latitud", type number}, {"Longitud", type number}})
+		in
+		    #"Tipo cambiado"
+	lineageTag: 5f5eea45-cfda-4ddd-9aff-3b122f3d84a8
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,152 @@
+model Model
+	culture: es-CO
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-GT
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Cengicaña","El Platanar","Bonanza","Tehuantepeq","Bouganvilia","San Antonio EV","San Nicolás","Trinidad Magdalena","Xoluta","Petén Oficina","Lorena","Naranjales","El Bálsamo","San Rafael","Amazonas","Costa Brava","Trinidad","Irlanda","Puyumate","Tululá","La Giralda","La Candelaria","Chiquirines","Providencia","Alamo","Cocales","Concepción","La Máquina","Santa Teresa","Yepocapa (FCA-CATIE)","Anexar1","Cuencas","Monte Alegre","Sotz'il - Waqxaqi' B'alam","La Joya","Pueblo Real (ACAX-TNC)","Coordenadas","El Carmen","Convencionales","Coordenadas_INSIVUMEH","Central Izalco","Copal","Chaparrastique","Agua Santa","San Clemente","Mirandilla","Las Vegas","Las Conchas","San Juan La Selva","La Coqueta","San Miguel Mapán","La Sierra","La Confianza","Carrizales","Santa Elena Tikal","Belén","Los Tarros","San Rafael - Patzún","El Jute","Cristobal","Margaritas","San Luis","La Perla","Miravalle","El Cipitillo","San Ildefonso","Cuencas_real"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["WebModelingEdit","DevMode"]
+
+ref table Cengicaña
+ref table DateTableTemplate_3a725476-f9ff-4c14-acfc-bf296a5b4da6
+ref table LocalDateTable_c92bdb9b-b20e-4680-803a-d55fccc76098
+ref table 'El Platanar'
+ref table LocalDateTable_f092bd72-7282-453b-bed7-48000e552b1f
+ref table Anexar1
+ref table Bonanza
+ref table LocalDateTable_b07f4aad-2ac9-4e81-8bee-d7cf6d6ed616
+ref table Tehuantepeq
+ref table LocalDateTable_8d901115-cf8a-4a2c-8e67-e7e4a9cda345
+ref table Bouganvilia
+ref table LocalDateTable_0865fcae-acaf-45b9-ba2f-e953429230ee
+ref table 'San Antonio EV'
+ref table LocalDateTable_7f2a6aba-210d-4bb6-9680-e82e5e701e04
+ref table 'San Nicolás'
+ref table LocalDateTable_c519b546-e414-49e6-b629-9bb5b631d23f
+ref table 'Trinidad Magdalena'
+ref table LocalDateTable_0debcfd2-d1c0-4685-bc13-20ebf761ca24
+ref table Xoluta
+ref table LocalDateTable_129dff0c-e580-4cc6-9c01-470e1154b16f
+ref table 'Petén Oficina'
+ref table LocalDateTable_e535c95f-6fc0-495c-bbb6-0404022c1382
+ref table Lorena
+ref table LocalDateTable_93f55bc3-9358-426b-aaad-b93a40f62820
+ref table Naranjales
+ref table LocalDateTable_2ebfec95-5e2e-4ec8-9456-0b5d9a5897e4
+ref table 'El Bálsamo'
+ref table LocalDateTable_53580bf3-29b7-4a78-87c5-8b32a09421f7
+ref table 'San Rafael'
+ref table LocalDateTable_b26aa940-c90b-4bd3-a649-6d4a3dfb1310
+ref table 'Periodo A'
+ref table LocalDateTable_74f7b46a-4a20-4c32-a174-bb0206926224
+ref table 'Periodo B'
+ref table LocalDateTable_577f407e-162a-4ba9-b377-5827b9c0bf2b
+ref table 'Rad Med'
+ref table 'Rad Min'
+ref table 'Rad Max'
+ref table Amazonas
+ref table LocalDateTable_2de83890-692b-4ef4-8474-a7ad69ec4556
+ref table 'Costa Brava'
+ref table LocalDateTable_7ac9a918-8fb0-4dbb-96c9-6d36e44bc358
+ref table Trinidad
+ref table LocalDateTable_03804639-71f5-4e9a-bce6-80d401b866a7
+ref table Irlanda
+ref table LocalDateTable_2d593c79-1340-4dec-abf7-28c8b82acdd9
+ref table Puyumate
+ref table LocalDateTable_0de748c0-1188-48f9-a80c-44c3c59619c8
+ref table Tululá
+ref table LocalDateTable_92a3e541-c8aa-49d0-ad46-094c34e85049
+ref table 'La Giralda'
+ref table LocalDateTable_7df4650f-82aa-484c-af3a-e57c8d9a93ec
+ref table 'La Candelaria'
+ref table LocalDateTable_8ffc1be1-b326-4b5e-800a-cf10d9384781
+ref table Chiquirines
+ref table LocalDateTable_7f24befc-db24-46ac-bade-2b109fa488ad
+ref table Providencia
+ref table LocalDateTable_f9b6bffa-0af1-4116-8dc3-27d935b32804
+ref table Alamo
+ref table LocalDateTable_de86bf9a-ece3-4c05-be88-554ab9b4598d
+ref table Cocales
+ref table LocalDateTable_6f62382f-7646-405b-85ca-1d349c7b668c
+ref table Concepción
+ref table LocalDateTable_38b5dfc4-5a27-4818-9602-bae70eefb227
+ref table 'La Máquina'
+ref table LocalDateTable_12718081-ff81-4d87-b4fb-34e7b2d711de
+ref table 'Santa Teresa'
+ref table LocalDateTable_cbf49051-8824-49dc-9d23-a8c88a532330
+ref table 'Yepocapa (FCA-CATIE)'
+ref table LocalDateTable_16a985d6-daee-4c3e-8d70-06667b4786b1
+ref table Cuencas
+ref table 'Monte Alegre'
+ref table LocalDateTable_7f382a55-6014-4a60-8805-29c2a765706b
+ref table 'Sotz''il - Waqxaqi'' B''alam'
+ref table 'La Joya'
+ref table LocalDateTable_ca8878a6-d591-4cee-af26-1e82ce669803
+ref table LocalDateTable_9b9529fe-d9a5-43b8-a237-49c4de9a4b0e
+ref table 'Pueblo Real (ACAX-TNC)'
+ref table LocalDateTable_e975e487-7c26-4b77-8028-949e657f38b1
+ref table Coordenadas
+ref table 'El Carmen'
+ref table LocalDateTable_d92a7ee6-38b6-4ce2-8b69-c22a4e12f54e
+ref table LocalDateTable_8900cde8-94c0-4cf6-84cc-8b252e9b6cff
+ref table 'Central Izalco'
+ref table LocalDateTable_00199bdb-4c28-4c99-83db-e68db42fcbd4
+ref table Copal
+ref table LocalDateTable_bff1e2a8-84ba-4193-acd4-d59f042122b4
+ref table Chaparrastique
+ref table LocalDateTable_dee341cb-16ea-412d-b21a-8244fa83a1cb
+ref table 'Agua Santa'
+ref table LocalDateTable_35f73170-d79d-47e7-bd8a-991e169c8cce
+ref table 'San Clemente'
+ref table LocalDateTable_10e4f532-7c3e-4cdb-87f1-e5969536cbaf
+ref table Mirandilla
+ref table LocalDateTable_e77e9e40-42a1-4f2c-ab70-de9422551dbf
+ref table 'Las Vegas'
+ref table LocalDateTable_8c5019a5-b375-45c7-9c55-bc032ae45c39
+ref table 'Las Conchas'
+ref table LocalDateTable_f060632d-4a74-4038-b299-ad09b4ac2bdd
+ref table 'San Juan La Selva'
+ref table LocalDateTable_723b3bde-4a07-4956-8c04-8cd18e93d19e
+ref table 'La Coqueta'
+ref table LocalDateTable_484bef27-e38f-4f08-8abc-0229a02fbbed
+ref table 'San Miguel Mapán'
+ref table LocalDateTable_23c60184-f3a9-4472-bc7a-c2a4b9d0d276
+ref table 'La Sierra'
+ref table LocalDateTable_c12eaf93-a78d-4b15-b556-e301de94a305
+ref table 'La Confianza'
+ref table LocalDateTable_9dfabca4-9c6d-4be2-9163-6955521f79d6
+ref table Carrizales
+ref table LocalDateTable_768138a2-91bd-4a0f-b4dc-03d22321c2b1
+ref table 'Santa Elena Tikal'
+ref table LocalDateTable_ce43a7a9-e9c8-4051-bf5e-be3329d2b0c5
+ref table Belén
+ref table LocalDateTable_facab9b9-834d-4017-9ef4-ed2dd5fa6f4a
+ref table 'Los Tarros'
+ref table LocalDateTable_c815cab3-9dee-41d1-a167-d6b9d5c49f63
+ref table 'San Rafael - Patzún'
+ref table LocalDateTable_7360fef6-46f9-41c2-920b-c421fd22b4ca
+ref table 'El Jute'
+ref table LocalDateTable_f2a2c739-1008-4ddf-b651-7385f828161f
+ref table Cristobal
+ref table LocalDateTable_d0e95e9d-a982-43e5-849b-5aa4a0ac9abe
+ref table Margaritas
+ref table LocalDateTable_723e1ef4-8532-4a48-93f3-002ae89fa30f
+ref table 'San Luis'
+ref table LocalDateTable_3fe2386c-1aaa-424a-9cdd-7fb07f00f88e
+ref table 'La Perla'
+ref table LocalDateTable_7565addf-76c5-475e-a803-dd7f75c6da39
+ref table Miravalle
+ref table LocalDateTable_37bc5c37-2a11-498e-82fc-6b38ffc22dea
+ref table 'El Cipitillo'
+ref table LocalDateTable_860c8e55-abb0-410c-981b-25ce5a5a0815
+ref table 'San Ildefonso'
+ref table LocalDateTable_9a90973a-1759-43b7-b224-af38f186c5bf
+ref table Cuencas_real
+
+ref cultureInfo es-CO
+

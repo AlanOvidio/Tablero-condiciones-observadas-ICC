@@ -1,0 +1,25 @@
+table 'Periodo A'
+	lineageTag: 3cfe5ca5-5abc-4ca1-b21f-50eb5e1177aa
+
+	column Date
+		formatString: Long Date
+		lineageTag: 1eb3602a-ec56-47e9-a5f6-dee039645d09
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variación
+			isDefault
+			relationship: 4da418bd-35d2-40dc-bf59-c0d1d77bfe87
+			defaultHierarchy: LocalDateTable_74f7b46a-4a20-4c32-a174-bb0206926224.'Jerarquía de fechas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'Periodo A-f7ea9b51-e41b-459d-9033-33064e5b18de' = calculated
+		mode: import
+		source = CALENDARAUTO()
+
+	annotation PBI_Id = 9e90a0937a8b431f80286a88b7774f7d
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "20260108 - Power BI Guatemala"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c68defb3-d8b3-4f20-9508-0188fe711e1a"
+  }
+}

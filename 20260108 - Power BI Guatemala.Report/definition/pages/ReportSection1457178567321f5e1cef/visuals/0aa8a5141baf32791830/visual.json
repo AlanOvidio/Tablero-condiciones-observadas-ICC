@@ -1,0 +1,52 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "0aa8a5141baf32791830",
+  "position": {
+    "x": 1114.7760060744117,
+    "y": 0,
+    "z": 3000,
+    "height": 316.8413059984814,
+    "width": 165.22399392558847
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Anexar1"
+                    }
+                  },
+                  "Property": "Pentada"
+                }
+              },
+              "queryRef": "Sum(Anexar1.Pentada)",
+              "nativeQueryRef": "Pentada1"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Anexar1"
+                    }
+                  },
+                  "Property": "Días"
+                }
+              },
+              "queryRef": "Anexar1.Dias",
+              "nativeQueryRef": "Fecha",
+              "displayName": "Fecha"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
