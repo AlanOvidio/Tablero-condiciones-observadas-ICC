@@ -1,0 +1,12 @@
+relationship e7cafa6f-35a9-449a-bea3-5d32178fe368
+	fromColumn: Fact_Diaria_met.Fecha
+	toColumn: Calendario.Fecha
+
+relationship 25274574-fc8f-41ae-a08f-1ff896ed7c59
+	fromColumn: Fact_Diaria_met.estacionid
+	toColumn: Estaciones_met.estacionid
+
+relationship 73905c6f-78be-4901-980e-244d7d9d1777
+	fromColumn: Fact_Mensual_met.estacionid
+	toColumn: Estaciones_met.estacionid
+

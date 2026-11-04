@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Condiciones_observadas"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "71b593d2-a4ce-4c4e-85f8-3e1e04679271"
+  }
+}

@@ -8,16 +8,32 @@ Tablero de Power BI que muestra las condiciones meteorológicas observadas por l
 
 ## Estado
 
-En **reformulación**. La versión heredada (`20260108 - Power BI Guatemala.pbip`) se conserva sin cambios en el primer commit como línea base. El plan está en [docs/01_plan_reformulacion.md](docs/01_plan_reformulacion.md) y cada cambio se registra en [docs/02_decisiones_y_cambios.md](docs/02_decisiones_y_cambios.md).
+En **reformulación** (rama `v2`). Plan: [docs/01_plan_reformulacion.md](docs/01_plan_reformulacion.md) · bitácora: [docs/02_decisiones_y_cambios.md](docs/02_decisiones_y_cambios.md).
 
 ## Contenido
 
 ```
-├── 20260108 - Power BI Guatemala.pbip   ← versión heredada (se retirará al alcanzar paridad)
-├── docs/                                ← plan, decisiones y bitácora
-├── config/                              ← tablas editables (estación → región climática, variables)
-├── tools/                               ← scripts auxiliares (asignación de regiones)
-└── otros_archivos/                      ← shapefile de regiones climáticas y scripts R de referencia
+├── Condiciones_observadas.pbip          ← tablero nuevo (abrir este)
+├── Condiciones_observadas.SemanticModel/ ← modelo: tablas, Power Query (M), medidas DAX (TMDL)
+├── Condiciones_observadas.Report/        ← reporte: páginas y visuales (JSON)
+├── 20260108 - Power BI Guatemala.pbip    ← versión heredada; se elimina al alcanzar paridad
+├── config/estaciones_region.csv          ← estación → región climática (generado)
+├── tools/
+│   ├── generar_regiones.R                ← spatial join estaciones × shapefile → config/estaciones_region.csv
+│   └── aplicar_regiones.py               ← copia el CSV al modelo (Power BI cerrado)
+├── otros_archivos/                       ← shapefile de regiones climáticas (scripts R de referencia: no se versionan)
+└── docs/                                 ← plan y bitácora
 ```
 
-> Los scripts `.R` de `otros_archivos/` **no se versionan** porque contienen credenciales en texto plano. Ver el plan, fase 0.
+## Actualizar regiones (si cambian estaciones o el shapefile)
+
+Con Power BI Desktop cerrado, desde la raíz del repositorio:
+
+```
+Rscript tools/generar_regiones.R
+python tools/aplicar_regiones.py
+```
+
+Las credenciales de la API se leen de las variables de entorno `REDMET_USER` y `REDMET_PASS`.
+
+> Los scripts `.R` de `otros_archivos/` no se versionan porque contienen credenciales en texto plano.

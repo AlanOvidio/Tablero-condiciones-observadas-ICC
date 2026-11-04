@@ -1,0 +1,273 @@
+table Fact_Diaria_met
+	lineageTag: be02eabf-b17d-46d7-9402-3b2954a1cbec
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: year
+		rollingWindowPeriods: 19
+		incrementalGranularity: day
+		incrementalPeriods: 7
+		sourceExpression =
+			let
+			    Fuente = TablaEstaciones_met,
+			    EjecutarAPI = Table.AddColumn(Fuente, "Lecturas", each fxLecturasEstacion_met_diario([estacionid], RangeStart, RangeEnd)),
+			    ExpandirLista = Table.ExpandListColumn(EjecutarAPI, "Lecturas"),
+			    QuitarVacias = Table.SelectRows(ExpandirLista, each [Lecturas] <> null),
+			    ExpandirCampos = Table.ExpandRecordColumn(QuitarVacias, "Lecturas",
+			        {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "humedadavg", "humedadmin", "humedadmax",
+			         "vientoavg", "lluviasum", "etosum", "indicecaloravg", "indicecalormax"},
+			        {"Fecha", "Temp_Media", "Temp_Min", "Temp_Max", "Rad_Total", "HR_Media", "HR_Min", "HR_Max",
+			         "Viento_Media", "Precip_Total", "ETO_Total", "IC_Media", "IC_Max"}),
+			    // ETo puede llegar como texto vacío: se deja nulo (no 0)
+			    EtoTexto = Table.TransformColumnTypes(ExpandirCampos, {{"ETO_Total", type text}}),
+			    EtoVacio = Table.ReplaceValue(EtoTexto, "", null, Replacer.ReplaceValue, {"ETO_Total"}),
+			    Tipos = Table.TransformColumnTypes(EtoVacio, {
+			        {"estacionid", Int64.Type}, {"Fecha", type date},
+			        {"Temp_Media", type number}, {"Temp_Min", type number}, {"Temp_Max", type number},
+			        {"Rad_Total", type number}, {"HR_Media", type number}, {"HR_Min", type number}, {"HR_Max", type number},
+			        {"Viento_Media", type number}, {"Precip_Total", type number}, {"ETO_Total", type number},
+			        {"IC_Media", type number}, {"IC_Max", type number}
+			    }),
+			    // Filtro de actualización incremental
+			    Incremental = Table.SelectRows(Tipos, each
+			        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
+			        [Fecha] < Date.From(RangeEnd)),
+			    Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
+			    Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
+			    // Energía diaria (MJ/m²) = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶
+			    RadMJ = Table.AddColumn(Mes, "Rad_MJ", each [Rad_Total] * 900 / 1000000, type number),
+			    // Irradiancia diurna media (W/m²): Σ lecturas / 52 lecturas de 06:00 a 18:59 (ventana fija, igual que los scripts R)
+			    Irradiancia = Table.AddColumn(RadMJ, "Irradiancia_Diurna", each [Rad_Total] / 52, type number),
+			    Amplitud = Table.AddColumn(Irradiancia, "Amplitud_Termica", each [Temp_Max] - [Temp_Min], type number),
+			    // Balance hídrico diario: nulo si falta la ETo
+			    Balance = Table.AddColumn(Amplitud, "Balance_Hidrico", each [Precip_Total] - [ETO_Total], type number)
+			in
+			    Balance
+
+	column estacionid
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 41ce0fa6-5689-4236-9133-cfa28bae909b
+		summarizeBy: none
+		sourceColumn: estacionid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c751fe63-fc9c-42a0-b87a-850c37f7a069
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Anio
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 64e8e1b5-08a6-4414-8b79-600970a85eff
+		summarizeBy: none
+		sourceColumn: Anio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dcc0ec7d-1828-4839-9e97-17867529ba25
+		summarizeBy: none
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 0e4228e2-abad-4dc3-9394-d49f13cb2d6d
+		summarizeBy: sum
+		sourceColumn: Temp_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Min
+		dataType: double
+		formatString: 0.0
+		lineageTag: 76453509-d47e-41e1-9a7a-23885167b8ff
+		summarizeBy: sum
+		sourceColumn: Temp_Min
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: 07d25c84-8e02-4f24-95a4-08723b6529d2
+		summarizeBy: sum
+		sourceColumn: Temp_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amplitud_Termica
+		dataType: double
+		formatString: 0.0
+		lineageTag: ac902819-8ac1-4c63-be79-1e9daeb25cba
+		summarizeBy: sum
+		sourceColumn: Amplitud_Termica
+
+		annotation SummarizationSetBy = Automatic
+
+	column HR_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: f86712af-ee7e-46e0-be7a-9942b027d507
+		summarizeBy: sum
+		sourceColumn: HR_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column HR_Min
+		dataType: double
+		formatString: 0.0
+		lineageTag: ba5d1321-f2bd-4c07-8964-77b496439c5d
+		summarizeBy: sum
+		sourceColumn: HR_Min
+
+		annotation SummarizationSetBy = Automatic
+
+	column HR_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: bb508d50-d572-41f0-a5bd-8b6ed53500dc
+		summarizeBy: sum
+		sourceColumn: HR_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	column Viento_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 1966360f-3721-4868-8070-d70d2b37ce53
+		summarizeBy: sum
+		sourceColumn: Viento_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precip_Total
+		dataType: double
+		formatString: 0.0
+		lineageTag: e519c7c9-7395-403d-940b-531a447c92f5
+		summarizeBy: sum
+		sourceColumn: Precip_Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETO_Total
+		dataType: double
+		formatString: 0.0
+		lineageTag: 546d2444-8377-49c9-b184-0e69dc025a46
+		summarizeBy: sum
+		sourceColumn: ETO_Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column Balance_Hidrico
+		dataType: double
+		formatString: 0.0
+		lineageTag: 3eeaf377-820f-4534-9b46-30d739f73066
+		summarizeBy: sum
+		sourceColumn: Balance_Hidrico
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rad_Total
+		dataType: double
+		isHidden
+		formatString: 0
+		lineageTag: f3a1d978-5ec4-4ceb-8bd2-69ff8c43007e
+		summarizeBy: sum
+		sourceColumn: Rad_Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rad_MJ
+		dataType: double
+		formatString: 0.00
+		lineageTag: fff2e3a6-b412-441c-91a7-dae23c054b2b
+		summarizeBy: sum
+		sourceColumn: Rad_MJ
+
+		annotation SummarizationSetBy = Automatic
+
+	column Irradiancia_Diurna
+		dataType: double
+		formatString: 0
+		lineageTag: 14a42c63-8cae-4127-8aa7-b56b39cb3056
+		summarizeBy: sum
+		sourceColumn: Irradiancia_Diurna
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: a2b0fad8-b4a9-41e9-bd26-ee83a83bf4ac
+		summarizeBy: sum
+		sourceColumn: IC_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: a41faed5-3b7b-4385-a196-c687f0322e4e
+		summarizeBy: sum
+		sourceColumn: IC_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Diaria_met = m
+		mode: import
+		source =
+				let
+				    Fuente = TablaEstaciones_met,
+				    EjecutarAPI = Table.AddColumn(Fuente, "Lecturas", each fxLecturasEstacion_met_diario([estacionid], RangeStart, RangeEnd)),
+				    ExpandirLista = Table.ExpandListColumn(EjecutarAPI, "Lecturas"),
+				    QuitarVacias = Table.SelectRows(ExpandirLista, each [Lecturas] <> null),
+				    ExpandirCampos = Table.ExpandRecordColumn(QuitarVacias, "Lecturas",
+				        {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "humedadavg", "humedadmin", "humedadmax",
+				         "vientoavg", "lluviasum", "etosum", "indicecaloravg", "indicecalormax"},
+				        {"Fecha", "Temp_Media", "Temp_Min", "Temp_Max", "Rad_Total", "HR_Media", "HR_Min", "HR_Max",
+				         "Viento_Media", "Precip_Total", "ETO_Total", "IC_Media", "IC_Max"}),
+				    // ETo puede llegar como texto vacío: se deja nulo (no 0)
+				    EtoTexto = Table.TransformColumnTypes(ExpandirCampos, {{"ETO_Total", type text}}),
+				    EtoVacio = Table.ReplaceValue(EtoTexto, "", null, Replacer.ReplaceValue, {"ETO_Total"}),
+				    Tipos = Table.TransformColumnTypes(EtoVacio, {
+				        {"estacionid", Int64.Type}, {"Fecha", type date},
+				        {"Temp_Media", type number}, {"Temp_Min", type number}, {"Temp_Max", type number},
+				        {"Rad_Total", type number}, {"HR_Media", type number}, {"HR_Min", type number}, {"HR_Max", type number},
+				        {"Viento_Media", type number}, {"Precip_Total", type number}, {"ETO_Total", type number},
+				        {"IC_Media", type number}, {"IC_Max", type number}
+				    }),
+				    // Filtro de actualización incremental
+				    Incremental = Table.SelectRows(Tipos, each
+				        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
+				        [Fecha] < Date.From(RangeEnd)),
+				    Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
+				    Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
+				    // Energía diaria (MJ/m²) = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶
+				    RadMJ = Table.AddColumn(Mes, "Rad_MJ", each [Rad_Total] * 900 / 1000000, type number),
+				    // Irradiancia diurna media (W/m²): Σ lecturas / 52 lecturas de 06:00 a 18:59 (ventana fija, igual que los scripts R)
+				    Irradiancia = Table.AddColumn(RadMJ, "Irradiancia_Diurna", each [Rad_Total] / 52, type number),
+				    Amplitud = Table.AddColumn(Irradiancia, "Amplitud_Termica", each [Temp_Max] - [Temp_Min], type number),
+				    // Balance hídrico diario: nulo si falta la ETo
+				    Balance = Table.AddColumn(Amplitud, "Balance_Hidrico", each [Precip_Total] - [ETO_Total], type number)
+				in
+				    Balance
+
+	annotation PBI_ResultType = Table
+

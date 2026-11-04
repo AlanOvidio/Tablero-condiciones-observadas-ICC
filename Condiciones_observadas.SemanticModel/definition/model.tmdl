@@ -1,0 +1,30 @@
+model Model
+	culture: es-GT
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["Estaciones_met","TablaEstaciones_met","Cuencas_met","Calendario","Fact_Diaria_met","RangeStart","RangeEnd","InicioAnioHidrologico","fxLecturasEstacion_met_diario"]
+
+ref table Estaciones_met
+ref table TablaEstaciones_met
+ref table Cuencas_met
+ref table Calendario
+ref table Fact_Diaria_met
+ref table Fact_Mensual_met
+ref table Variables
+ref table Agrupar_por
+ref table Meses_Acum
+ref table Anios_Comparacion
+ref table Base_Inicio
+ref table Base_Fin
+ref table Periodo_A
+ref table Periodo_B
+ref table _Medidas
+

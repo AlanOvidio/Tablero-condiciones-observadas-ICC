@@ -18,8 +18,6 @@ desktop.ini
 __pycache__/
 *.pyc
 
-# ── Referencias en PDF (derechos de autor / tamaño) ──
-referencias/*.pdf
 **/.pbi/unappliedChanges.json
 
 # ── Scripts R con credenciales en texto plano (no subir hasta moverlas a .Renviron) ──
@@ -27,5 +25,10 @@ otros_archivos/*.R
 .Renviron
 .Rhistory
 .RData
+.Rproj.user/
 # Salidas de gráficas de los scripts R
 graficas*/
+
+# ── Índices espaciales de ArcGIS (se regeneran; no los usa sf) ──
+*.sbn
+*.sbx

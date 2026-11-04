@@ -1,0 +1,17 @@
+table Periodo_A
+	lineageTag: 860b124c-856f-419f-91ae-bf2fa1a27571
+
+	column Date
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 40f49757-c534-4d18-a720-687a5591f7ab
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Periodo_A = calculated
+		mode: import
+		source = CALENDAR ( DATE ( 2008, 1, 1 ), TODAY () )
+

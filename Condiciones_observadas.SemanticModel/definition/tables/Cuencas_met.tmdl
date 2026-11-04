@@ -1,0 +1,39 @@
+table Cuencas_met
+	isHidden
+	lineageTag: 78afa871-182a-4c6d-ae70-3bf06644bc5a
+
+	column Clave
+		dataType: string
+		lineageTag: 5d59e0ce-ff60-41b8-87d0-744354a43abb
+		summarizeBy: none
+		sourceColumn: Clave
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cuenca
+		dataType: string
+		lineageTag: 0ec1416a-acba-456d-bb37-b3eee3048c8b
+		summarizeBy: none
+		sourceColumn: Cuenca
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Cuencas_met = m
+		mode: import
+		source =
+				let
+				    // Fuente heredada (Excel de 2020). Se une a Estaciones_met por nombre normalizado.
+				    Origen = SharePoint.Files("https://asazgua.sharepoint.com/sites/DataPowerBI/", [ApiVersion = 15]),
+				    Archivo = Origen{[Name = "Meteorologicas_10062020.xlsx", #"Folder Path" = "https://asazgua.sharepoint.com/sites/DataPowerBI/Documentos compartidos/"]}[Content],
+				    Hoja = Excel.Workbook(Archivo){[Item = "Hoja2", Kind = "Sheet"]}[Data],
+				    Encabezados = Table.PromoteHeaders(Hoja, [PromoteAllScalars = true]),
+				    Clave = Table.AddColumn(Encabezados, "Clave", each Text.Lower(Text.Trim(Text.From([Estación]))), type text),
+				    Sel = Table.SelectColumns(Clave, {"Clave", "Cuenca"}),
+				    Tipos = Table.TransformColumnTypes(Sel, {{"Cuenca", type text}}),
+				    SinVacios = Table.SelectRows(Tipos, each [Clave] <> null and [Clave] <> ""),
+				    Unicos = Table.Distinct(SinVacios, {"Clave"})
+				in
+				    Unicos
+
+	annotation PBI_ResultType = Table
+

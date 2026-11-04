@@ -1,0 +1,42 @@
+expression RangeStart = #datetime(2008, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 5301897b-da46-4a3f-a075-21c42d601b6f
+
+	annotation PBI_ResultType = DateTime
+
+expression RangeEnd = #datetime(2030, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 527d5206-9bc0-45af-bf78-409969b2838c
+
+	annotation PBI_ResultType = DateTime
+
+/// Fecha de inicio del año hidrológico (mes y día)
+expression InicioAnioHidrologico = #date(2025, 11, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
+	lineageTag: 6e9493a6-ba65-47ad-bcc4-e9f9144d9204
+
+	annotation PBI_ResultType = Date
+
+/// Lecturas diarias de una estación (endpoint getlecturasdia)
+expression fxLecturasEstacion_met_diario =
+		(estacionId as number, RangeStart as datetime, RangeEnd as datetime) =>
+		let
+		    fechaini = DateTime.ToText(RangeStart, "yyyy-MM-dd HH:mm"),
+		    fechafin = DateTime.ToText(RangeEnd, "yyyy-MM-dd HH:mm"),
+		    Origen = Json.Document(
+		        Web.Contents(
+		            "https://redmet.icc.org.gt/ws/getlecturasdia",
+		            [
+		                Query = [
+		                    fechaini   = fechaini,
+		                    fechafin   = fechafin,
+		                    estacionid = Number.ToText(estacionId)
+		                ],
+		                Timeout = #duration(0, 0, 5, 0)
+		            ]
+		        )
+		    ),
+		    Lecturas = try Origen[data] otherwise {}
+		in
+		    Lecturas
+	lineageTag: 1d78ec3f-b339-4462-be8c-943531303cd3
+
+	annotation PBI_ResultType = Function
+

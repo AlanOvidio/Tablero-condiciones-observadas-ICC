@@ -1,0 +1,503 @@
+table _Medidas
+	lineageTag: 0d14359d-357e-44f4-acd7-a6618a104b57
+
+	/// Clave de la variable elegida (PCP por defecto)
+	measure Var_Sel = SELECTEDVALUE ( Variables[Clave], "PCP" )
+		displayFolder: 0 Contexto
+		lineageTag: bf987618-d2b8-4cb4-bd33-e0a8483ce78f
+
+	measure Var_Nombre = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = [Var_Sel] ), Variables[Variable] )
+		displayFolder: 0 Contexto
+		lineageTag: e1bf67a4-6a50-41b4-b0ba-412475cd6ca0
+
+	measure Var_Unidad = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = [Var_Sel] ), Variables[Unidad] )
+		displayFolder: 0 Contexto
+		lineageTag: a5bae692-d05f-41a3-8315-b180a571d463
+
+	/// Suma (variables acumulativas) · Promedio · Máximo · Mínimo
+	measure Var_Regla = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = [Var_Sel] ), Variables[Regla] )
+		displayFolder: 0 Contexto
+		lineageTag: 592b83dc-187a-41ff-b0b1-305928268195
+
+	measure Ultima_Fecha = CALCULATE ( MAX ( Fact_Diaria_met[Fecha] ), REMOVEFILTERS () )
+		formatString: dd/mm/yyyy
+		displayFolder: 0 Contexto
+		lineageTag: 7548414f-1b9e-4d27-8269-172d43007391
+
+	/// Último mes cerrado con datos, como AAAAMM
+	measure Ultimo_Mes_Completo =
+			CALCULATE (
+			    MAXX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Completo] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ),
+			    REMOVEFILTERS ()
+			)
+		formatString: 0
+		displayFolder: 0 Contexto
+		lineageTag: 04ce99c8-0276-4e74-b14b-3d7afe83aa6f
+
+	/// Año elegido en el segmentador de año; si no hay uno, el año del último dato
+	measure Anio_Analisis = IF ( HASONEVALUE ( Calendario[Anio] ), VALUES ( Calendario[Anio] ), YEAR ( [Ultima_Fecha] ) )
+		formatString: 0
+		displayFolder: 0 Contexto
+		lineageTag: 92eefa21-0283-4f3f-8295-82d0da68e17b
+
+	/// Primer año del periodo base (por defecto, el primero con datos)
+	measure Base_Ini = SELECTEDVALUE ( Base_Inicio[Año], CALCULATE ( MIN ( Fact_Mensual_met[Anio] ), REMOVEFILTERS () ) )
+		formatString: 0
+		displayFolder: 0 Contexto
+		lineageTag: 0f039117-b0ec-4b04-8df4-ad8dcf5db327
+
+	/// Último año del periodo base (por defecto, el anterior al año de análisis)
+	measure Base_Fin = MIN ( SELECTEDVALUE ( Base_Fin[Año], [Anio_Analisis] - 1 ), [Anio_Analisis] - 1 )
+		formatString: 0
+		displayFolder: 0 Contexto
+		lineageTag: d5272ceb-9017-4e98-acc3-1816f903e46c
+
+	/// Estaciones con datos en el contexto
+	measure N_Estaciones = CALCULATE ( DISTINCTCOUNT ( Fact_Diaria_met[estacionid] ) )
+		formatString: 0
+		displayFolder: 0 Contexto
+		lineageTag: b113743d-2538-46e0-94a7-c697e6fc9f23
+
+	/// Valor de UNA estación en el periodo del contexto
+	measure _Dia_Est =
+			VAR v = [Var_Sel]
+			RETURN
+			    SWITCH (
+			        v,
+			        "PCP", SUM ( Fact_Diaria_met[Precip_Total] ),
+			        "ETO", SUM ( Fact_Diaria_met[ETO_Total] ),
+			        "BH", SUM ( Fact_Diaria_met[Balance_Hidrico] ),
+			        "RAD", SUM ( Fact_Diaria_met[Rad_MJ] ),
+			        "IRR", AVERAGE ( Fact_Diaria_met[Irradiancia_Diurna] ),
+			        "TMED", AVERAGE ( Fact_Diaria_met[Temp_Media] ),
+			        "TMAX", MAX ( Fact_Diaria_met[Temp_Max] ),
+			        "TMIN", MIN ( Fact_Diaria_met[Temp_Min] ),
+			        "AMP", AVERAGE ( Fact_Diaria_met[Amplitud_Termica] ),
+			        "IC", MAX ( Fact_Diaria_met[IC_Max] ),
+			        "HR", AVERAGE ( Fact_Diaria_met[HR_Media] ),
+			        "VV", AVERAGE ( Fact_Diaria_met[Viento_Media] )
+			    )
+		isHidden
+		displayFolder: 1 Diario
+		lineageTag: ffc8323c-c23f-4424-b7eb-840356de4397
+
+	/// Variable elegida en el periodo del contexto. Varias estaciones: primero se agrega por estación (suma, promedio o extremo) y luego se promedian las estaciones con dato.
+	measure Valor_Diario = AVERAGEX ( VALUES ( Estaciones_met[estacionid] ), [_Dia_Est] )
+		formatString: 0.0
+		displayFolder: 1 Diario
+		lineageTag: 4ab13be3-d650-403b-9087-cb79b27af7a8
+
+	/// Acumulado desde el inicio del año (civil o hidrológico) hasta la fecha del contexto; solo variables acumulativas. Suma por estación y luego promedio.
+	measure Acum_Diario =
+			VAR _fin = MAX ( Calendario[Fecha] )
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _mesIni = IF ( _modo = "Año civil (ene–dic)", 1, 11 )
+			VAR _ini = IF ( MONTH ( _fin ) >= _mesIni, DATE ( YEAR ( _fin ), _mesIni, 1 ), DATE ( YEAR ( _fin ) - 1, _mesIni, 1 ) )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma" && _fin <= [Ultima_Fecha],
+			        AVERAGEX (
+			            VALUES ( Estaciones_met[estacionid] ),
+			            CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), DATESBETWEEN ( Calendario[Fecha], _ini, _fin ) )
+			        )
+			    )
+		formatString: 0.0
+		displayFolder: 1 Diario
+		lineageTag: b68ddbc3-7dcf-49c3-af11-1de607d44f2b
+
+	/// Promedio de los 7 días que terminan en la fecha del contexto
+	measure Media_Movil_7d =
+			VAR _fin = MAX ( Calendario[Fecha] )
+			VAR _dias = DATESBETWEEN ( Calendario[Fecha], _fin - 6, _fin )
+			RETURN
+			    IF (
+			        _fin <= [Ultima_Fecha],
+			        AVERAGEX ( _dias, CALCULATE ( [Valor_Diario] ) )
+			    )
+		formatString: 0.0
+		displayFolder: 1 Diario
+		lineageTag: 2c35d7d4-5052-4991-b363-ad8ec0e3dd55
+
+	/// Valor mensual de UNA estación; solo meses cerrados con ≥ 80 % de días
+	measure _Mes_Est =
+			VAR v = [Var_Sel]
+			RETURN
+			    CALCULATE (
+			        SWITCH (
+			            v,
+			            "PCP", SUM ( Fact_Mensual_met[Precip] ),
+			            "ETO", SUM ( Fact_Mensual_met[ETo] ),
+			            "BH", SUM ( Fact_Mensual_met[BH] ),
+			            "RAD", SUM ( Fact_Mensual_met[Rad_MJ] ),
+			            "IRR", AVERAGE ( Fact_Mensual_met[Irradiancia] ),
+			            "TMED", AVERAGE ( Fact_Mensual_met[Temp_Media] ),
+			            "TMAX", MAX ( Fact_Mensual_met[Temp_Max_Abs] ),
+			            "TMIN", MIN ( Fact_Mensual_met[Temp_Min_Abs] ),
+			            "AMP", AVERAGE ( Fact_Mensual_met[Amplitud] ),
+			            "IC", MAX ( Fact_Mensual_met[IC_Max] ),
+			            "HR", AVERAGE ( Fact_Mensual_met[HR_Media] ),
+			            "VV", AVERAGE ( Fact_Mensual_met[Viento_Media] )
+			        ),
+			        Fact_Mensual_met[Mes_Valido] = TRUE ()
+			    )
+		isHidden
+		displayFolder: 2 Mensual
+		lineageTag: 5c2433da-5219-4a43-9c5d-3e2189f91af9
+
+	/// Promedio de las estaciones del grupo (usa los filtros ya aplicados a Fact_Mensual_met)
+	measure _Grupo_Mes = AVERAGEX ( VALUES ( Estaciones_met[estacionid] ), [_Mes_Est] )
+		isHidden
+		displayFolder: 2 Mensual
+		lineageTag: d74c2d68-84e7-42fb-801f-4d0857be5ba3
+
+	/// Variable elegida por mes. No se muestra hasta que el mes termina.
+	measure Valor_Mensual =
+			CALCULATE (
+			    [_Grupo_Mes],
+			    TREATAS ( VALUES ( Calendario[Anio] ), Fact_Mensual_met[Anio] ),
+			    TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
+			)
+		formatString: 0.0
+		displayFolder: 2 Mensual
+		lineageTag: cd94c154-398e-4c67-96cc-d560b0b77961
+
+	/// Igual que Valor_Mensual para los años adicionales (Anios_Comparacion en la leyenda)
+	measure Valor_Mensual_Anio_Comp =
+			CALCULATE (
+			    [_Grupo_Mes],
+			    TREATAS ( VALUES ( Anios_Comparacion[Año] ), Fact_Mensual_met[Anio] ),
+			    TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
+			)
+		formatString: 0.0
+		displayFolder: 2 Mensual
+		lineageTag: acd715ff-e188-49be-a3bc-9a4b598d3729
+
+	/// Media de los valores mensuales del grupo en los años del periodo base
+	measure Hist_Media =
+			VAR _meses = VALUES ( Calendario[Mes_Num] )
+			VAR _ini = [Base_Ini]
+			VAR _fin = [Base_Fin]
+			VAR _t =
+			    FILTER (
+			        ADDCOLUMNS (
+			            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
+			            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
+			        ),
+			        NOT ISBLANK ( [@v] )
+			    )
+			RETURN
+			    AVERAGEX ( _t, [@v] )
+		formatString: 0.0
+		displayFolder: 3 Histórico mensual
+		lineageTag: 346aa63e-cceb-41f5-ae58-ea0b7634e792
+
+	/// Mínimo histórico (periodo base)
+	measure Hist_Min =
+			VAR _meses = VALUES ( Calendario[Mes_Num] )
+			VAR _ini = [Base_Ini]
+			VAR _fin = [Base_Fin]
+			VAR _t =
+			    FILTER (
+			        ADDCOLUMNS (
+			            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
+			            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
+			        ),
+			        NOT ISBLANK ( [@v] )
+			    )
+			RETURN
+			    MINX ( _t, [@v] )
+		formatString: 0.0
+		displayFolder: 3 Histórico mensual
+		lineageTag: 289ca818-2b9a-4369-a69d-736fe5eee72f
+
+	/// Máximo histórico (periodo base)
+	measure Hist_Max =
+			VAR _meses = VALUES ( Calendario[Mes_Num] )
+			VAR _ini = [Base_Ini]
+			VAR _fin = [Base_Fin]
+			VAR _t =
+			    FILTER (
+			        ADDCOLUMNS (
+			            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
+			            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
+			        ),
+			        NOT ISBLANK ( [@v] )
+			    )
+			RETURN
+			    MAXX ( _t, [@v] )
+		formatString: 0.0
+		displayFolder: 3 Histórico mensual
+		lineageTag: fd5f1d9d-63f6-4fb0-8487-d709c5e82f5e
+
+	/// Percentil 33 (igual a quantile tipo 7 de R)
+	measure Hist_P33 =
+			VAR _meses = VALUES ( Calendario[Mes_Num] )
+			VAR _ini = [Base_Ini]
+			VAR _fin = [Base_Fin]
+			VAR _t =
+			    FILTER (
+			        ADDCOLUMNS (
+			            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
+			            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
+			        ),
+			        NOT ISBLANK ( [@v] )
+			    )
+			RETURN
+			    PERCENTILEX.INC ( _t, [@v], 0.33 )
+		formatString: 0.0
+		displayFolder: 3 Histórico mensual
+		lineageTag: baac0910-9e4e-4560-a843-6500eb0f0aa5
+
+	/// Percentil 66
+	measure Hist_P66 =
+			VAR _meses = VALUES ( Calendario[Mes_Num] )
+			VAR _ini = [Base_Ini]
+			VAR _fin = [Base_Fin]
+			VAR _t =
+			    FILTER (
+			        ADDCOLUMNS (
+			            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
+			            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
+			        ),
+			        NOT ISBLANK ( [@v] )
+			    )
+			RETURN
+			    PERCENTILEX.INC ( _t, [@v], 0.66 )
+		formatString: 0.0
+		displayFolder: 3 Histórico mensual
+		lineageTag: 32eb3e1a-afc2-42a7-b2b6-8cf94b4b8a7c
+
+	/// Años con dato en el periodo base
+	measure Hist_N_Anios =
+			VAR _meses = VALUES ( Calendario[Mes_Num] )
+			VAR _ini = [Base_Ini]
+			VAR _fin = [Base_Fin]
+			VAR _t =
+			    FILTER (
+			        ADDCOLUMNS (
+			            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
+			            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
+			        ),
+			        NOT ISBLANK ( [@v] )
+			    )
+			RETURN
+			    COUNTROWS ( _t )
+		formatString: 0.0
+		displayFolder: 3 Histórico mensual
+		lineageTag: c1a3e364-f5f3-419a-992a-b950cc3a7095
+
+	measure Anomalia = IF ( NOT ISBLANK ( [Valor_Mensual] ), [Valor_Mensual] - [Hist_Media] )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 4 Anomalías
+		lineageTag: 69025a5d-a7f9-4242-ac26-f0105f9b5dfb
+
+	measure Anomalia_Pct = IF ( NOT ISBLANK ( [Valor_Mensual] ), DIVIDE ( [Valor_Mensual] - [Hist_Media], [Hist_Media] ) )
+		formatString: +0%;-0%;0%
+		displayFolder: 4 Anomalías
+		lineageTag: 0231a577-b84f-41be-acc9-457c6d93a632
+
+	/// Umbrales por variable en la tabla Variables (T: ±0.5/±1 °C; Pp: ±15/±40 %, como script_nuevo.R)
+	measure Anomalia_Categoria =
+			VAR _v = [Var_Sel]
+			VAR _tipo = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Anom_Tipo] )
+			VAR _u1 = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Umbral1] )
+			VAR _u2 = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Umbral2] )
+			VAR _a = IF ( _tipo = "pct", [Anomalia_Pct] * 100, [Anomalia] )
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _a ),
+			        SWITCH (
+			            TRUE (),
+			            _a > _u2, "Muy por encima",
+			            _a > _u1, "Por encima",
+			            _a < -_u2, "Muy por debajo",
+			            _a < -_u1, "Por debajo",
+			            "Normal"
+			        )
+			    )
+		displayFolder: 4 Anomalías
+		lineageTag: 49719f33-296a-453d-a9f2-6d7105e85007
+
+	measure Anomalia_Color =
+			SWITCH (
+			    [Anomalia_Categoria],
+			    "Muy por encima", "#d73027",
+			    "Por encima", "#fc8d59",
+			    "Normal", "#91bfdb",
+			    "Por debajo", "#4575b4",
+			    "Muy por debajo", "#313695"
+			)
+		displayFolder: 4 Anomalías
+		lineageTag: 7b33e22e-2443-4876-80b2-9ee4829716f0
+
+	/// Acumulado mensual del año de análisis (civil o hidrológico). Suma por estación y luego promedio.
+	measure Acum_Mensual =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			VAR _y = [Anio_Analisis]
+			VAR _pares =
+			    SELECTCOLUMNS (
+			        FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			        "Anio", _y - Meses_Acum[Desfase_Anio],
+			        "Mes", Meses_Acum[Mes_Num]
+			    )
+			VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
+			        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: 762d6137-89f8-4a5d-bd51-c2f7cd5f12ab
+
+	/// Igual que Acum_Mensual para cada año adicional (Anios_Comparacion en la leyenda)
+	measure Acum_Mensual_Anio_Comp =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			VAR _y = SELECTEDVALUE ( Anios_Comparacion[Año] )
+			VAR _pares =
+			    SELECTCOLUMNS (
+			        FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			        "Anio", _y - Meses_Acum[Desfase_Anio],
+			        "Mes", Meses_Acum[Mes_Num]
+			    )
+			VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
+			        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: 90bf5ab0-b4f6-4329-934b-bb93abc95611
+
+	/// Suma acumulada de Hist_Media (mismo criterio que los scripts R)
+	measure Hist_Acum_Media =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma",
+			        SUMX (
+			            FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			            VAR _m = Meses_Acum[Mes_Num]
+			            RETURN CALCULATE ( [Hist_Media], REMOVEFILTERS ( Meses_Acum ), Calendario[Mes_Num] = _m )
+			        )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: bc0a8d02-1caf-4508-b0f7-24ce2ecce4d7
+
+	/// Suma acumulada de Hist_Min (mismo criterio que los scripts R)
+	measure Hist_Acum_Min =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma",
+			        SUMX (
+			            FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			            VAR _m = Meses_Acum[Mes_Num]
+			            RETURN CALCULATE ( [Hist_Min], REMOVEFILTERS ( Meses_Acum ), Calendario[Mes_Num] = _m )
+			        )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: 3ff14fc5-4bd5-4e89-9b4e-98ffee6ba4bb
+
+	/// Suma acumulada de Hist_Max (mismo criterio que los scripts R)
+	measure Hist_Acum_Max =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma",
+			        SUMX (
+			            FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			            VAR _m = Meses_Acum[Mes_Num]
+			            RETURN CALCULATE ( [Hist_Max], REMOVEFILTERS ( Meses_Acum ), Calendario[Mes_Num] = _m )
+			        )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: df4d6c5b-5f7a-4d13-8276-e810c542bacf
+
+	/// Suma acumulada de Hist_P33 (mismo criterio que los scripts R)
+	measure Hist_Acum_P33 =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma",
+			        SUMX (
+			            FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			            VAR _m = Meses_Acum[Mes_Num]
+			            RETURN CALCULATE ( [Hist_P33], REMOVEFILTERS ( Meses_Acum ), Calendario[Mes_Num] = _m )
+			        )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: a26ecc40-f34e-4d35-b9b9-0b5899564c49
+
+	/// Suma acumulada de Hist_P66 (mismo criterio que los scripts R)
+	measure Hist_Acum_P66 =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año civil (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			RETURN
+			    IF (
+			        [Var_Regla] = "Suma",
+			        SUMX (
+			            FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] <= _p ),
+			            VAR _m = Meses_Acum[Mes_Num]
+			            RETURN CALCULATE ( [Hist_P66], REMOVEFILTERS ( Meses_Acum ), Calendario[Mes_Num] = _m )
+			        )
+			    )
+		formatString: 0.0
+		displayFolder: 5 Acumulados
+		lineageTag: af587294-842a-4cf4-9326-7e0843a9c5c8
+
+	/// Variable elegida en las fechas del Periodo A
+	measure Valor_Periodo_A =
+			AVERAGEX (
+			    VALUES ( Estaciones_met[estacionid] ),
+			    CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), TREATAS ( VALUES ( Periodo_A[Fecha] ), Fact_Diaria_met[Fecha] ) )
+			)
+		formatString: 0.0
+		displayFolder: 6 Periodos
+		lineageTag: 2d569f1e-94eb-45d8-8c58-d62091267a93
+
+	/// Variable elegida en las fechas del Periodo B
+	measure Valor_Periodo_B =
+			AVERAGEX (
+			    VALUES ( Estaciones_met[estacionid] ),
+			    CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), TREATAS ( VALUES ( Periodo_B[Fecha] ), Fact_Diaria_met[Fecha] ) )
+			)
+		formatString: 0.0
+		displayFolder: 6 Periodos
+		lineageTag: 96966032-a115-425f-90b6-df2a4305fe48
+
+	measure Titulo_Variable = [Var_Nombre] & " (" & [Var_Unidad] & ")"
+		displayFolder: 7 Textos
+		lineageTag: 24e1a364-9232-4619-aeec-26b6ed776de7
+
+	measure Nota_Fuente =
+			"Fuente: Red Meteorológica ICC  |  Periodo base: " & [Base_Ini] & "–" & [Base_Fin] &
+			"  |  n histórico: " & [Hist_N_Anios] & " años  |  Datos al " & FORMAT ( [Ultima_Fecha], "dd/mm/yyyy" )
+		displayFolder: 7 Textos
+		lineageTag: 4dcc0385-b25b-410a-916f-b56ddf44ef5f
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: 1271d80f-7b29-4662-9cf7-63fe3b384c88
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Medidas = calculated
+		mode: import
+		source = Row("Column", BLANK())
+

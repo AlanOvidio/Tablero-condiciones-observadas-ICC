@@ -1,0 +1,154 @@
+table Variables
+	lineageTag: 8a326d6f-d0a0-450d-b51f-ba305c67ca04
+
+	column Clave
+		dataType: string
+		lineageTag: 405e49a9-5f2c-4dd9-8adb-c10d592399af
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Clave]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Variable
+		dataType: string
+		lineageTag: 66b4749c-8c09-48dd-8893-e8ff01c2a7f3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Variable]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidad
+		dataType: string
+		lineageTag: 4e4b4c23-a52b-4c00-a1d3-3cb44cf606c7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Unidad]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Regla
+		dataType: string
+		lineageTag: 9169ed9f-03fb-4cb0-b8ac-82412d677d36
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Regla]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 06f96f6e-ab2f-4be0-a5fd-7da66275d925
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Grupo
+		dataType: string
+		lineageTag: 05a4792c-2eac-4aab-b131-3898cd484e80
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Grupo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Anom_Tipo
+		dataType: string
+		isHidden
+		lineageTag: fd732ce3-95ca-4daa-aa39-abf7ffa70a05
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Anom_Tipo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Umbral1
+		dataType: double
+		isHidden
+		lineageTag: 0aad73cc-20e5-48c0-802c-8077bc48f330
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Umbral1]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Umbral2
+		dataType: double
+		isHidden
+		lineageTag: 5e276b37-e1a1-4bff-91a7-307c52f41e0d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Umbral2]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Actual
+		dataType: string
+		isHidden
+		lineageTag: 42f821cf-8698-460f-ae24-a53cf42fadb6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Color_Actual]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Rango
+		dataType: string
+		isHidden
+		lineageTag: 3f5d54e1-a16f-4b2d-9982-33d85faee23a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Color_Rango]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Normal
+		dataType: string
+		isHidden
+		lineageTag: 97b0d2f5-2226-4390-9fa5-d6395bba0a5e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Color_Normal]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Decimales
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 825ee4c6-7660-42dc-b745-c14841b5a454
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Decimales]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Variables = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Clave", STRING, "Variable", STRING, "Unidad", STRING, "Regla", STRING, "Orden", INTEGER,
+				    "Grupo", STRING, "Anom_Tipo", STRING, "Umbral1", DOUBLE, "Umbral2", DOUBLE,
+				    "Color_Actual", STRING, "Color_Rango", STRING, "Color_Normal", STRING, "Decimales", INTEGER,
+				    {
+				        {"PCP", "Precipitación", "mm", "Suma", 1, "Agua", "pct", 15, 40, "#00008B", "#4682B4", "#36648B", 1},
+				        {"ETO", "Evapotranspiración de referencia (ETo)", "mm", "Suma", 2, "Agua", "pct", 15, 40, "#006400", "#8FBC8F", "#2E8B57", 1},
+				        {"BH", "Balance hídrico (P − ETo)", "mm", "Suma", 3, "Agua", "abs", 25, 50, "#00008B", "#7EC8E3", "#4A90D9", 1},
+				        {"RAD", "Radiación acumulada", "MJ/m²", "Suma", 4, "Radiación", "pct", 10, 20, "#8B4513", "#F4A460", "#CD853F", 1},
+				        {"IRR", "Irradiancia diurna media", "W/m²", "Promedio", 5, "Radiación", "pct", 10, 20, "#8B4513", "#F4A460", "#CD853F", 0},
+				        {"TMED", "Temperatura media", "°C", "Promedio", 6, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1},
+				        {"TMAX", "Temperatura máxima", "°C", "Máximo", 7, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1},
+				        {"TMIN", "Temperatura mínima", "°C", "Mínimo", 8, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1},
+				        {"AMP", "Amplitud térmica", "°C", "Promedio", 9, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1},
+				        {"IC", "Índice de calor máximo", "°C", "Máximo", 10, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1},
+				        {"HR", "Humedad relativa media", "%", "Promedio", 11, "Humedad y viento", "abs", 3, 6, "#2F4F4F", "#B0C4DE", "#778899", 0},
+				        {"VV", "Velocidad del viento media", "km/h", "Promedio", 12, "Humedad y viento", "pct", 15, 30, "#2F4F4F", "#B0C4DE", "#778899", 1}
+				    }
+				)
+

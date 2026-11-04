@@ -1,0 +1,255 @@
+table Fact_Mensual_met
+	isHidden
+	lineageTag: 5c94c1e2-5c0b-4c5a-accc-39914ac779fa
+
+	column estacionid
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 56076f42-d23e-4e71-858a-055730e4ed7b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Fact_Diaria_met[estacionid]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Anio
+		dataType: int64
+		formatString: 0
+		lineageTag: 04ccd3db-3c5f-4964-8701-c9f0649a640e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Fact_Diaria_met[Anio]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: int64
+		formatString: 0
+		lineageTag: 66300649-1fe2-446b-ad20-60aa623c59bd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: Fact_Diaria_met[Mes]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha_Mes
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 5ea1756f-f9b0-4460-91b6-c5daa0239d6d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Fecha_Mes]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dias_Mes
+		dataType: int64
+		formatString: 0
+		lineageTag: a5bc9a2c-f0d1-4f10-b6a3-ceb1fedec3a5
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Dias_Mes]
+
+		annotation SummarizationSetBy = Automatic
+
+	column N_Dias
+		dataType: int64
+		formatString: 0
+		lineageTag: e91c40e5-27da-4138-9e2b-37629a55ed43
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [N_Dias]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precip
+		dataType: double
+		formatString: 0.0
+		lineageTag: 55a8e37a-b1d9-4883-a1fb-a1b35382f340
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Precip]
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETo
+		dataType: double
+		formatString: 0.0
+		lineageTag: 037b5b32-8f58-4335-9e88-572deb19b9f2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [ETo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column N_Dias_ETo
+		dataType: int64
+		formatString: 0
+		lineageTag: 0cbcde62-8ef7-491d-91a7-4487ead05c9d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [N_Dias_ETo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rad_MJ
+		dataType: double
+		formatString: 0.0
+		lineageTag: 25aa5b67-c7a9-4598-87c3-aaaba603ef75
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Rad_MJ]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Irradiancia
+		dataType: double
+		formatString: 0
+		lineageTag: 611d4286-45bd-4287-b502-c7851b74efde
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Irradiancia]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 268a8aa4-3c3d-474e-8407-649d23545d64
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Temp_Media]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Max_Abs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 494b437c-4ed4-447b-a913-2248c243d7a7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Temp_Max_Abs]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Min_Abs
+		dataType: double
+		formatString: 0.0
+		lineageTag: d875c7f7-b48c-4b91-8f18-3f7566cfc255
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Temp_Min_Abs]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amplitud
+		dataType: double
+		formatString: 0.0
+		lineageTag: 8628ac29-b096-46dd-870b-44379ce81cbd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Amplitud]
+
+		annotation SummarizationSetBy = Automatic
+
+	column HR_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: cab070cf-2304-4740-a702-7f3bbd19cd8c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [HR_Media]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Viento_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 69210bcf-54df-4827-8289-054958e06592
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Viento_Media]
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: 5114a531-5d57-47ab-8f16-f9eae8c0752b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [IC_Max]
+
+		annotation SummarizationSetBy = Automatic
+
+	column BH
+		dataType: double
+		formatString: 0.0
+		lineageTag: 5e928914-9ae6-4916-a7b2-61b76c26cec2
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [BH]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Completitud
+		dataType: double
+		formatString: 0%
+		lineageTag: 595539c6-8e4f-4e4a-a57c-c1a8bd7abb17
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Completitud]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Completo
+		dataType: boolean
+		lineageTag: 867522a6-3ad7-40e9-8cb4-e6fe578c5c89
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mes_Completo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Valido
+		dataType: boolean
+		lineageTag: acb52e9a-3c45-4140-ad90-bf0717d03a2b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mes_Valido]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Mensual_met = calculated
+		mode: import
+		source =
+				VAR _Ult = MAX ( Fact_Diaria_met[Fecha] )
+				VAR _Base =
+				    ADDCOLUMNS (
+				        SUMMARIZE ( Fact_Diaria_met, Fact_Diaria_met[estacionid], Fact_Diaria_met[Anio], Fact_Diaria_met[Mes] ),
+				        "Fecha_Mes", DATE ( Fact_Diaria_met[Anio], Fact_Diaria_met[Mes], 1 ),
+				        "Dias_Mes", DAY ( EOMONTH ( DATE ( Fact_Diaria_met[Anio], Fact_Diaria_met[Mes], 1 ), 0 ) ),
+				        "N_Dias", CALCULATE ( COUNTROWS ( Fact_Diaria_met ) ),
+				        "Precip", CALCULATE ( SUM ( Fact_Diaria_met[Precip_Total] ) ),
+				        "ETo", CALCULATE ( SUM ( Fact_Diaria_met[ETO_Total] ) ),
+				        "N_Dias_ETo", CALCULATE ( COUNT ( Fact_Diaria_met[ETO_Total] ) ),
+				        "Rad_MJ", CALCULATE ( SUM ( Fact_Diaria_met[Rad_MJ] ) ),
+				        "Irradiancia", CALCULATE ( AVERAGE ( Fact_Diaria_met[Irradiancia_Diurna] ) ),
+				        "Temp_Media", CALCULATE ( AVERAGE ( Fact_Diaria_met[Temp_Media] ) ),
+				        "Temp_Max_Abs", CALCULATE ( MAX ( Fact_Diaria_met[Temp_Max] ) ),
+				        "Temp_Min_Abs", CALCULATE ( MIN ( Fact_Diaria_met[Temp_Min] ) ),
+				        "Amplitud", CALCULATE ( AVERAGE ( Fact_Diaria_met[Amplitud_Termica] ) ),
+				        "HR_Media", CALCULATE ( AVERAGE ( Fact_Diaria_met[HR_Media] ) ),
+				        "Viento_Media", CALCULATE ( AVERAGE ( Fact_Diaria_met[Viento_Media] ) ),
+				        "IC_Max", CALCULATE ( MAX ( Fact_Diaria_met[IC_Max] ) )
+				    )
+				RETURN
+				    ADDCOLUMNS (
+				        _Base,
+				        "BH", IF ( [N_Dias_ETo] > 0, [Precip] - [ETo] ),
+				        "Completitud", DIVIDE ( [N_Dias], [Dias_Mes] ),
+				        "Mes_Completo", EOMONTH ( [Fecha_Mes], 0 ) <= _Ult,
+				        "Mes_Valido", EOMONTH ( [Fecha_Mes], 0 ) <= _Ult && DIVIDE ( [N_Dias], [Dias_Mes] ) >= 0.8
+				    )
+

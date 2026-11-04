@@ -1,0 +1,170 @@
+table Calendario
+	lineageTag: 9caecd52-c6a0-4b54-a754-d6ff263cfc05
+	dataCategory: Time
+
+	column Fecha
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: cbf5b629-070b-4eca-9160-807a277c2bb3
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Anio
+		dataType: int64
+		formatString: 0
+		lineageTag: 64546a1f-b17c-4a16-9aff-f11c86b10015
+		summarizeBy: none
+		sourceColumn: Anio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Num
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1ed51046-bee5-4f97-9e03-f5d21810a72b
+		summarizeBy: none
+		sourceColumn: Mes_Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: string
+		lineageTag: 510985af-93d0-4922-a737-7814035b15df
+		summarizeBy: none
+		sourceColumn: Mes
+		sortByColumn: Mes_Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Anio
+		dataType: string
+		lineageTag: 41318eb7-8f84-4862-93c5-676d65fc5cd4
+		summarizeBy: none
+		sourceColumn: Mes_Anio
+		sortByColumn: Mes_Anio_Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Anio_Num
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 928c2b9b-06f2-4ae7-8b4b-b374e4817def
+		summarizeBy: none
+		sourceColumn: Mes_Anio_Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha_Mes
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 20e5e556-4335-44bb-b497-eb0219a970e4
+		summarizeBy: none
+		sourceColumn: Fecha_Mes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Dia_Juliano
+		dataType: int64
+		formatString: 0
+		lineageTag: cb174ddc-1b51-4e1b-a317-51b80d8aa2ad
+		summarizeBy: none
+		sourceColumn: Dia_Juliano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pentada
+		dataType: int64
+		formatString: 0
+		lineageTag: 355feaa1-bb7d-4a43-af94-3fa13d661fb7
+		summarizeBy: none
+		sourceColumn: Pentada
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pentada_Anio
+		dataType: string
+		lineageTag: 6935126a-231c-4e4b-967c-3f571445c8a7
+		summarizeBy: none
+		sourceColumn: Pentada_Anio
+		sortByColumn: Pentada_Anio_Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pentada_Anio_Num
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4e34eee1-1e95-4372-9021-59b1bcf0a556
+		summarizeBy: none
+		sourceColumn: Pentada_Anio_Num
+
+		annotation SummarizationSetBy = Automatic
+
+	column Inicio_Semana
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e566e398-9c94-4b7e-8922-48453ffed45d
+		summarizeBy: none
+		sourceColumn: Inicio_Semana
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Anio_Hidrologico
+		dataType: int64
+		formatString: 0
+		lineageTag: 1bdfa3b8-d8c6-4c0b-b6a6-c58af9f54f51
+		summarizeBy: none
+		sourceColumn: Anio_Hidrologico
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha_Corta
+		dataType: string
+		lineageTag: c3279a35-962d-4e5d-b440-c0daadb4c83f
+		summarizeBy: none
+		sourceColumn: Fecha_Corta
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendario = m
+		mode: import
+		source =
+				let
+				    FechaInicio = #date(2008, 1, 1),
+				    // Hasta el 31-dic del año en curso (hora de Guatemala) para que los ejes mensuales muestren el año completo
+				    FechaFin    = Date.EndOfYear(Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6))),
+				    MesInicioHidro = Date.Month(InicioAnioHidrologico),
+				    MesesAbrev = {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"},
+				    Lista = List.Dates(FechaInicio, Duration.Days(FechaFin - FechaInicio) + 1, #duration(1, 0, 0, 0)),
+				    Tabla = Table.FromList(Lista, Splitter.SplitByNothing(), {"Fecha"}),
+				    TipoFecha = Table.TransformColumnTypes(Tabla, {{"Fecha", type date}}),
+				    Anio = Table.AddColumn(TipoFecha, "Anio", each Date.Year([Fecha]), Int64.Type),
+				    Mes = Table.AddColumn(Anio, "Mes_Num", each Date.Month([Fecha]), Int64.Type),
+				    MesAbrev = Table.AddColumn(Mes, "Mes", each MesesAbrev{[Mes_Num] - 1}, type text),
+				    MesAnio = Table.AddColumn(MesAbrev, "Mes_Anio", each MesesAbrev{[Mes_Num] - 1} & " " & Text.From([Anio]), type text),
+				    MesAnioNum = Table.AddColumn(MesAnio, "Mes_Anio_Num", each [Anio] * 100 + [Mes_Num], Int64.Type),
+				    FechaMes = Table.AddColumn(MesAnioNum, "Fecha_Mes", each Date.StartOfMonth([Fecha]), type date),
+				    DiaJuliano = Table.AddColumn(FechaMes, "Dia_Juliano", each Date.DayOfYear([Fecha]), Int64.Type),
+				    Pentada = Table.AddColumn(DiaJuliano, "Pentada", each List.Min({Number.RoundUp([Dia_Juliano] / 5), 73}), Int64.Type),
+				    PentadaAnio = Table.AddColumn(Pentada, "Pentada_Anio", each "P" & Text.PadStart(Text.From([Pentada]), 2, "0") & " " & Text.From([Anio]), type text),
+				    PentadaAnioNum = Table.AddColumn(PentadaAnio, "Pentada_Anio_Num", each [Anio] * 100 + [Pentada], Int64.Type),
+				    InicioSemana = Table.AddColumn(PentadaAnioNum, "Inicio_Semana", each Date.StartOfWeek([Fecha], Day.Monday), type date),
+				    // Año hidrológico por mes (nov–oct): noviembre de 2025 pertenece al año hidrológico 2026
+				    AnioHidro = Table.AddColumn(InicioSemana, "Anio_Hidrologico", each if [Mes_Num] >= MesInicioHidro then [Anio] + 1 else [Anio], Int64.Type),
+				    FechaCorta = Table.AddColumn(AnioHidro, "Fecha_Corta", each Date.ToText([Fecha], "dd-MMM", "es-GT"), type text)
+				in
+				    FechaCorta
+
+	annotation PBI_ResultType = Table
+

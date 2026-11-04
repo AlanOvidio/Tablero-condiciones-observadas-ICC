@@ -100,19 +100,20 @@ Panel de filtros uniforme en todas: Variable · Agrupar por · País · Estrato 
 ## Fases
 
 ### Fase 0 · Línea base y seguridad
-- [ ] Repositorio Git; commit 1 = versión heredada sin cambios.
-- [ ] Commit 2 = README, plan, bitácora, `.gitignore`.
+- [x] Repositorio Git; commit 1 = versión heredada sin cambios.
+- [x] Commit 2 = README, plan, bitácora, `.gitignore`.
 - [ ] Sacar las credenciales de los scripts R (`Sys.getenv("REDMET_USER")`/`.Renviron`) y cambiar esas contraseñas; luego versionar los scripts.
 
 ### Fase 1 · Definiciones y configuración
-- [ ] Resolver las decisiones pendientes (abajo).
-- [ ] `config/estaciones_region.csv` con `tools/generar_regiones.R` (spatial join con `regiones_gcs_wgs_1984.shp`, mismo criterio que R).
+- [x] Resolver las decisiones (abajo).
+- [ ] `config/estaciones_region.csv` con `tools/generar_regiones.R` (todas las estaciones) y `tools/aplicar_regiones.py` (spatial join con `regiones_gcs_wgs_1984.shp`, mismo criterio que R).
 - [ ] `config/variables.csv` (variables, unidades, reglas, colores).
 
 ### Fase 2 · Modelo nuevo (rama `v2`)
-- [ ] Nuevo proyecto `Condiciones_observadas.pbip` en este repositorio, con tablas tomadas del semanal (`Estaciones_met`, `TablaEstaciones_met`, `Calendario`, `fxLecturasEstacion_met_diario`, `Fact_Diaria_met`).
-- [ ] `Fact_Mensual_met`, `Agrupar_por`, `Variables`, `Años_Comparacion`, `Periodo A/B`.
-- [ ] Fecha/hora automática **desactivada**.
+- [x] Nuevo proyecto `Condiciones_observadas.pbip` en este repositorio, con tablas tomadas del semanal (`Estaciones_met`, `TablaEstaciones_met`, `Calendario`, `fxLecturasEstacion_met_diario`, `Fact_Diaria_met`).
+- [x] `Fact_Mensual_met`, `Agrupar_por`, `Variables`, `Meses_Acum`, `Anios_Comparacion`, `Base_Inicio/Fin`, `Periodo_A/B`.
+- [ ] Abrir en Desktop, actualizar y validar carga.
+- [x] Fecha/hora automática **desactivada**.
 
 ### Fase 3 · Medidas y validación
 - [ ] Medidas genéricas: valor del periodo, histórico (media, mín, máx, P33, P66), acumulados, anomalías, categoría, colores dinámicos.
@@ -127,13 +128,25 @@ Panel de filtros uniforme en todas: Variable · Agrupar por · País · Estrato 
 - [ ] Documentación (arquitectura, diccionario, medidas, guía de usuario) con los generadores del semanal.
 - [ ] Publicación; retiro del `.pbip` heredado (queda en el historial de Git); etiqueta `v1.0`.
 
-## Decisiones pendientes
+## Decisiones (2026-11-04)
 
-| # | Tema | Opciones | Recomendación |
-|---|---|---|---|
-| D1 | Visual del gráfico climatológico | a) **Deneb** (Vega-Lite, visual certificado): reproduce ggplot casi exacto (dos bandas, media, actual, años con etiqueta, anomalías). b) Visuales nativos (línea con bandas de error): más simple, pero sin años adicionales con etiqueta al final ni dos bandas + leyenda por año en el mismo visual | **a) Deneb** para páginas 3–5; nativos en el resto |
-| D2 | Tmax/Tmin mensual | a) promedio de máximas/mínimas diarias (climatológico estándar) · b) máxima/mínima absoluta del mes (como `script_nuevo.R`) | a), con b) como variable aparte |
-| D3 | Inicio del año para acumulados | Enero (como R) · año hidrológico (como el semanal) · seleccionable | Seleccionable, enero por defecto |
-| D4 | Estaciones | Las 44 de `script_nuevo.R` (GT + SV) · las ~60 del heredado (incluye Petén y otras) | Confirmar lista |
-| D5 | Periodo base | Todos los años anteriores · ventana fija (p. ej. 2008–2025) · seleccionable | Seleccionable, todos por defecto |
-| D6 | Cuencas | Se descartan (Excel de 2020) · se actualizan e incorporan a `Estaciones_met` | Confirmar si se siguen usando |
+| # | Tema | Decisión |
+|---|---|---|
+| D1 | Gráfico climatológico | **Deneb** (visual gratuito y de código abierto, en AppSource) para páginas 3–5; visuales nativos en el resto. |
+| D2 | Tmax/Tmin mensual | Como los scripts R: **máxima y mínima absolutas** del mes. Con varias estaciones, promedio de esos extremos entre estaciones. |
+| D3 | Inicio de acumulados | **Seleccionable**: año civil (ene–dic) o hidrológico (nov–oct). Tabla `Meses_Acum`. |
+| D4 | Estaciones | **Todas** las del tablero heredado (61 IDs, incluido Chaparrastique = 40), no solo las 44 de los scripts. |
+| D5 | Periodo base | **Seleccionable** (`Base_Inicio`, `Base_Fin`); por defecto todos los años anteriores al de análisis. |
+| D6 | Cuencas | Se mantienen (Excel de SharePoint, hoja `Hoja2`), unidas a `Estaciones_met` por nombre. |
+| D7 | Fuente de datos | Solo el **endpoint diario** (`getlecturasdia`). La irradiancia diurna media se aproxima como Σ W/m² / 52 (ventana fija 06:00–18:59, igual que R). |
+| D8 | Agregación entre estaciones | Variables acumulativas (Pp, ETo, BH, Rad): **suma por estación y luego promedio** de las estaciones con dato. Promedios: promedio por estación y luego entre estaciones. Extremos: extremo por estación y luego promedio. |
+| D9 | Meses incompletos | Los valores **mensuales** solo se muestran cuando el mes terminó y tiene ≥ 80 % de días con dato (`Fact_Mensual_met[Mes_Valido]`). |
+| D10 | Radiación | Selector entre **energía diaria acumulada (MJ/m²)** e **irradiancia diurna media (W/m²)** (variables RAD e IRR). |
+| D11 | Exportar | No hay botón nativo para exportar la página con licencia Pro (la API de exportación requiere capacidad dedicada). Se usa *Exportar → PDF* del servicio con "Solo página actual" y se documenta en la guía de usuario. |
+
+## Diseño propuesto para las páginas diarias (precipitación y radiación)
+
+- **Mapa:** burbujas de tamaño fijo coloreadas por **clases** del total del periodo (Pp: 0, 1–5, 5–20, 20–50, > 50 mm; Rad: escala secuencial) con etiqueta de valor. El tamaño variable de las burbujas actuales dificulta comparar.
+- **Matriz de calor grupo × día:** filas = estación, estrato o región (según *Agrupar por*), columnas = días, color = valor. Reemplaza la gráfica de columnas con 40 estaciones en la leyenda.
+- **Serie del grupo:** columnas diarias + línea del **acumulado** (eje secundario) para Pp; columnas diarias + **media móvil de 7 días** + líneas de umbral (subóptimo/aceptable) para radiación.
+- **Múltiplos pequeños** por grupo cuando se comparan estratos o regiones, en lugar de leyendas largas.
