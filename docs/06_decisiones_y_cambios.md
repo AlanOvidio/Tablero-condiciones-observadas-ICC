@@ -79,3 +79,8 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 ## 2026-11-10 · Documentación
 - Documentación al estilo del tablero semanal: 01 arquitectura, 02 diccionario (automático), 03 catálogo de medidas (automático), 04 guía de usuario, 05 operación, 06 decisiones y cambios (antes 02), 07 repositorio, 08 plan (antes 01), 09 inventario de visuales (automático).
 - `tools/generar_docs_modelo.py` adaptado del tablero semanal (agrupa las medidas por carpeta).
+
+## 2026-11-10 · Versión v1.0
+- Fusión de la rama `v2` en `main` (Pull Request #1) y etiqueta `v1.0`.
+- Se conserva temporalmente la versión heredada como referencia.
+- Pendientes: completar cuencas en el Excel de SharePoint (`Hoja2`); decidir si se unen las comparativas por estación, por año y de temperaturas; retirar la versión heredada.

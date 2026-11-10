@@ -2,19 +2,21 @@
 
 Repositorio privado `Tablero-condiciones-observadas-ICC`, gestionado con GitHub Desktop.
 
-## Ramas
+## Ramas y versiones
 
-| Rama | Contenido |
+| Rama / etiqueta | Contenido |
 |---|---|
-| `main` | Versión heredada (`20260108 - Power BI Guatemala.pbip`) hasta que se fusione la reformulación. |
-| `v2` | Reformulación (`Condiciones_observadas.pbip`). Al terminar la validación se fusiona a `main` con un *Pull Request* y se etiqueta `v1.0`. |
+| `main` | Versión vigente. Desde la etiqueta `v1.0` contiene el tablero reformulado (`Condiciones_observadas.pbip`); la versión heredada se conserva temporalmente como referencia. |
+| `v1.0` | Primera versión del tablero reformulado (fusión del *Pull Request* #1, rama `v2`). |
+| Ramas de trabajo | Una por tema (p. ej. `comparativas-mensuales`, `cuencas`). Se fusionan a `main` con un *Pull Request* y, si se publica, se etiqueta la versión (`v1.1`, `v1.2`…). |
 
 ## Flujo de trabajo
 
-1. **Fetch origin / Pull** antes de abrir Power BI.
+1. **Fetch origin / Pull** antes de abrir Power BI. Para un cambio nuevo: *Branch → New branch*.
 2. Cambios en Power BI → **guardar y cerrar**.
 3. `python tools/generar_docs_modelo.py` y anotar el cambio en `docs/06_decisiones_y_cambios.md`.
 4. GitHub Desktop: revisar archivos, un commit por cambio lógico → **Push origin**.
+5. Al terminar el tema: *Pull Request* hacia `main` → **Merge** → en GitHub Desktop cambiar a `main` → **Pull origin**. Si se publica, etiquetar la versión (*History* → clic derecho → **Create tag** → **Push origin**).
 
 Deshacer: *History* → clic derecho → **Undo commit** (sin push) o **Revert changes in commit** (ya subido).
 
