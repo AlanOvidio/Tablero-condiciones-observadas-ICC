@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "c8beba09110f41c3bc05",
   "position": {
-    "x": 1050,
-    "y": 52,
+    "x": 1060.1958442799141,
+    "y": 66.0329591593026,
     "z": 5000,
-    "height": 58,
-    "width": 220,
+    "height": 64.810126582278485,
+    "width": 220.109863864342,
     "tabOrder": 5000
   },
   "visual": {
@@ -89,7 +89,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Precipitación'"
+                                "Value": "'Radiación solar'"
                               }
                             }
                           ]

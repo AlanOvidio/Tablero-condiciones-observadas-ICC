@@ -3,7 +3,7 @@
   "name": "74b923684a114cba85f7",
   "position": {
     "x": 1050,
-    "y": 292,
+    "y": 302.28570992606024,
     "z": 9000,
     "height": 58,
     "width": 220,
@@ -64,7 +64,7 @@
                 "Version": 2,
                 "From": [
                   {
-                    "Name": "v",
+                    "Name": "c",
                     "Entity": "Capas",
                     "Type": 0
                   }
@@ -78,7 +78,7 @@
                             "Column": {
                               "Expression": {
                                 "SourceRef": {
-                                  "Source": "v"
+                                  "Source": "c"
                                 }
                               },
                               "Property": "Capa"
@@ -111,6 +111,13 @@
                             {
                               "Literal": {
                                 "Value": "'Anomalías'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Media histórica'"
                               }
                             }
                           ]

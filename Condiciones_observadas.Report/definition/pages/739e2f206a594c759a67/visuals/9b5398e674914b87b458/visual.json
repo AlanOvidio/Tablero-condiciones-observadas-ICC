@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "9b5398e674914b87b458",
   "position": {
-    "x": 805.71428571428578,
-    "y": 395.71428571428572,
+    "x": 799.732505373776,
+    "y": 396.19775495581564,
     "z": 4000,
-    "height": 320,
-    "width": 234.28571428571431,
+    "height": 319.15930260329594,
+    "width": 239.67518509672797,
     "tabOrder": 4000
   },
   "visual": {
@@ -47,7 +47,73 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Medidas"
+                  }
+                },
+                "Property": "Valor_Diario"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "85.23898721342056D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Estaciones_met.Estación"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "label": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Promedio'"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
@@ -71,6 +137,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Tabla'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
