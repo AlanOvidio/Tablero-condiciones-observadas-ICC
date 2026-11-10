@@ -112,16 +112,16 @@ Panel de filtros uniforme en todas: Variable · Agrupar por · País · Estrato 
 ### Fase 2 · Modelo nuevo (rama `v2`)
 - [x] Nuevo proyecto `Condiciones_observadas.pbip` en este repositorio, con tablas tomadas del semanal (`Estaciones_met`, `TablaEstaciones_met`, `Calendario`, `fxLecturasEstacion_met_diario`, `Fact_Diaria_met`).
 - [x] `Fact_Mensual_met`, `Agrupar_por`, `Variables`, `Meses_Acum`, `Anios_Comparacion`, `Base_Inicio/Fin`, `Periodo_A/B`.
-- [ ] Abrir en Desktop, actualizar y validar carga.
+- [x] Abrir en Desktop, actualizar y validar carga.
 - [x] Fecha/hora automática **desactivada**.
 
 ### Fase 3 · Medidas y validación
-- [ ] Medidas genéricas: valor del periodo, histórico (media, mín, máx, P33, P66), acumulados, anomalías, categoría, colores dinámicos.
+- [x] Medidas genéricas: valor del periodo, histórico (media, mín, máx, P33, P66), acumulados, anomalías, categoría, colores dinámicos.
 - [ ] **Validación contra R:** mismas cifras que `script_figs_zonasclima_.R` para 2 regiones × (Pp, T, Rad, ETo, BH) en un año cerrado (tolerancia 0.1).
 
 ### Fase 4 · Reporte y tema
-- [ ] Tema JSON con el estilo de `tema_boletin`.
-- [ ] Páginas 1–8 según la tabla de paridad.
+- [x] Tema JSON con el estilo de `tema_boletin`.
+- [x] Páginas generadas (8). Pendiente: revisión visual y ajustes en Desktop.
 
 ### Fase 5 · Cierre
 - [ ] Revisión de paridad página por página.

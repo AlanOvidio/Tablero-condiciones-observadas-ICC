@@ -10,7 +10,7 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["Estaciones_met","TablaEstaciones_met","Cuencas_met","Calendario","Fact_Diaria_met","RangeStart","RangeEnd","InicioAnioHidrologico","fxLecturasEstacion_met_diario"]
+annotation PBI_QueryOrder = ["Estaciones_met","TablaEstaciones_met","Cuencas_met","Calendario","Fact_Diaria_met","RangeStart","RangeEnd","InicioAnioHidrologico","fxLecturasEstacion_met_diario","Fact_Mensual_met","fxLimpiarDiario"]
 
 ref table Estaciones_met
 ref table TablaEstaciones_met
@@ -19,12 +19,17 @@ ref table Calendario
 ref table Fact_Diaria_met
 ref table Fact_Mensual_met
 ref table Variables
-ref table Agrupar_por
 ref table Meses_Acum
 ref table Anios_Comparacion
-ref table Base_Inicio
-ref table Base_Fin
+ref table Anio_Sel
+ref table Anios_Base
+ref table Capas
+ref table Umbral_Rad_Sub
+ref table Umbral_Rad_Opt
 ref table Periodo_A
 ref table Periodo_B
+ref table Dias_Periodo
 ref table _Medidas
+
+ref cultureInfo es-GT
 

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "a097dc966de44a6d8e37",
+  "position": {
+    "x": 857.14285714285722,
+    "y": 518.57142857142856,
+    "z": 3000,
+    "height": 31.740753786544559,
+    "width": 193.33004579077141,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Fuente: Red Meteorológica ICC",
+                    "textStyle": {
+                      "fontSize": "9pt",
+                      "color": "#7f7f7f"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

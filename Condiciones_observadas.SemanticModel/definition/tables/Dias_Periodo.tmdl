@@ -1,0 +1,17 @@
+table Dias_Periodo
+	lineageTag: a624de28-ba1e-4f04-9814-495fcaadbbb2
+
+	column Día
+		dataType: int64
+		formatString: 0
+		lineageTag: 62ba1ca8-97cd-43a4-976a-34ece56f010a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Día]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dias_Periodo = calculated
+		mode: import
+		source = SELECTCOLUMNS ( GENERATESERIES ( 1, 366, 1 ), "Día", [Value] )
+

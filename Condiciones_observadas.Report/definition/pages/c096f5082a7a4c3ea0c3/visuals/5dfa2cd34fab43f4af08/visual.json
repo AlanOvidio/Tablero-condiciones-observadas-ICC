@@ -1,0 +1,126 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "5dfa2cd34fab43f4af08",
+  "position": {
+    "x": 40,
+    "y": 30,
+    "z": 1000,
+    "height": 660,
+    "width": 1200,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Notas metodológicas",
+                    "textStyle": {
+                      "fontSize": "16pt",
+                      "fontWeight": "bold"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Fuente: Red Meteorológica ICC (API REDMET, endpoint diario getlecturasdia), datos desde 2008. Tablas diaria y mensual con actualización incremental.",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Selección: por defecto se muestra toda la red. Los filtros de región climática y estrato altitudinal definen las agregaciones predeterminadas; también se pueden elegir estaciones individuales. El título indica la estación, el estrato o la región; con otra combinación muestra la delimitación y el número de estaciones.",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Agregación: por mes y estación (suma para precipitación, ETo, balance y radiación; promedio para temperatura media; extremo absoluto para máxima y mínima) y luego promedio de las estaciones seleccionadas con dato.",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Meses: solo se muestran meses terminados con al menos 80 % de días con dato.",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Control de calidad diario: se descartan (nulo) temperaturas fuera de −5 a 50 °C, lluvia fuera de 0 a 400 mm, ETo fuera de 0 a 15 mm, radiación mayor a ~40 MJ/m² y sensación térmica fuera de −5 a 70 °C (función fxLimpiarDiario).",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Histórico: media, mínimo, máximo y percentiles 33 y 66 de los valores mensuales de la selección en el periodo histórico elegido (nunca incluye el año de análisis). La leyenda indica los años con datos de la selección.",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Mostrar: año actual, media histórica (apagada por defecto), rangos históricos, años adicionales y anomalías (visibles solo con el año actual).",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Radiación: energía = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶ (MJ/m²); irradiancia diurna media = Σ W/m² / 52 lecturas (06:00–18:59).",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Exportar: en el servicio de Power BI, Exportar → PDF y marcar «Solo página actual».",
+                    "textStyle": {
+                      "fontSize": "11pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+table Umbral_Rad_Opt
+	lineageTag: ea0d1a0f-88c0-4185-a0d8-0fdb7a593d2a
+
+	column MJ
+		dataType: int64
+		formatString: 0
+		lineageTag: 78722c41-886f-4e90-bd03-68edd51f6316
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MJ]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Umbral_Rad_Opt = calculated
+		mode: import
+		source = SELECTCOLUMNS ( GENERATESERIES ( 0, 35, 1 ), "MJ", [Value] )
+

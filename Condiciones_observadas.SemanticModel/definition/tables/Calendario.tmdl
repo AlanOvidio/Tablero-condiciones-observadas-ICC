@@ -5,7 +5,7 @@ table Calendario
 	column Fecha
 		dataType: dateTime
 		isKey
-		formatString: Long Date
+		formatString: dd-mmm-yy
 		lineageTag: cbf5b629-070b-4eca-9160-807a277c2bb3
 		summarizeBy: none
 		sourceColumn: Fecha
@@ -13,6 +13,8 @@ table Calendario
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
 
 	column Anio
 		dataType: int64
@@ -137,6 +139,60 @@ table Calendario
 
 		annotation SummarizationSetBy = Automatic
 
+	column Trimestre
+		dataType: string
+		lineageTag: 10030920-1d5f-481c-861a-d4ffdea16569
+		summarizeBy: none
+		sourceColumn: Trimestre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dia
+		dataType: int64
+		formatString: 0
+		lineageTag: 82bd6e88-ab06-4e88-bc36-2dbd58cc32ad
+		summarizeBy: none
+		sourceColumn: Dia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha_Larga
+		dataType: string
+		lineageTag: 297c2681-2df0-4fe6-8377-45310b7938a6
+		summarizeBy: none
+		sourceColumn: Fecha_Larga
+		sortByColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha_Abrev
+		dataType: string
+		lineageTag: 024b19a1-e4cd-419b-ac50-99808c0aa5bb
+		summarizeBy: none
+		sourceColumn: Fecha_Abrev
+		sortByColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Jerarquía de fechas'
+		lineageTag: 32b4ef3f-563a-488b-b083-3a090271d0c6
+
+		level Año
+			lineageTag: 2cedae68-d72e-4fa4-b172-64d903a711dd
+			column: Anio
+
+		level Trimestre
+			lineageTag: 59e3597e-6a33-416e-b5c7-f6b949d05b93
+			column: Trimestre
+
+		level Mes
+			lineageTag: d88946f8-5179-4781-b8c1-5f36d718a791
+			column: Mes
+
+		level Día
+			lineageTag: 6d2766b7-15e3-4f6e-8be8-5ab2cd329da5
+			column: Dia
+
 	partition Calendario = m
 		mode: import
 		source =
@@ -162,9 +218,15 @@ table Calendario
 				    InicioSemana = Table.AddColumn(PentadaAnioNum, "Inicio_Semana", each Date.StartOfWeek([Fecha], Day.Monday), type date),
 				    // Año hidrológico por mes (nov–oct): noviembre de 2025 pertenece al año hidrológico 2026
 				    AnioHidro = Table.AddColumn(InicioSemana, "Anio_Hidrologico", each if [Mes_Num] >= MesInicioHidro then [Anio] + 1 else [Anio], Int64.Type),
-				    FechaCorta = Table.AddColumn(AnioHidro, "Fecha_Corta", each Date.ToText([Fecha], "dd-MMM", "es-GT"), type text)
+				    FechaCorta = Table.AddColumn(AnioHidro, "Fecha_Corta", each Date.ToText([Fecha], "dd-MMM", "es-GT"), type text),
+				    // Niveles de la jerarquía de fechas
+				    Trimestre = Table.AddColumn(FechaCorta, "Trimestre", each "T" & Text.From(Date.QuarterOfYear([Fecha])), type text),
+				    Dia = Table.AddColumn(Trimestre, "Dia", each Date.Day([Fecha]), Int64.Type),
+				    // Representaciones de texto de la fecha (la columna Fecha no se modifica)
+				    FechaLarga = Table.AddColumn(Dia, "Fecha_Larga", each Text.From(Date.Day([Fecha])) & " " & Date.ToText([Fecha], "MMMM", "es-GT") & ", " & Text.From(Date.Year([Fecha])), type text),
+				    FechaAbrev = Table.AddColumn(FechaLarga, "Fecha_Abrev", each Text.From(Date.Day([Fecha])) & "-" & Text.Lower(MesesAbrev{[Mes_Num] - 1}) & "-" & Text.From(Date.Year([Fecha])), type text)
 				in
-				    FechaCorta
+				    FechaAbrev
 
 	annotation PBI_ResultType = Table
 

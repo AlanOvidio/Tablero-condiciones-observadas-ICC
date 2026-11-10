@@ -1,0 +1,59 @@
+{
+  "name": "Tema ICC condiciones observadas",
+  "dataColors": [
+    "#36648B",
+    "#CD4F39",
+    "#2E8B57",
+    "#CD853F",
+    "#4000D3",
+    "#F720F0",
+    "#FF8C00",
+    "#666666",
+    "#008B8B",
+    "#8B0000"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#000000",
+  "tableAccent": "#36648B",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#000000"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#000000"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "valueAxis": [
+          {
+            "gridlineStyle": "dashed",
+            "gridlineColor": {
+              "solid": {
+                "color": "#E5E5E5"
+              }
+            },
+            "showAxisTitle": true
+          }
+        ],
+        "categoryAxis": [
+          {
+            "gridlineStyle": "dashed",
+            "showAxisTitle": true
+          }
+        ],
+        "legend": [
+          {
+            "show": true,
+            "position": "Bottom"
+          }
+        ]
+      }
+    }
+  }
+}

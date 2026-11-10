@@ -1,17 +1,17 @@
 table Anios_Comparacion
-	lineageTag: ccaab026-1d6a-4014-a207-84955bff7c4a
+	lineageTag: 4278cd7d-c3b2-411f-809f-a15e081bdc6c
 
-	column Anio
+	column Año
 		dataType: int64
 		formatString: 0
-		lineageTag: 35711db9-1ca6-4195-a169-c470c6457688
+		lineageTag: bb361541-aeb8-4725-ab9e-03f6e14fd83b
 		summarizeBy: none
 		isNameInferred
-		sourceColumn: [Anio]
+		sourceColumn: [Año]
 
 		annotation SummarizationSetBy = Automatic
 
 	partition Anios_Comparacion = calculated
 		mode: import
-		source = DISTINCT ( SELECTCOLUMNS ( Calendario, "Anio", Calendario[Anio] ) )
+		source = DISTINCT ( SELECTCOLUMNS ( Calendario, "Año", Calendario[Anio] ) )
 

@@ -1,0 +1,630 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c9160f7e9acb4c45ad05",
+  "position": {
+    "x": 10,
+    "y": 61.428571428571431,
+    "z": 2000,
+    "height": 470,
+    "width": 1030,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
+    "query": {
+      "queryState": {
+        "dataset": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Calendario"
+                    }
+                  },
+                  "Property": "Mes_Num"
+                }
+              },
+              "queryRef": "Calendario.Mes_Num",
+              "nativeQueryRef": "x",
+              "displayName": "x"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Valor_Mensual"
+                }
+              },
+              "queryRef": "_Medidas.Valor_Mensual",
+              "nativeQueryRef": "valor",
+              "displayName": "valor"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_Media"
+                }
+              },
+              "queryRef": "_Medidas.Hist_Media",
+              "nativeQueryRef": "h_media",
+              "displayName": "h_media"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_Min"
+                }
+              },
+              "queryRef": "_Medidas.Hist_Min",
+              "nativeQueryRef": "h_min",
+              "displayName": "h_min"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_Max"
+                }
+              },
+              "queryRef": "_Medidas.Hist_Max",
+              "nativeQueryRef": "h_max",
+              "displayName": "h_max"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_P33"
+                }
+              },
+              "queryRef": "_Medidas.Hist_P33",
+              "nativeQueryRef": "h_p33",
+              "displayName": "h_p33"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_P66"
+                }
+              },
+              "queryRef": "_Medidas.Hist_P66",
+              "nativeQueryRef": "h_p66",
+              "displayName": "h_p66"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anomalia_Etiqueta"
+                }
+              },
+              "queryRef": "_Medidas.Anomalia_Etiqueta",
+              "nativeQueryRef": "anom_txt",
+              "displayName": "anom_txt"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anomalia_Color"
+                }
+              },
+              "queryRef": "_Medidas.Anomalia_Color",
+              "nativeQueryRef": "anom_col",
+              "displayName": "anom_col"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Subtitulo_Seleccion"
+                }
+              },
+              "queryRef": "_Medidas.Subtitulo_Seleccion",
+              "nativeQueryRef": "subtitulo",
+              "displayName": "subtitulo"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Eje_Y"
+                }
+              },
+              "queryRef": "_Medidas.Eje_Y",
+              "nativeQueryRef": "ytitulo",
+              "displayName": "ytitulo"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Valor_Comp_1"
+                }
+              },
+              "queryRef": "_Medidas.Valor_Comp_1",
+              "nativeQueryRef": "y1",
+              "displayName": "y1"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anio_Comp_1_Txt"
+                }
+              },
+              "queryRef": "_Medidas.Anio_Comp_1_Txt",
+              "nativeQueryRef": "n1",
+              "displayName": "n1"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Valor_Comp_2"
+                }
+              },
+              "queryRef": "_Medidas.Valor_Comp_2",
+              "nativeQueryRef": "y2",
+              "displayName": "y2"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anio_Comp_2_Txt"
+                }
+              },
+              "queryRef": "_Medidas.Anio_Comp_2_Txt",
+              "nativeQueryRef": "n2",
+              "displayName": "n2"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Valor_Comp_3"
+                }
+              },
+              "queryRef": "_Medidas.Valor_Comp_3",
+              "nativeQueryRef": "y3",
+              "displayName": "y3"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anio_Comp_3_Txt"
+                }
+              },
+              "queryRef": "_Medidas.Anio_Comp_3_Txt",
+              "nativeQueryRef": "n3",
+              "displayName": "n3"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Valor_Comp_4"
+                }
+              },
+              "queryRef": "_Medidas.Valor_Comp_4",
+              "nativeQueryRef": "y4",
+              "displayName": "y4"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anio_Comp_4_Txt"
+                }
+              },
+              "queryRef": "_Medidas.Anio_Comp_4_Txt",
+              "nativeQueryRef": "n4",
+              "displayName": "n4"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Color_Actual"
+                }
+              },
+              "queryRef": "_Medidas.Color_Actual",
+              "nativeQueryRef": "c_act",
+              "displayName": "c_act"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Color_Rango"
+                }
+              },
+              "queryRef": "_Medidas.Color_Rango",
+              "nativeQueryRef": "c_rango",
+              "displayName": "c_rango"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Color_Normal"
+                }
+              },
+              "queryRef": "_Medidas.Color_Normal",
+              "nativeQueryRef": "c_normal",
+              "displayName": "c_normal"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Etiqueta_Actual"
+                }
+              },
+              "queryRef": "_Medidas.Etiqueta_Actual",
+              "nativeQueryRef": "lbl_act",
+              "displayName": "lbl_act"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Etiqueta_Rango"
+                }
+              },
+              "queryRef": "_Medidas.Etiqueta_Rango",
+              "nativeQueryRef": "lbl_rango",
+              "displayName": "lbl_rango"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Var_Unidad"
+                }
+              },
+              "queryRef": "_Medidas.Var_Unidad",
+              "nativeQueryRef": "unidad",
+              "displayName": "unidad"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Modo_Hidro"
+                }
+              },
+              "queryRef": "_Medidas.Modo_Hidro",
+              "nativeQueryRef": "modo_h",
+              "displayName": "modo_h"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Titulo_Seleccion"
+                }
+              },
+              "queryRef": "_Medidas.Titulo_Seleccion",
+              "nativeQueryRef": "titulo",
+              "displayName": "titulo"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mostrar_Rangos"
+                }
+              },
+              "queryRef": "_Medidas.Mostrar_Rangos",
+              "nativeQueryRef": "f_rib",
+              "displayName": "f_rib"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mostrar_Media"
+                }
+              },
+              "queryRef": "_Medidas.Mostrar_Media",
+              "nativeQueryRef": "f_med",
+              "displayName": "f_med"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mostrar_Actual"
+                }
+              },
+              "queryRef": "_Medidas.Mostrar_Actual",
+              "nativeQueryRef": "f_act",
+              "displayName": "f_act"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mostrar_Anios"
+                }
+              },
+              "queryRef": "_Medidas.Mostrar_Anios",
+              "nativeQueryRef": "f_anios",
+              "displayName": "f_anios"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mostrar_Anomalias"
+                }
+              },
+              "queryRef": "_Medidas.Mostrar_Anomalias",
+              "nativeQueryRef": "f_anom",
+              "displayName": "f_anom"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "vega": [
+        {
+          "properties": {
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
+                }
+              }
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"$schema\": \"https://vega.github.io/schema/vega-lite/v5.json\", \"data\": {\"name\": \"dataset\"}, \"title\": {\"text\": {\"expr\": \"data(''dataset'')[0].titulo\"}, \"subtitle\": {\"expr\": \"data(''dataset'')[0].subtitulo\"}}, \"width\": \"container\", \"height\": \"container\", \"layer\": [{\"transform\": [{\"filter\": \"datum.f_rib == 1 && datum.h_min != null\"}], \"mark\": {\"type\": \"area\", \"opacity\": 0.25}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"h_min\"}, \"y2\": {\"field\": \"h_max\"}, \"color\": {\"scale\": {\"domain\": [\"act\", \"media\", \"rango\", \"normal\"], \"range\": [{\"expr\": \"data(''dataset'')[0].c_act\"}, \"#FFD700\", {\"expr\": \"data(''dataset'')[0].c_rango\"}, {\"expr\": \"data(''dataset'')[0].c_normal\"}]}, \"legend\": {\"labelExpr\": \"datum.value == ''act'' ? data(''dataset'')[0].lbl_act : datum.value == ''rango'' ? data(''dataset'')[0].lbl_rango : datum.value == ''normal'' ? ''Rango normal (P33–P66)'' : ''Media histórica''\", \"values\": {\"expr\": \"data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 ? [''act'',''media''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''rango'',''normal''] : data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 ? [''act''] : data(''dataset'')[0].f_med == 1 ? [''media''] : data(''dataset'')[0].f_rib == 1 ? [''rango'',''normal''] : []\"}}, \"datum\": \"rango\"}}}, {\"transform\": [{\"filter\": \"datum.f_rib == 1 && datum.h_p33 != null\"}], \"mark\": {\"type\": \"area\", \"opacity\": 0.45}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"h_p33\"}, \"y2\": {\"field\": \"h_p66\"}, \"color\": {\"scale\": {\"domain\": [\"act\", \"media\", \"rango\", \"normal\"], \"range\": [{\"expr\": \"data(''dataset'')[0].c_act\"}, \"#FFD700\", {\"expr\": \"data(''dataset'')[0].c_rango\"}, {\"expr\": \"data(''dataset'')[0].c_normal\"}]}, \"legend\": {\"labelExpr\": \"datum.value == ''act'' ? data(''dataset'')[0].lbl_act : datum.value == ''rango'' ? data(''dataset'')[0].lbl_rango : datum.value == ''normal'' ? ''Rango normal (P33–P66)'' : ''Media histórica''\", \"values\": {\"expr\": \"data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 ? [''act'',''media''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''rango'',''normal''] : data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 ? [''act''] : data(''dataset'')[0].f_med == 1 ? [''media''] : data(''dataset'')[0].f_rib == 1 ? [''rango'',''normal''] : []\"}}, \"datum\": \"normal\"}}}, {\"transform\": [{\"filter\": \"datum.f_med == 1 && datum.h_media != null\"}], \"mark\": {\"type\": \"line\", \"strokeDash\": [9, 6], \"strokeWidth\": 2.6, \"point\": {\"filled\": true, \"size\": 110}}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"h_media\"}, \"color\": {\"scale\": {\"domain\": [\"act\", \"media\", \"rango\", \"normal\"], \"range\": [{\"expr\": \"data(''dataset'')[0].c_act\"}, \"#FFD700\", {\"expr\": \"data(''dataset'')[0].c_rango\"}, {\"expr\": \"data(''dataset'')[0].c_normal\"}]}, \"legend\": {\"labelExpr\": \"datum.value == ''act'' ? data(''dataset'')[0].lbl_act : datum.value == ''rango'' ? data(''dataset'')[0].lbl_rango : datum.value == ''normal'' ? ''Rango normal (P33–P66)'' : ''Media histórica''\", \"values\": {\"expr\": \"data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 ? [''act'',''media''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''rango'',''normal''] : data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 ? [''act''] : data(''dataset'')[0].f_med == 1 ? [''media''] : data(''dataset'')[0].f_rib == 1 ? [''rango'',''normal''] : []\"}}, \"datum\": \"media\"}}}, {\"transform\": [{\"filter\": \"datum.f_anios == 1\"}, {\"fold\": [\"y1\", \"y2\", \"y3\", \"y4\"], \"as\": [\"k\", \"v\"]}, {\"filter\": \"datum.v != null\"}, {\"calculate\": \"datum.k == ''y1'' ? datum.n1 : datum.k == ''y2'' ? datum.n2 : datum.k == ''y3'' ? datum.n3 : datum.n4\", \"as\": \"anio\"}, {\"calculate\": \"[''#4000D3'', ''#F720F0'', ''#FF8C00'', ''#666666''][toNumber(substring(datum.k, 1)) - 1]\", \"as\": \"c_ad\"}], \"layer\": [{\"mark\": {\"type\": \"line\", \"strokeDash\": [9, 6], \"strokeWidth\": 2.4}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"v\"}, \"detail\": {\"field\": \"anio\"}, \"stroke\": {\"field\": \"c_ad\", \"type\": \"nominal\", \"scale\": null}, \"tooltip\": [{\"field\": \"anio\", \"title\": \"Año\"}, {\"field\": \"v\", \"title\": \"Valor\", \"format\": \",.1f\"}]}}, {\"mark\": {\"type\": \"point\", \"filled\": true, \"size\": 40, \"opacity\": 1}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"v\"}, \"fill\": {\"field\": \"c_ad\", \"type\": \"nominal\", \"scale\": null}}}, {\"transform\": [{\"joinaggregate\": [{\"op\": \"max\", \"field\": \"x\", \"as\": \"x_fin\"}], \"groupby\": [\"anio\"]}, {\"filter\": \"datum.x == datum.x_fin\"}], \"mark\": {\"type\": \"text\", \"align\": \"left\", \"dx\": 10, \"fontWeight\": \"bold\", \"fontSize\": 14}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"v\"}, \"text\": {\"field\": \"anio\"}, \"fill\": {\"field\": \"c_ad\", \"type\": \"nominal\", \"scale\": null}}}]}, {\"transform\": [{\"filter\": \"datum.f_act == 1 && datum.valor != null\"}], \"mark\": {\"type\": \"line\", \"strokeWidth\": 3.4}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"valor\"}, \"color\": {\"scale\": {\"domain\": [\"act\", \"media\", \"rango\", \"normal\"], \"range\": [{\"expr\": \"data(''dataset'')[0].c_act\"}, \"#FFD700\", {\"expr\": \"data(''dataset'')[0].c_rango\"}, {\"expr\": \"data(''dataset'')[0].c_normal\"}]}, \"legend\": {\"labelExpr\": \"datum.value == ''act'' ? data(''dataset'')[0].lbl_act : datum.value == ''rango'' ? data(''dataset'')[0].lbl_rango : datum.value == ''normal'' ? ''Rango normal (P33–P66)'' : ''Media histórica''\", \"values\": {\"expr\": \"data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 ? [''act'',''media''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''rango'',''normal''] : data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 ? [''act''] : data(''dataset'')[0].f_med == 1 ? [''media''] : data(''dataset'')[0].f_rib == 1 ? [''rango'',''normal''] : []\"}}, \"datum\": \"act\"}}}, {\"transform\": [{\"filter\": \"datum.f_act == 1 && datum.valor != null\"}], \"mark\": {\"type\": \"point\", \"filled\": true, \"size\": 150, \"opacity\": 1}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"valor\"}, \"color\": {\"scale\": {\"domain\": [\"act\", \"media\", \"rango\", \"normal\"], \"range\": [{\"expr\": \"data(''dataset'')[0].c_act\"}, \"#FFD700\", {\"expr\": \"data(''dataset'')[0].c_rango\"}, {\"expr\": \"data(''dataset'')[0].c_normal\"}]}, \"legend\": {\"labelExpr\": \"datum.value == ''act'' ? data(''dataset'')[0].lbl_act : datum.value == ''rango'' ? data(''dataset'')[0].lbl_rango : datum.value == ''normal'' ? ''Rango normal (P33–P66)'' : ''Media histórica''\", \"values\": {\"expr\": \"data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_med == 1 ? [''act'',''media''] : data(''dataset'')[0].f_act == 1 && data(''dataset'')[0].f_rib == 1 ? [''act'',''rango'',''normal''] : data(''dataset'')[0].f_med == 1 && data(''dataset'')[0].f_rib == 1 ? [''media'',''rango'',''normal''] : data(''dataset'')[0].f_act == 1 ? [''act''] : data(''dataset'')[0].f_med == 1 ? [''media''] : data(''dataset'')[0].f_rib == 1 ? [''rango'',''normal''] : []\"}}, \"datum\": \"act\"}, \"tooltip\": [{\"field\": \"valor\", \"title\": \"Actual\", \"format\": \",.1f\"}, {\"field\": \"h_media\", \"title\": \"Media histórica\", \"format\": \",.1f\"}, {\"field\": \"h_p33\", \"title\": \"P33\", \"format\": \",.1f\"}, {\"field\": \"h_p66\", \"title\": \"P66\", \"format\": \",.1f\"}, {\"field\": \"h_min\", \"title\": \"Mínimo\", \"format\": \",.1f\"}, {\"field\": \"h_max\", \"title\": \"Máximo\", \"format\": \",.1f\"}]}}, {\"transform\": [{\"filter\": \"datum.f_anom == 1 && datum.f_act == 1\"}, {\"fold\": [\"valor\", \"h_max\", \"h_min\", \"h_media\", \"y1\", \"y2\", \"y3\", \"y4\"], \"as\": [\"campo\", \"vv\"]}, {\"filter\": \"datum.vv != null\"}, {\"joinaggregate\": [{\"op\": \"max\", \"field\": \"vv\", \"as\": \"gmax\"}, {\"op\": \"min\", \"field\": \"vv\", \"as\": \"gmin\"}]}, {\"filter\": \"datum.campo == ''valor'' && datum.anom_txt != null\"}, {\"calculate\": \"(datum.gmax - datum.gmin) || 1\", \"as\": \"rng\"}, {\"calculate\": \"datum.vv >= datum.h_media ? (datum.vv + 0.16 * datum.rng <= datum.gmax) : (datum.vv - 0.16 * datum.rng < datum.gmin)\", \"as\": \"arriba\"}, {\"filter\": \"datum.arriba\"}], \"mark\": {\"type\": \"text\", \"fontWeight\": \"bold\", \"fontSize\": 12, \"lineBreak\": \"|\", \"lineHeight\": 14, \"baseline\": \"bottom\", \"dy\": -14, \"stroke\": \"#FFFFFF\", \"strokeWidth\": 4, \"strokeOpacity\": 0.85, \"strokeJoin\": \"round\"}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"vv\"}, \"text\": {\"field\": \"anom_txt\"}}}, {\"transform\": [{\"filter\": \"datum.f_anom == 1 && datum.f_act == 1\"}, {\"fold\": [\"valor\", \"h_max\", \"h_min\", \"h_media\", \"y1\", \"y2\", \"y3\", \"y4\"], \"as\": [\"campo\", \"vv\"]}, {\"filter\": \"datum.vv != null\"}, {\"joinaggregate\": [{\"op\": \"max\", \"field\": \"vv\", \"as\": \"gmax\"}, {\"op\": \"min\", \"field\": \"vv\", \"as\": \"gmin\"}]}, {\"filter\": \"datum.campo == ''valor'' && datum.anom_txt != null\"}, {\"calculate\": \"(datum.gmax - datum.gmin) || 1\", \"as\": \"rng\"}, {\"calculate\": \"datum.vv >= datum.h_media ? (datum.vv + 0.16 * datum.rng <= datum.gmax) : (datum.vv - 0.16 * datum.rng < datum.gmin)\", \"as\": \"arriba\"}, {\"filter\": \"datum.arriba\"}], \"mark\": {\"type\": \"text\", \"fontWeight\": \"bold\", \"fontSize\": 12, \"lineBreak\": \"|\", \"lineHeight\": 14, \"baseline\": \"bottom\", \"dy\": -14}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"vv\"}, \"text\": {\"field\": \"anom_txt\"}, \"fill\": {\"field\": \"anom_col\", \"type\": \"nominal\", \"scale\": null}}}, {\"transform\": [{\"filter\": \"datum.f_anom == 1 && datum.f_act == 1\"}, {\"fold\": [\"valor\", \"h_max\", \"h_min\", \"h_media\", \"y1\", \"y2\", \"y3\", \"y4\"], \"as\": [\"campo\", \"vv\"]}, {\"filter\": \"datum.vv != null\"}, {\"joinaggregate\": [{\"op\": \"max\", \"field\": \"vv\", \"as\": \"gmax\"}, {\"op\": \"min\", \"field\": \"vv\", \"as\": \"gmin\"}]}, {\"filter\": \"datum.campo == ''valor'' && datum.anom_txt != null\"}, {\"calculate\": \"(datum.gmax - datum.gmin) || 1\", \"as\": \"rng\"}, {\"calculate\": \"datum.vv >= datum.h_media ? (datum.vv + 0.16 * datum.rng <= datum.gmax) : (datum.vv - 0.16 * datum.rng < datum.gmin)\", \"as\": \"arriba\"}, {\"filter\": \"!datum.arriba\"}], \"mark\": {\"type\": \"text\", \"fontWeight\": \"bold\", \"fontSize\": 12, \"lineBreak\": \"|\", \"lineHeight\": 14, \"baseline\": \"top\", \"dy\": 14, \"stroke\": \"#FFFFFF\", \"strokeWidth\": 4, \"strokeOpacity\": 0.85, \"strokeJoin\": \"round\"}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"vv\"}, \"text\": {\"field\": \"anom_txt\"}}}, {\"transform\": [{\"filter\": \"datum.f_anom == 1 && datum.f_act == 1\"}, {\"fold\": [\"valor\", \"h_max\", \"h_min\", \"h_media\", \"y1\", \"y2\", \"y3\", \"y4\"], \"as\": [\"campo\", \"vv\"]}, {\"filter\": \"datum.vv != null\"}, {\"joinaggregate\": [{\"op\": \"max\", \"field\": \"vv\", \"as\": \"gmax\"}, {\"op\": \"min\", \"field\": \"vv\", \"as\": \"gmin\"}]}, {\"filter\": \"datum.campo == ''valor'' && datum.anom_txt != null\"}, {\"calculate\": \"(datum.gmax - datum.gmin) || 1\", \"as\": \"rng\"}, {\"calculate\": \"datum.vv >= datum.h_media ? (datum.vv + 0.16 * datum.rng <= datum.gmax) : (datum.vv - 0.16 * datum.rng < datum.gmin)\", \"as\": \"arriba\"}, {\"filter\": \"!datum.arriba\"}], \"mark\": {\"type\": \"text\", \"fontWeight\": \"bold\", \"fontSize\": 12, \"lineBreak\": \"|\", \"lineHeight\": 14, \"baseline\": \"top\", \"dy\": 14}, \"encoding\": {\"x\": {\"field\": \"x\", \"type\": \"quantitative\", \"title\": \"Mes\", \"scale\": {\"domain\": [0.35, 12.65], \"nice\": false}, \"axis\": {\"values\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"labelExpr\": \"['''',''Ene'',''Feb'',''Mar'',''Abr'',''May'',''Jun'',''Jul'',''Ago'',''Sep'',''Oct'',''Nov'',''Dic''][datum.value]\", \"grid\": true, \"labelPadding\": 6}}, \"y\": {\"type\": \"quantitative\", \"scale\": {\"zero\": false, \"nice\": true}, \"axis\": {\"title\": {\"expr\": \"data(''dataset'')[0].ytitulo\"}, \"format\": \",~r\", \"tickCount\": 8, \"titlePadding\": 10, \"labelExpr\": \"replace(datum.label, /,/g, '' '') + '' '' + data(''dataset'')[0].unidad\"}, \"field\": \"vv\"}, \"text\": {\"field\": \"anom_txt\"}, \"fill\": {\"field\": \"anom_col\", \"type\": \"nominal\", \"scale\": null}}}]}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"view\": {\"stroke\": \"transparent\"}, \"font\": \"Arial\", \"axis\": {\"domainColor\": \"#000000\", \"domainWidth\": 2, \"tickColor\": \"#000000\", \"tickWidth\": 1.2, \"labelColor\": \"#000000\", \"labelFontSize\": 13, \"labelFontWeight\": \"bold\", \"titleFontSize\": 15, \"titleFontWeight\": \"bold\", \"titleColor\": \"#000000\", \"gridColor\": \"#E3E3E3\", \"gridDash\": [5, 5], \"gridWidth\": 1}, \"legend\": {\"orient\": \"bottom\", \"direction\": \"horizontal\", \"labelFontSize\": 13, \"symbolSize\": 320, \"symbolStrokeWidth\": 3.5, \"symbolOpacity\": 0.85, \"columnPadding\": 34, \"labelLimit\": 360, \"title\": null}, \"title\": {\"fontSize\": 22, \"fontWeight\": \"bold\", \"color\": \"#000000\", \"anchor\": \"middle\", \"subtitleFontSize\": 15, \"subtitleColor\": \"#666666\", \"subtitlePadding\": 6, \"offset\": 14}, \"text\": {\"font\": \"Arial\"}}'"
+                }
+              }
+            },
+            "renderMode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'svg'"
+                }
+              }
+            },
+            "enableTooltips": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'6.4.3'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "stateManagement": [
+        {
+          "properties": {
+            "viewportHeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "460D"
+                }
+              }
+            },
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1020D"
+                }
+              }
+            },
+            "supportFieldConfiguration": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"x\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":false,\"formatted\":false,\"names\":false},\"valor\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"h_media\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"h_min\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"h_max\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"h_p33\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"h_p66\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"anom_txt\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"anom_col\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"subtitulo\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"ytitulo\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"y1\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"n1\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"y2\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"n2\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"y3\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"n3\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"y4\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"n4\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"c_act\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"c_rango\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"c_normal\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"lbl_act\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"lbl_rango\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"unidad\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"modo_h\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"titulo\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"f_rib\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"f_med\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"f_act\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"f_anios\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false},\"f_anom\":{\"highlight\":false,\"highlightStatus\":false,\"highlightComparator\":false,\"format\":true,\"formatted\":true,\"names\":false}}'"
+                }
+              }
+            },
+            "denebMetaVersion": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2'"
+                }
+              }
+            },
+            "consolidateFieldParameters": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'2.0.1.0'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

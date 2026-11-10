@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "0f0477f5e3854b6e83e6",
-  "displayName": "Validación del modelo",
-  "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
-}

@@ -1,9 +1,9 @@
 table Meses_Acum
-	lineageTag: 52264015-343f-45d2-8d55-6adb4426deb9
+	lineageTag: b1e3d88d-efa3-4a82-a173-816d41db2fd6
 
 	column Modo
 		dataType: string
-		lineageTag: c6b3f226-48e1-4a2f-9190-1ce4d5c8008f
+		lineageTag: b6164765-5864-456e-b432-0d853864ee07
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Modo]
@@ -14,7 +14,7 @@ table Meses_Acum
 		dataType: int64
 		isHidden
 		formatString: 0
-		lineageTag: f8531573-02f9-47e3-90de-42e0ad2ba55c
+		lineageTag: 58326807-6b6e-4005-aafa-22cb8180d0e2
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Pos]
@@ -25,7 +25,7 @@ table Meses_Acum
 		dataType: int64
 		isHidden
 		formatString: 0
-		lineageTag: 441ce31e-d833-4247-96d2-29bfa4756850
+		lineageTag: f0774555-d193-4362-8e3a-8344aecf80f2
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Mes_Num]
@@ -34,7 +34,7 @@ table Meses_Acum
 
 	column Mes_Eje
 		dataType: string
-		lineageTag: 939f727c-8bb0-4cd5-8258-6d6b74b8a88c
+		lineageTag: 333dd13f-368c-4dea-985f-953823652ab0
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Mes_Eje]
@@ -46,7 +46,7 @@ table Meses_Acum
 		dataType: int64
 		isHidden
 		formatString: 0
-		lineageTag: 501afdab-c3d2-429a-aeea-294448452587
+		lineageTag: f35996a2-5e96-4dc0-aec9-0fdd6b12a0b1
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Desfase_Anio]
@@ -59,18 +59,18 @@ table Meses_Acum
 				DATATABLE (
 				    "Modo", STRING, "Pos", INTEGER, "Mes_Num", INTEGER, "Mes_Eje", STRING, "Desfase_Anio", INTEGER,
 				    {
-				        {"Año civil (ene–dic)", 1, 1, "Ene", 0},
-				        {"Año civil (ene–dic)", 2, 2, "Feb", 0},
-				        {"Año civil (ene–dic)", 3, 3, "Mar", 0},
-				        {"Año civil (ene–dic)", 4, 4, "Abr", 0},
-				        {"Año civil (ene–dic)", 5, 5, "May", 0},
-				        {"Año civil (ene–dic)", 6, 6, "Jun", 0},
-				        {"Año civil (ene–dic)", 7, 7, "Jul", 0},
-				        {"Año civil (ene–dic)", 8, 8, "Ago", 0},
-				        {"Año civil (ene–dic)", 9, 9, "Sep", 0},
-				        {"Año civil (ene–dic)", 10, 10, "Oct", 0},
-				        {"Año civil (ene–dic)", 11, 11, "Nov", 0},
-				        {"Año civil (ene–dic)", 12, 12, "Dic", 0},
+				        {"Año calendario (ene–dic)", 1, 1, "Ene", 0},
+				        {"Año calendario (ene–dic)", 2, 2, "Feb", 0},
+				        {"Año calendario (ene–dic)", 3, 3, "Mar", 0},
+				        {"Año calendario (ene–dic)", 4, 4, "Abr", 0},
+				        {"Año calendario (ene–dic)", 5, 5, "May", 0},
+				        {"Año calendario (ene–dic)", 6, 6, "Jun", 0},
+				        {"Año calendario (ene–dic)", 7, 7, "Jul", 0},
+				        {"Año calendario (ene–dic)", 8, 8, "Ago", 0},
+				        {"Año calendario (ene–dic)", 9, 9, "Sep", 0},
+				        {"Año calendario (ene–dic)", 10, 10, "Oct", 0},
+				        {"Año calendario (ene–dic)", 11, 11, "Nov", 0},
+				        {"Año calendario (ene–dic)", 12, 12, "Dic", 0},
 				        {"Año hidrológico (nov–oct)", 1, 11, "Nov ", 1},
 				        {"Año hidrológico (nov–oct)", 2, 12, "Dic ", 1},
 				        {"Año hidrológico (nov–oct)", 3, 1, "Ene ", 0},

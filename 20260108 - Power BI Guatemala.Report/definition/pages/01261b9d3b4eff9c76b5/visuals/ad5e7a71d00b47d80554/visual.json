@@ -283,87 +283,89 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filter11c5bc785ff8bd2c826d",
+        "name": "a92b6879031e5cc01574",
         "field": {
           "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Coordenadas"
+              }
+            },
+            "Property": "Estación"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "6f78aad48dada04cc720",
+        "field": {
+          "Measure": {
             "Expression": {
               "SourceRef": {
                 "Entity": "Anexar1"
               }
             },
-            "Property": "Días"
+            "Property": "SensaciónT ACTUAL"
           }
         },
-        "type": "RelativeDate",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "a",
-              "Entity": "Anexar1",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Between": {
-                  "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "a"
-                        }
-                      },
-                      "Property": "Días"
-                    }
-                  },
-                  "LowerBound": {
-                    "DateSpan": {
-                      "Expression": {
-                        "DateAdd": {
-                          "Expression": {
-                            "DateAdd": {
-                              "Expression": {
-                                "DateAdd": {
-                                  "Expression": {
-                                    "Now": {}
-                                  },
-                                  "Amount": -1,
-                                  "TimeUnit": 0
-                                }
-                              },
-                              "Amount": 1,
-                              "TimeUnit": 0
-                            }
-                          },
-                          "Amount": -1,
-                          "TimeUnit": 0
-                        }
-                      },
-                      "TimeUnit": 0
-                    }
-                  },
-                  "UpperBound": {
-                    "DateSpan": {
-                      "Expression": {
-                        "DateAdd": {
-                          "Expression": {
-                            "Now": {}
-                          },
-                          "Amount": -1,
-                          "TimeUnit": 0
-                        }
-                      },
-                      "TimeUnit": 0
-                    }
+        "type": "Advanced"
+      },
+      {
+        "name": "a060cbd02ab0900da44b",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Cuencas"
                   }
-                }
+                },
+                "Property": "Cuenca"
               }
-            }
-          ]
+            },
+            "Function": 3
+          }
         },
-        "howCreated": "User"
+        "type": "Advanced"
+      },
+      {
+        "name": "36975854d051e4691c40",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Coordenadas"
+                  }
+                },
+                "Property": "Longitud"
+              }
+            },
+            "Function": 1
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "3357c0e53ee31a039060",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Coordenadas"
+                  }
+                },
+                "Property": "Latitud"
+              }
+            },
+            "Function": 1
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }
