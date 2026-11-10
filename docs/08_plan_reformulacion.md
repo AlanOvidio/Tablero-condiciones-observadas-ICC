@@ -1,6 +1,6 @@
 # Plan de reformulación — Tablero de condiciones observadas
 
-> Estado: **borrador para aprobación** (2026-11-04). Marcar cada tarea al completarla y registrar el detalle en [02 · Decisiones y cambios](02_decisiones_y_cambios.md).
+> Estado: **en validación** (2026-11-10). Plan original del 2026-11-04; la arquitectura final está en [01 · Arquitectura](01_arquitectura.md). Marcar cada tarea al completarla y registrar el detalle en [06 · Decisiones y cambios](06_decisiones_y_cambios.md).
 
 ## Objetivo
 

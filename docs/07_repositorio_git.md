@@ -1,0 +1,27 @@
+# Repositorio Git y GitHub
+
+Repositorio privado `Tablero-condiciones-observadas-ICC`, gestionado con GitHub Desktop.
+
+## Ramas
+
+| Rama | Contenido |
+|---|---|
+| `main` | Versión heredada (`20260108 - Power BI Guatemala.pbip`) hasta que se fusione la reformulación. |
+| `v2` | Reformulación (`Condiciones_observadas.pbip`). Al terminar la validación se fusiona a `main` con un *Pull Request* y se etiqueta `v1.0`. |
+
+## Flujo de trabajo
+
+1. **Fetch origin / Pull** antes de abrir Power BI.
+2. Cambios en Power BI → **guardar y cerrar**.
+3. `python tools/generar_docs_modelo.py` y anotar el cambio en `docs/06_decisiones_y_cambios.md`.
+4. GitHub Desktop: revisar archivos, un commit por cambio lógico → **Push origin**.
+
+Deshacer: *History* → clic derecho → **Undo commit** (sin push) o **Revert changes in commit** (ya subido).
+
+## Qué se versiona y qué no
+
+| Se versiona | No se versiona (`.gitignore`) |
+|---|---|
+| `.pbip`, TMDL del modelo, JSON del reporte, `diagramLayout.json`, `docs/`, `tools/`, `config/`, `deneb/`, shapefile de regiones | `.pbi/cache.abf` (datos), `.pbi/localSettings.json`, `_respaldo*/`, scripts `.R` de `otros_archivos/` (credenciales), `.Renviron`, `.Rhistory`, índices `.sbn/.sbx` |
+
+Después de clonar en otro equipo: abrir el `.pbip` y **Actualizar** (los datos no viajan en el repositorio).

@@ -75,3 +75,7 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 ## 2026-11-09 · Fechas y mapas
 - `Calendario`: jerarquía "Jerarquía de fechas" (Año → Trimestre → Mes → Día) y columnas de texto `Fecha_Larga` ("5 noviembre, 2025") y `Fecha_Abrev` ("5-nov-2026"), ordenadas por `Fecha`. La columna `Fecha` no cambia. Con la fecha automática desactivada, la jerarquía debe declararse en la tabla de fechas.
 - Mapas Azure: la estación no puede ir en *Ubicación* junto con latitud/longitud (`DataViewMappingError_LocationAndLatLongGroup`); se corrigió en Desktop dejando solo latitud y longitud.
+
+## 2026-11-10 · Documentación
+- Documentación al estilo del tablero semanal: 01 arquitectura, 02 diccionario (automático), 03 catálogo de medidas (automático), 04 guía de usuario, 05 operación, 06 decisiones y cambios (antes 02), 07 repositorio, 08 plan (antes 01), 09 inventario de visuales (automático).
+- `tools/generar_docs_modelo.py` adaptado del tablero semanal (agrupa las medidas por carpeta).
