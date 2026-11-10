@@ -1,0 +1,284 @@
+table Estaciones_met
+	lineageTag: 0d61624d-1406-4dfe-9f5e-89b8acb7c935
+
+	column estacionid
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 61a31069-dd96-4019-abe7-d7367bbd3888
+		summarizeBy: none
+		sourceColumn: estacionid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Código
+		dataType: string
+		lineageTag: cfbbfdd7-31c8-449b-b36f-20dea6f7a161
+		summarizeBy: none
+		sourceColumn: Código
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estación
+		dataType: string
+		lineageTag: 8ae942ad-2a07-4d94-96a7-b047c68ef6c3
+		summarizeBy: none
+		sourceColumn: Estación
+
+		annotation SummarizationSetBy = Automatic
+
+	column País
+		dataType: string
+		lineageTag: 58603990-0642-4c99-8487-0d34ba4d8893
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Estrato
+		dataType: string
+		lineageTag: 22613b39-3bbf-4189-b16b-10c47f383a74
+		summarizeBy: none
+		sourceColumn: Estrato
+		sortByColumn: Orden_Estrato
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Región climática'
+		dataType: string
+		lineageTag: 0eb71928-4022-4a8c-9be1-fe8a8c6225d1
+		summarizeBy: none
+		sourceColumn: Región climática
+		sortByColumn: Orden_Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitud
+		dataType: double
+		lineageTag: 5a517526-fa24-474b-96ec-bf50879c8962
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitud
+
+		annotation SummarizationSetBy = Automatic
+
+	column Longitud
+		dataType: double
+		lineageTag: 758de1ea-b097-4c6f-8051-29184757d76c
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitud
+
+		annotation SummarizationSetBy = Automatic
+
+	column Altitud
+		dataType: int64
+		formatString: 0
+		lineageTag: 46820f54-a603-4fa0-a1af-cde40572aa8c
+		summarizeBy: none
+		sourceColumn: Altitud
+
+		annotation SummarizationSetBy = Automatic
+
+	column Activa
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 14ff38bb-7bcf-4290-b77d-03bcd9d89f20
+		summarizeBy: none
+		sourceColumn: Activa
+
+		annotation SummarizationSetBy = Automatic
+
+	column Redmet
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 76dfbe66-a349-4163-9692-fa6ec3b4c7c7
+		summarizeBy: none
+		sourceColumn: Redmet
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden_Region
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 13e55b76-50f8-4bdf-a3e2-222207c0f562
+		summarizeBy: none
+		sourceColumn: Orden_Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden_Estrato
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3c8dda90-1057-4170-bce2-8a2745e9562b
+		summarizeBy: none
+		sourceColumn: Orden_Estrato
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cuenca =
+			VAR k = LOWER ( TRIM ( Estaciones_met[Estación] ) )
+			VAR c = MAXX ( FILTER ( Cuencas_met, Cuencas_met[Clave] = k ), Cuencas_met[Cuenca] )
+			RETURN IF ( ISBLANK ( c ), "Sin cuenca", c )
+		dataType: string
+		lineageTag: a97274a9-e61a-428e-877c-40fed69db5e1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Estaciones_met = m
+		mode: import
+		source =
+				let
+				    Origen = Json.Document(Web.Contents(
+				        "https://redmet.icc.org.gt/ws/redmet/estaciones",
+				        [Headers = [Accept = "Application/json"]]
+				    )),
+				    Tabla = Table.FromList(Origen[estaciones], Splitter.SplitByNothing(), {"r"}),
+				    Expandir = Table.ExpandRecordColumn(Tabla, "r",
+				        {"estacionid", "codigo", "finca", "latitud", "longitud", "altitud", "activa", "redmet", "pais", "estrato"}),
+				    ExpPais = Table.ExpandRecordColumn(Expandir, "pais", {"nombre"}, {"País"}),
+				    ExpEstrato = Table.ExpandRecordColumn(ExpPais, "estrato", {"nombre"}, {"Estrato"}),
+				    Tipos = Table.TransformColumnTypes(ExpEstrato, {
+				        {"estacionid", Int64.Type}, {"codigo", type text}, {"finca", type text},
+				        {"latitud", type number}, {"longitud", type number}, {"altitud", Int64.Type},
+				        {"activa", Int64.Type}, {"redmet", Int64.Type}, {"País", type text}, {"Estrato", type text}
+				    }),
+				    // Solo las estaciones de TablaEstaciones_met
+				    Seleccion = Table.SelectRows(Tipos, each List.Contains(TablaEstaciones_met[estacionid], [estacionid])),
+				
+				    // Región climática: spatial join con regiones_gcs_wgs_1984.shp (tools/generar_regiones.R).
+				    // Bloque generado desde config/estaciones_region.csv: no editar a mano.
+				    Regiones = #table(type table [estacionid = Int64.Type, Region = text], {
+				        // <regiones>
+				        {38, "Montañosa (SV)"},
+				        {47, "Montañosa (SV)"},
+				        {45, "Pacífico (SV)"},
+				        {39, "Pacífico (SV)"},
+				        {40, "Pacífico (SV)"},
+				        {46, "Pacífico (SV)"},
+				        {79, "Pacífico (SV)"},
+				        {78, "Pacífico (SV)"},
+				        {103, "Pacífico (SV)"},
+				        {80, "Pacífico (SV)"},
+				        {3, "Altiplano Central"},
+				        {67, "Altiplano Central"},
+				        {94, "Altiplano Central"},
+				        {36, "Altiplano Central"},
+				        {74, "Altiplano Central"},
+				        {32, "Bocacosta"},
+				        {91, "Bocacosta"},
+				        {6, "Bocacosta"},
+				        {1, "Bocacosta"},
+				        {105, "Bocacosta"},
+				        {31, "Bocacosta"},
+				        {33, "Bocacosta"},
+				        {21, "Bocacosta"},
+				        {83, "Bocacosta"},
+				        {17, "Bocacosta"},
+				        {82, "Bocacosta"},
+				        {14, "Bocacosta"},
+				        {92, "Bocacosta"},
+				        {84, "Bocacosta"},
+				        {69, "Bocacosta"},
+				        {16, "Bocacosta"},
+				        {96, "Bocacosta"},
+				        {98, "Bocacosta"},
+				        {97, "Bocacosta"},
+				        {24, "Bocacosta"},
+				        {85, "Bocacosta"},
+				        {2, "Bocacosta"},
+				        {22, "Bocacosta"},
+				        {25, "Bocacosta"},
+				        {99, "Bocacosta"},
+				        {100, "Bocacosta"},
+				        {102, "Bocacosta"},
+				        {37, "Bocacosta"},
+				        {95, "Caribe"},
+				        {30, "Pacífico"},
+				        {20, "Pacífico"},
+				        {35, "Pacífico"},
+				        {4, "Pacífico"},
+				        {88, "Pacífico"},
+				        {28, "Pacífico"},
+				        {12, "Pacífico"},
+				        {68, "Pacífico"},
+				        {7, "Pacífico"},
+				        {23, "Pacífico"},
+				        {27, "Pacífico"},
+				        {87, "Pacífico"},
+				        {81, "Pacífico"},
+				        {26, "Pacífico"},
+				        {75, "Pacífico"},
+				        {34, "Pacífico"},
+				        {93, "Pacífico"},
+				        {86, "Pacífico"},
+				        {77, "Pacífico"},
+				        {42, "Pacífico"},
+				        {101, "Pacífico"},
+				        {106, "Pacífico"},
+				        {107, "Pacífico"},
+				        {73, "Pacífico"},
+				        {15, "Pacífico"},
+				        {13, "Pacífico"},
+				        {44, "Pacífico"},
+				        {29, "Pacífico"},
+				        {8, "Pacífico"},
+				        {76, "Pacífico"},
+				        {90, "Pacífico"},
+				        {9, "Pacífico"},
+				        {19, "Pacífico"},
+				        {18, "Pacífico"},
+				        {89, "Pacífico"},
+				        {5, "Pacífico"},
+				        {43, "Pacífico"},
+				        {10, "Pacífico"},
+				        {11, "Pacífico"},
+				        {50, "Sin región"},
+				        {53, "Sin región"},
+				        {51, "Sin región"},
+				        {49, "Sin región"},
+				        {54, "Sin región"},
+				        {52, "Sin región"},
+				        {48, "Sin región"},
+				        {66, "Sin región"},
+				        {61, "Sin región"},
+				        {60, "Sin región"},
+				        {58, "Sin región"},
+				        {62, "Sin región"},
+				        {59, "Sin región"},
+				        {65, "Sin región"},
+				        {56, "Sin región"},
+				        {57, "Sin región"},
+				        {64, "Sin región"},
+				        {63, "Sin región"}
+				        // </regiones>
+				    }),
+				    UnirRegion = Table.NestedJoin(Seleccion, {"estacionid"}, Regiones, {"estacionid"}, "R", JoinKind.LeftOuter),
+				    ExpRegion = Table.ExpandTableColumn(UnirRegion, "R", {"Region"}, {"RegionCSV"}),
+				    // Estaciones sin región en el CSV: El Salvador usa el estrato (como script_nuevo.R)
+				    Region = Table.AddColumn(ExpRegion, "Región climática", each
+				        if [RegionCSV] <> null then [RegionCSV]
+				        else if [País] = "El Salvador" then
+				            (if List.Contains({"Litoral", "Bajo"}, [Estrato]) then "Pacífico (SV)" else "Montañosa (SV)")
+				        else "Sin región", type text),
+				    OrdenRegion = Table.AddColumn(Region, "Orden_Region", each
+				        let p = List.PositionOf({"Pacífico", "Bocacosta", "Altiplano Central", "Pacífico (SV)", "Montañosa (SV)"}, [Región climática])
+				        in if p < 0 then 99 else p + 1, Int64.Type),
+				    OrdenEstrato = Table.AddColumn(OrdenRegion, "Orden_Estrato", each
+				        let p = List.PositionOf({"Litoral", "Bajo", "Medio", "Alto"}, [Estrato])
+				        in if p < 0 then 99 else p + 1, Int64.Type),
+				    Renombrar = Table.RenameColumns(OrdenEstrato, {
+				        {"codigo", "Código"}, {"finca", "Estación"}, {"latitud", "Latitud"},
+				        {"longitud", "Longitud"}, {"altitud", "Altitud"}, {"activa", "Activa"}, {"redmet", "Redmet"}
+				    }),
+				    Final = Table.RemoveColumns(Renombrar, {"RegionCSV"})
+				in
+				    Final
+
+	annotation PBI_ResultType = Table
+

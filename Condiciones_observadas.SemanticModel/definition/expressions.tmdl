@@ -1,0 +1,67 @@
+expression RangeStart = #datetime(2008, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 5301897b-da46-4a3f-a075-21c42d601b6f
+
+	annotation PBI_ResultType = DateTime
+
+expression RangeEnd = #datetime(2026, 11, 9, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 527d5206-9bc0-45af-bf78-409969b2838c
+
+	annotation PBI_ResultType = DateTime
+
+/// Fecha de inicio del año hidrológico (mes y día)
+expression InicioAnioHidrologico = #date(2025, 11, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
+	lineageTag: 6e9493a6-ba65-47ad-bcc4-e9f9144d9204
+
+	annotation PBI_ResultType = Date
+
+/// Lecturas diarias de una estación (endpoint getlecturasdia)
+expression fxLecturasEstacion_met_diario =
+		(estacionId as number, RangeStart as datetime, RangeEnd as datetime) =>
+		let
+		    fechaini = DateTime.ToText(RangeStart, "yyyy-MM-dd HH:mm"),
+		    fechafin = DateTime.ToText(RangeEnd, "yyyy-MM-dd HH:mm"),
+		    Origen = Json.Document(
+		        Web.Contents(
+		            "https://redmet.icc.org.gt/ws/getlecturasdia",
+		            [
+		                Query = [
+		                    fechaini   = fechaini,
+		                    fechafin   = fechafin,
+		                    estacionid = Number.ToText(estacionId)
+		                ],
+		                Timeout = #duration(0, 0, 5, 0)
+		            ]
+		        )
+		    ),
+		    Lecturas = try Origen[data] otherwise {}
+		in
+		    Lecturas
+	lineageTag: 1d78ec3f-b339-4462-be8c-943531303cd3
+
+	annotation PBI_ResultType = Function
+
+/// Control de calidad: valores diarios fuera de rango → nulo. Límites editables en Limites.
+expression fxLimpiarDiario =
+		(t as table) as table =>
+		let
+		    // {mínimo, máximo} por columna (valores diarios)
+		    Limites = [
+		        Temp_Media = {-5, 50}, Temp_Min = {-5, 50}, Temp_Max = {-5, 50},
+		        Precip_Total = {0, 400},
+		        ETO_Total = {0, 15},
+		        Rad_Total = {0, 44444},          // Σ W/m² de 96 lecturas ≈ 40 MJ/m²·día
+		        IC_Media = {-5, 70}, IC_Min = {-5, 70}, IC_Max = {-5, 70}
+		    ],
+		    Columnas = List.Intersect({Record.FieldNames(Limites), Table.ColumnNames(t)}),
+		    Limpia = Table.TransformColumns(
+		        t,
+		        List.Transform(Columnas, (c) => {c, (v) =>
+		            if v = null or v < Record.Field(Limites, c){0} or v > Record.Field(Limites, c){1} then null else v,
+		            type nullable number})
+		    )
+		in
+		    Limpia
+	lineageTag: 2b8d1f90-ae2f-4e77-9f87-3c3cb7bc5d09
+
+	annotation PBI_ResultType = Function
+

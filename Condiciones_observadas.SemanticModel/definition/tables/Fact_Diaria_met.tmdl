@@ -1,0 +1,203 @@
+table Fact_Diaria_met
+	lineageTag: 42b763bc-53e3-405a-8c2d-c759bd17298c
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: year
+		rollingWindowPeriods: 19
+		incrementalGranularity: day
+		incrementalPeriods: 7
+		sourceExpression =
+			let
+			    Fuente = TablaEstaciones_met,
+			    EjecutarAPI = Table.AddColumn(Fuente, "Lecturas", each fxLecturasEstacion_met_diario([estacionid], RangeStart, RangeEnd)),
+			    ExpandirLista = Table.ExpandListColumn(EjecutarAPI, "Lecturas"),
+			    QuitarVacias = Table.SelectRows(ExpandirLista, each [Lecturas] <> null),
+			    ExpandirCampos = Table.ExpandRecordColumn(QuitarVacias, "Lecturas",
+			        {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "lluviasum", "etosum", "indicecaloravg", "indicecalormin", "indicecalormax"},
+			        {"Fecha", "Temp_Media", "Temp_Min", "Temp_Max", "Rad_Total", "Precip_Total", "ETO_Total", "IC_Media", "IC_Min", "IC_Max"}),
+			    EtoTexto = Table.TransformColumnTypes(ExpandirCampos, {{"ETO_Total", type text}}),
+			    EtoVacio = Table.ReplaceValue(EtoTexto, "", null, Replacer.ReplaceValue, {"ETO_Total"}),
+			    Tipos = Table.TransformColumnTypes(EtoVacio, {
+			        {"estacionid", Int64.Type}, {"Fecha", type date}, {"Temp_Media", type number}, {"Temp_Min", type number},
+			        {"Temp_Max", type number}, {"Rad_Total", type number}, {"Precip_Total", type number}, {"ETO_Total", type number},
+			        {"IC_Media", type number}, {"IC_Min", type number}, {"IC_Max", type number}
+			    }),
+			    // Control de calidad: valores fuera de rango → nulo (límites en fxLimpiarDiario)
+			    Limpio = fxLimpiarDiario(Tipos),
+			    Incremental = Table.SelectRows(Limpio, each
+			        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
+			        [Fecha] < Date.From(RangeEnd)),
+			    // Energía diaria (MJ/m²) = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶
+			    RadMJ = Table.AddColumn(Incremental, "Rad_MJ", each [Rad_Total] * 900 / 1000000, type number),
+			    // Irradiancia diurna media (W/m²) = Σ lecturas / 52 (06:00–18:59, como los scripts R)
+			    Irradiancia = Table.AddColumn(RadMJ, "Irradiancia_Diurna", each [Rad_Total] / 52, type number),
+			    // Balance hídrico diario: nulo si falta la ETo
+			    Balance = Table.AddColumn(Irradiancia, "Balance_Hidrico", each [Precip_Total] - [ETO_Total], type number)
+			in
+			    Balance
+
+	column estacionid
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c26823e7-df86-40b3-91e9-0cc0e9a1e1bc
+		summarizeBy: none
+		sourceColumn: estacionid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0a293fad-87f4-4c73-81b6-0071242c7ad0
+		summarizeBy: none
+		sourceColumn: Fecha
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Temp_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 7b56fe73-0831-4e1b-abce-f8c5ced0b53d
+		summarizeBy: none
+		sourceColumn: Temp_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Min
+		dataType: double
+		formatString: 0.0
+		lineageTag: 936e3e04-6ecd-4154-81cc-ed6e77c97b85
+		summarizeBy: none
+		sourceColumn: Temp_Min
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: 56a8eb7e-53ce-4c6e-824e-71921a73d3ec
+		summarizeBy: none
+		sourceColumn: Temp_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precip_Total
+		dataType: double
+		formatString: 0.0
+		lineageTag: 1f7c9a1d-223c-45e5-9207-e63847f4dff6
+		summarizeBy: none
+		sourceColumn: Precip_Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETO_Total
+		dataType: double
+		formatString: 0.0
+		lineageTag: 5853fa51-9f59-467b-bbc8-97144e6b5f2d
+		summarizeBy: none
+		sourceColumn: ETO_Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column Balance_Hidrico
+		dataType: double
+		formatString: 0.0
+		lineageTag: b260c66d-f000-47ec-8788-821e33e9b791
+		summarizeBy: none
+		sourceColumn: Balance_Hidrico
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rad_Total
+		dataType: double
+		isHidden
+		formatString: 0
+		lineageTag: 31dcae07-a056-4f05-affa-7cd777d39521
+		summarizeBy: none
+		sourceColumn: Rad_Total
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rad_MJ
+		dataType: double
+		formatString: 0.00
+		lineageTag: 2e2cd3f6-b4c5-4095-adad-ba733e69dca4
+		summarizeBy: none
+		sourceColumn: Rad_MJ
+
+		annotation SummarizationSetBy = Automatic
+
+	column Irradiancia_Diurna
+		dataType: double
+		formatString: 0
+		lineageTag: 6116d9eb-e91d-4c72-b70b-63316f255d60
+		summarizeBy: none
+		sourceColumn: Irradiancia_Diurna
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 87f5c0be-f6b1-433d-993e-401682c9ac63
+		summarizeBy: none
+		sourceColumn: IC_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: 3e8968a1-4655-4db5-8f1a-2ae06121a32f
+		summarizeBy: none
+		sourceColumn: IC_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Min
+		dataType: double
+		formatString: 0.0
+		lineageTag: 2466b1a5-15db-48dd-8211-3d906e9d03e7
+		summarizeBy: none
+		sourceColumn: IC_Min
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Diaria_met = m
+		mode: import
+		source =
+				let
+				    Fuente = TablaEstaciones_met,
+				    EjecutarAPI = Table.AddColumn(Fuente, "Lecturas", each fxLecturasEstacion_met_diario([estacionid], RangeStart, RangeEnd)),
+				    ExpandirLista = Table.ExpandListColumn(EjecutarAPI, "Lecturas"),
+				    QuitarVacias = Table.SelectRows(ExpandirLista, each [Lecturas] <> null),
+				    ExpandirCampos = Table.ExpandRecordColumn(QuitarVacias, "Lecturas",
+				        {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "lluviasum", "etosum", "indicecaloravg", "indicecalormin", "indicecalormax"},
+				        {"Fecha", "Temp_Media", "Temp_Min", "Temp_Max", "Rad_Total", "Precip_Total", "ETO_Total", "IC_Media", "IC_Min", "IC_Max"}),
+				    EtoTexto = Table.TransformColumnTypes(ExpandirCampos, {{"ETO_Total", type text}}),
+				    EtoVacio = Table.ReplaceValue(EtoTexto, "", null, Replacer.ReplaceValue, {"ETO_Total"}),
+				    Tipos = Table.TransformColumnTypes(EtoVacio, {
+				        {"estacionid", Int64.Type}, {"Fecha", type date}, {"Temp_Media", type number}, {"Temp_Min", type number},
+				        {"Temp_Max", type number}, {"Rad_Total", type number}, {"Precip_Total", type number}, {"ETO_Total", type number},
+				        {"IC_Media", type number}, {"IC_Min", type number}, {"IC_Max", type number}
+				    }),
+				    // Control de calidad: valores fuera de rango → nulo (límites en fxLimpiarDiario)
+				    Limpio = fxLimpiarDiario(Tipos),
+				    Incremental = Table.SelectRows(Limpio, each
+				        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
+				        [Fecha] < Date.From(RangeEnd)),
+				    // Energía diaria (MJ/m²) = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶
+				    RadMJ = Table.AddColumn(Incremental, "Rad_MJ", each [Rad_Total] * 900 / 1000000, type number),
+				    // Irradiancia diurna media (W/m²) = Σ lecturas / 52 (06:00–18:59, como los scripts R)
+				    Irradiancia = Table.AddColumn(RadMJ, "Irradiancia_Diurna", each [Rad_Total] / 52, type number),
+				    // Balance hídrico diario: nulo si falta la ETo
+				    Balance = Table.AddColumn(Irradiancia, "Balance_Hidrico", each [Precip_Total] - [ETO_Total], type number)
+				in
+				    Balance
+
+	annotation PBI_ResultType = Table
+

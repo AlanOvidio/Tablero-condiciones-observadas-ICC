@@ -1,0 +1,48 @@
+{
+  "view": {
+    "stroke": "transparent"
+  },
+  "font": "Arial",
+  "axis": {
+    "domainColor": "#000000",
+    "domainWidth": 2,
+    "tickColor": "#000000",
+    "tickWidth": 1.2,
+    "labelColor": "#000000",
+    "labelFontSize": 13,
+    "labelFontWeight": "bold",
+    "titleFontSize": 15,
+    "titleFontWeight": "bold",
+    "titleColor": "#000000",
+    "gridColor": "#E3E3E3",
+    "gridDash": [
+      5,
+      5
+    ],
+    "gridWidth": 1
+  },
+  "legend": {
+    "orient": "bottom",
+    "direction": "horizontal",
+    "labelFontSize": 13,
+    "symbolSize": 320,
+    "symbolStrokeWidth": 3.5,
+    "symbolOpacity": 0.85,
+    "columnPadding": 34,
+    "labelLimit": 360,
+    "title": null
+  },
+  "title": {
+    "fontSize": 22,
+    "fontWeight": "bold",
+    "color": "#000000",
+    "anchor": "middle",
+    "subtitleFontSize": 15,
+    "subtitleColor": "#666666",
+    "subtitlePadding": 6,
+    "offset": 14
+  },
+  "text": {
+    "font": "Arial"
+  }
+}

@@ -2647,7 +2647,7 @@ cultureInfo es-CO
 			          }
 			        },
 			        {
-			          "Mínimo histórico": {
+			          ".": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -2657,7 +2657,7 @@ cultureInfo es-CO
 			          }
 			        },
 			        {
-			          ".": {
+			          "Mínimo histórico": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -3115,7 +3115,7 @@ cultureInfo es-CO
 			          }
 			        },
 			        {
-			          ".": {
+			          "Normal inferior": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -3125,7 +3125,7 @@ cultureInfo es-CO
 			          }
 			        },
 			        {
-			          "Normal inferior": {
+			          ".": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -3469,7 +3469,7 @@ cultureInfo es-CO
 			          }
 			        },
 			        {
-			          "Temperatura máxima": {
+			          "Mes actual": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -3479,7 +3479,7 @@ cultureInfo es-CO
 			          }
 			        },
 			        {
-			          "Mes actual": {
+			          "Temperatura máxima": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

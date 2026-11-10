@@ -481,6 +481,20 @@
             }
           ]
         }
+      },
+      {
+        "name": "1cdfbff969d321c6537e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Anexar1"
+              }
+            },
+            "Property": "SensaciónT ACTUAL"
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

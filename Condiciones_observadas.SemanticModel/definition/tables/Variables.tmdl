@@ -1,0 +1,163 @@
+table Variables
+	lineageTag: ce5a6cf7-ff53-4b75-94c6-dce3ea084a50
+
+	column Clave
+		dataType: string
+		lineageTag: b7713b9b-ce54-4c06-80ac-bdd3bb66e2e6
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Clave]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Variable
+		dataType: string
+		lineageTag: c203fd16-1b4d-4bdc-8d1a-9e150cd1be7e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Variable]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidad
+		dataType: string
+		lineageTag: ddbea7c9-f7c5-4a6a-bf1e-d90cb8cf051a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Unidad]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Regla
+		dataType: string
+		lineageTag: eabed72f-6951-448c-a54b-4bd9935f692b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Regla]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4a7d1694-417e-4af6-b1b0-a46a3dc91da9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Grupo
+		dataType: string
+		lineageTag: c5f9d6cb-3d5e-478e-8367-28a9c434a1a7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Grupo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Anom_Tipo
+		dataType: string
+		isHidden
+		lineageTag: 9d15de0e-f896-4187-8597-6dace7e5e7cc
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Anom_Tipo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Umbral1
+		dataType: double
+		isHidden
+		lineageTag: ab831c64-c5ca-4011-a564-9f990a341ab8
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Umbral1]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Umbral2
+		dataType: double
+		isHidden
+		lineageTag: bb3225ea-3ea4-4fb2-9e7b-16e26bc9e4f1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Umbral2]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Actual
+		dataType: string
+		isHidden
+		lineageTag: b1f294d9-9c23-4b4c-a82f-534686eef1e1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Color_Actual]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Rango
+		dataType: string
+		isHidden
+		lineageTag: 48f4a73c-ba29-4105-b992-6a7b2ad53e70
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Color_Rango]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Color_Normal
+		dataType: string
+		isHidden
+		lineageTag: 9c409377-5bb8-4ffb-a51f-03b888cb16bd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Color_Normal]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Decimales
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5401d1bb-ce3b-487f-b9e4-6d7b485e1a79
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Decimales]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Positivo_Azul
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fcb56335-d364-437f-8a2a-e5ab4e9e5d97
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Positivo_Azul]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Variables = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Clave", STRING, "Variable", STRING, "Unidad", STRING, "Regla", STRING, "Orden", INTEGER, "Grupo", STRING, "Anom_Tipo", STRING, "Umbral1", DOUBLE, "Umbral2", DOUBLE, "Color_Actual", STRING, "Color_Rango", STRING, "Color_Normal", STRING, "Decimales", INTEGER, "Positivo_Azul", INTEGER,
+				    {
+				        {"PCP", "Precipitación", "mm", "Suma", 1, "Agua", "pct", 15, 40, "#00008B", "#4682B4", "#36648B", 0, 1},
+				        {"ETO", "Evapotranspiración potencial (ETo)", "mm", "Suma", 2, "Agua", "pct", 15, 40, "#006400", "#8FBC8F", "#2E8B57", 0, 0},
+				        {"ETOD", "ETo media diaria", "mm/día", "Promedio", 3, "Agua", "pct", 15, 40, "#006400", "#8FBC8F", "#2E8B57", 1, 0},
+				        {"BH", "Balance hídrico (P − ETo)", "mm", "Suma", 4, "Agua", "abs", 25, 50, "#00008B", "#7EC8E3", "#4A90D9", 0, 1},
+				        {"RAD", "Radiación solar", "MJ/m²", "Suma", 5, "Radiación", "pct", 10, 20, "#8B4513", "#F4A460", "#CD853F", 0, 0},
+				        {"IRR", "Irradiancia diurna media", "W/m²", "Promedio", 6, "Radiación", "pct", 10, 20, "#8B4513", "#F4A460", "#CD853F", 0, 0},
+				        {"TMED", "Temperatura media", "°C", "Promedio", 7, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1, 0},
+				        {"TMAX", "Temperatura máxima", "°C", "Máximo", 8, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1, 0},
+				        {"TMIN", "Temperatura mínima", "°C", "Mínimo", 9, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1, 0},
+				        {"ICMED", "Sensación térmica media", "°C", "Promedio", 10, "Temperatura", "abs", 0.5, 1, "#A63603", "#FDAE6B", "#E6550D", 1, 0},
+				        {"IC", "Sensación térmica máxima", "°C", "Máximo", 11, "Temperatura", "abs", 0.5, 1, "#A63603", "#FDAE6B", "#E6550D", 1, 0},
+				        {"ICMIN", "Sensación térmica mínima", "°C", "Mínimo", 12, "Temperatura", "abs", 0.5, 1, "#A63603", "#FDAE6B", "#E6550D", 1, 0}
+				    }
+				)
+

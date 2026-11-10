@@ -1,0 +1,17 @@
+table Periodo_B
+	lineageTag: 4ba8c64e-737e-42dc-a587-baf721f9fb67
+
+	column Fecha
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: dca3657e-f0ec-4773-9a46-c696fca43a95
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Fecha]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Periodo_B = calculated
+		mode: import
+		source = SELECTCOLUMNS ( CALENDAR ( DATE ( 2008, 1, 1 ), TODAY () ), "Fecha", [Date] )
+

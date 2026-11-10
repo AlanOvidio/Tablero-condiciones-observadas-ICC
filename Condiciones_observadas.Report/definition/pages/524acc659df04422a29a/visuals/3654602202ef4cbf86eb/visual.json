@@ -1,0 +1,183 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "3654602202ef4cbf86eb",
+  "position": {
+    "x": 10,
+    "y": 52,
+    "z": 3000,
+    "height": 440,
+    "width": 560,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Estaciones_met"
+                    }
+                  },
+                  "Property": "Estación"
+                }
+              },
+              "queryRef": "Estaciones_met.Estación",
+              "nativeQueryRef": "Estación"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Estaciones_met"
+                    }
+                  },
+                  "Property": "País"
+                }
+              },
+              "queryRef": "Estaciones_met.País",
+              "nativeQueryRef": "País"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Estaciones_met"
+                    }
+                  },
+                  "Property": "Estrato"
+                }
+              },
+              "queryRef": "Estaciones_met.Estrato",
+              "nativeQueryRef": "Estrato"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Estaciones_met"
+                    }
+                  },
+                  "Property": "Región climática"
+                }
+              },
+              "queryRef": "Estaciones_met.Región climática",
+              "nativeQueryRef": "Región climática"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Estaciones_met"
+                    }
+                  },
+                  "Property": "Cuenca"
+                }
+              },
+              "queryRef": "Estaciones_met.Cuenca",
+              "nativeQueryRef": "Cuenca"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Val_N_Dias"
+                }
+              },
+              "queryRef": "_Medidas.Val_N_Dias",
+              "nativeQueryRef": "Días",
+              "displayName": "Días"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Val_Meses_Validos"
+                }
+              },
+              "queryRef": "_Medidas.Val_Meses_Validos",
+              "nativeQueryRef": "Meses válidos",
+              "displayName": "Meses válidos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Val_Primera_Fecha"
+                }
+              },
+              "queryRef": "_Medidas.Val_Primera_Fecha",
+              "nativeQueryRef": "Desde",
+              "displayName": "Desde"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Val_Ultima_Fecha"
+                }
+              },
+              "queryRef": "_Medidas.Val_Ultima_Fecha",
+              "nativeQueryRef": "Hasta",
+              "displayName": "Hasta"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Estaciones y cobertura de datos'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "5924144e7de445d8a5e3",
+  "position": {
+    "x": 575,
+    "y": 52,
+    "z": 4000,
+    "height": 440,
+    "width": 465,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Calendario"
+                    }
+                  },
+                  "Property": "Mes"
+                }
+              },
+              "queryRef": "Calendario.Mes",
+              "nativeQueryRef": "Mes",
+              "displayName": "Mes"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Valor_Mensual"
+                }
+              },
+              "queryRef": "_Medidas.Valor_Mensual",
+              "nativeQueryRef": "Actual",
+              "displayName": "Actual"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_Media"
+                }
+              },
+              "queryRef": "_Medidas.Hist_Media",
+              "nativeQueryRef": "Media",
+              "displayName": "Media"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_P33"
+                }
+              },
+              "queryRef": "_Medidas.Hist_P33",
+              "nativeQueryRef": "P33",
+              "displayName": "P33"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_P66"
+                }
+              },
+              "queryRef": "_Medidas.Hist_P66",
+              "nativeQueryRef": "P66",
+              "displayName": "P66"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_Min"
+                }
+              },
+              "queryRef": "_Medidas.Hist_Min",
+              "nativeQueryRef": "Mín",
+              "displayName": "Mín"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_Max"
+                }
+              },
+              "queryRef": "_Medidas.Hist_Max",
+              "nativeQueryRef": "Máx",
+              "displayName": "Máx"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Hist_N_Anios"
+                }
+              },
+              "queryRef": "_Medidas.Hist_N_Anios",
+              "nativeQueryRef": "Años",
+              "displayName": "Años"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Anomalia"
+                }
+              },
+              "queryRef": "_Medidas.Anomalia",
+              "nativeQueryRef": "Anomalía",
+              "displayName": "Anomalía"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Titulo_Seleccion"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

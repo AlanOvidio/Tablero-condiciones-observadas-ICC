@@ -1,0 +1,88 @@
+table Meses_Acum
+	lineageTag: b1e3d88d-efa3-4a82-a173-816d41db2fd6
+
+	column Modo
+		dataType: string
+		lineageTag: b6164765-5864-456e-b432-0d853864ee07
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Modo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Pos
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 58326807-6b6e-4005-aafa-22cb8180d0e2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Pos]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Num
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f0774555-d193-4362-8e3a-8344aecf80f2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mes_Num]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Eje
+		dataType: string
+		lineageTag: 333dd13f-368c-4dea-985f-953823652ab0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Mes_Eje]
+		sortByColumn: Pos
+
+		annotation SummarizationSetBy = Automatic
+
+	column Desfase_Anio
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f35996a2-5e96-4dc0-aec9-0fdd6b12a0b1
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Desfase_Anio]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Meses_Acum = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Modo", STRING, "Pos", INTEGER, "Mes_Num", INTEGER, "Mes_Eje", STRING, "Desfase_Anio", INTEGER,
+				    {
+				        {"Año calendario (ene–dic)", 1, 1, "Ene", 0},
+				        {"Año calendario (ene–dic)", 2, 2, "Feb", 0},
+				        {"Año calendario (ene–dic)", 3, 3, "Mar", 0},
+				        {"Año calendario (ene–dic)", 4, 4, "Abr", 0},
+				        {"Año calendario (ene–dic)", 5, 5, "May", 0},
+				        {"Año calendario (ene–dic)", 6, 6, "Jun", 0},
+				        {"Año calendario (ene–dic)", 7, 7, "Jul", 0},
+				        {"Año calendario (ene–dic)", 8, 8, "Ago", 0},
+				        {"Año calendario (ene–dic)", 9, 9, "Sep", 0},
+				        {"Año calendario (ene–dic)", 10, 10, "Oct", 0},
+				        {"Año calendario (ene–dic)", 11, 11, "Nov", 0},
+				        {"Año calendario (ene–dic)", 12, 12, "Dic", 0},
+				        {"Año hidrológico (nov–oct)", 1, 11, "Nov ", 1},
+				        {"Año hidrológico (nov–oct)", 2, 12, "Dic ", 1},
+				        {"Año hidrológico (nov–oct)", 3, 1, "Ene ", 0},
+				        {"Año hidrológico (nov–oct)", 4, 2, "Feb ", 0},
+				        {"Año hidrológico (nov–oct)", 5, 3, "Mar ", 0},
+				        {"Año hidrológico (nov–oct)", 6, 4, "Abr ", 0},
+				        {"Año hidrológico (nov–oct)", 7, 5, "May ", 0},
+				        {"Año hidrológico (nov–oct)", 8, 6, "Jun ", 0},
+				        {"Año hidrológico (nov–oct)", 9, 7, "Jul ", 0},
+				        {"Año hidrológico (nov–oct)", 10, 8, "Ago ", 0},
+				        {"Año hidrológico (nov–oct)", 11, 9, "Sep ", 0},
+				        {"Año hidrológico (nov–oct)", 12, 10, "Oct ", 0}
+				    }
+				)
+

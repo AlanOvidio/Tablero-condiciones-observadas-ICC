@@ -1,0 +1,38 @@
+table Capas
+	lineageTag: 521256ee-0321-4026-a3da-77da29672fe7
+
+	column Capa
+		dataType: string
+		lineageTag: 70fc48a1-b036-4a80-9012-fbc38688fe58
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Capa]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 00866fae-72ff-40b6-b138-a6ad14693703
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Capas = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Capa", STRING, "Orden", INTEGER,
+				    {
+				        {"Año actual", 1},
+				        {"Media histórica", 2},
+				        {"Rangos históricos", 3},
+				        {"Años adicionales", 4},
+				        {"Anomalías", 5}
+				    }
+				)
+

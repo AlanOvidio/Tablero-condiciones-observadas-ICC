@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "7297e4ac75d44e77b91e",
+  "position": {
+    "x": 10,
+    "y": 62.857142857142861,
+    "z": 2000,
+    "height": 484.28571428571433,
+    "width": 1020.0000000000001,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "areaChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Calendario"
+                    }
+                  },
+                  "Property": "Pentada"
+                }
+              },
+              "queryRef": "Calendario.Pentada",
+              "nativeQueryRef": "Pentada",
+              "active": true,
+              "displayName": "Pentada"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "ETO_Anio"
+                }
+              },
+              "queryRef": "_Medidas.ETO_Anio",
+              "nativeQueryRef": "Evapotranspiración potencial (mm)",
+              "displayName": "Evapotranspiración potencial (mm)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "PCP_Anio"
+                }
+              },
+              "queryRef": "_Medidas.PCP_Anio",
+              "nativeQueryRef": "Precipitación (mm)",
+              "displayName": "Precipitación (mm)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Precipitación y ETo por pentada (mm)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

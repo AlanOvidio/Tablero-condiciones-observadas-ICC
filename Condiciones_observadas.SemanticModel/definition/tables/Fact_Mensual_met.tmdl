@@ -1,0 +1,323 @@
+table Fact_Mensual_met
+	isHidden
+	lineageTag: 640bfb7a-0d4a-4bf3-9cc7-78faae2fa633
+
+	refreshPolicy
+		policyType: basic
+		rollingWindowGranularity: year
+		rollingWindowPeriods: 19
+		incrementalGranularity: month
+		incrementalPeriods: 2
+		sourceExpression =
+			let
+			    Fuente = TablaEstaciones_met,
+			    EjecutarAPI = Table.AddColumn(Fuente, "Lecturas", each fxLecturasEstacion_met_diario([estacionid], RangeStart, RangeEnd)),
+			    ExpandirLista = Table.ExpandListColumn(EjecutarAPI, "Lecturas"),
+			    QuitarVacias = Table.SelectRows(ExpandirLista, each [Lecturas] <> null),
+			    ExpandirCampos = Table.ExpandRecordColumn(QuitarVacias, "Lecturas",
+			        {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "lluviasum", "etosum", "indicecaloravg", "indicecalormin", "indicecalormax"},
+			        {"Fecha", "Temp_Media", "Temp_Min", "Temp_Max", "Rad_Total", "Precip_Total", "ETO_Total", "IC_Media", "IC_Min", "IC_Max"}),
+			    // ETo puede llegar como texto vacío: se deja nulo (no 0)
+			    EtoTexto = Table.TransformColumnTypes(ExpandirCampos, {{"ETO_Total", type text}}),
+			    EtoVacio = Table.ReplaceValue(EtoTexto, "", null, Replacer.ReplaceValue, {"ETO_Total"}),
+			    Tipos = Table.TransformColumnTypes(EtoVacio, {
+			        {"estacionid", Int64.Type}, {"Fecha", type date}, {"Temp_Media", type number}, {"Temp_Min", type number},
+			        {"Temp_Max", type number}, {"Rad_Total", type number}, {"Precip_Total", type number}, {"ETO_Total", type number},
+			        {"IC_Media", type number}, {"IC_Min", type number}, {"IC_Max", type number}
+			    }),
+			    // Control de calidad: valores fuera de rango → nulo (límites en fxLimpiarDiario)
+			    Limpio = fxLimpiarDiario(Tipos),
+			    // Filtro de actualización incremental (particiones por mes: un mes nunca queda partido)
+			    Incremental = Table.SelectRows(Limpio, each
+			        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
+			        [Fecha] < Date.From(RangeEnd)),
+			    Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
+			    Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
+			    // Día → mes por estación (como mensual_por_estacion() de los scripts R)
+			    Mensual = Table.Group(Mes, {"estacionid", "Anio", "Mes"}, {
+			        {"N_Dias", each Table.RowCount(_), Int64.Type},
+			        {"Precip", each List.Sum([Precip_Total]), type nullable number},
+			        {"ETo", each List.Sum([ETO_Total]), type nullable number},
+			        {"N_Dias_ETo", each List.Count(List.RemoveNulls([ETO_Total])), Int64.Type},
+			        // Energía (MJ/m²) = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶
+			        {"Rad_MJ", each List.Sum([Rad_Total]) * 900 / 1000000, type nullable number},
+			        // Irradiancia diurna media (W/m²) = Σ W/m² del día / 52 lecturas (06:00–18:59)
+			        {"Irradiancia", each List.Average([Rad_Total]) / 52, type nullable number},
+			        {"Temp_Media", each List.Average([Temp_Media]), type nullable number},
+			        {"Temp_Max_Abs", each List.Max([Temp_Max]), type nullable number},
+			        {"Temp_Min_Abs", each List.Min([Temp_Min]), type nullable number},
+			        {"IC_Media", each List.Average([IC_Media]), type nullable number},
+			        {"IC_Max", each List.Max([IC_Max]), type nullable number},
+			        {"IC_Min_Abs", each List.Min([IC_Min]), type nullable number}
+			    }),
+			    Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
+			    FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
+			    DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
+			    BH = Table.AddColumn(DiasMes, "BH", each if [N_Dias_ETo] > 0 and [Precip] <> null then [Precip] - [ETo] else null, type nullable number),
+			    EToDia = Table.AddColumn(BH, "ETo_Dia", each if [N_Dias_ETo] > 0 then [ETo] / [N_Dias_ETo] else null, type nullable number),
+			    Completitud = Table.AddColumn(EToDia, "Completitud", each [N_Dias] / [Dias_Mes], type number),
+			    // Mes cerrado: terminó antes de hoy (hora de Guatemala). Válido: cerrado y con ≥ 80 % de días con dato
+			    Cerrado = Table.AddColumn(Completitud, "Mes_Completo", each Date.EndOfMonth([Fecha_Mes]) < Hoy, type logical),
+			    Valido = Table.AddColumn(Cerrado, "Mes_Valido", each [Mes_Completo] and [Completitud] >= 0.8, type logical)
+			in
+			    Valido
+
+	column estacionid
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ee40b065-e3c0-44f0-a2d7-de704b0598be
+		summarizeBy: none
+		sourceColumn: estacionid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Anio
+		dataType: int64
+		formatString: 0
+		lineageTag: bc6fde68-2656-4c82-a04a-3a7d3b8344ce
+		summarizeBy: none
+		sourceColumn: Anio
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes
+		dataType: int64
+		formatString: 0
+		lineageTag: 75245264-8c32-451b-aef2-a9cda0549c7a
+		summarizeBy: none
+		sourceColumn: Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fecha_Mes
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 3a8a1eaa-9013-486e-87bc-bbca74dbd251
+		summarizeBy: none
+		sourceColumn: Fecha_Mes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Dias_Mes
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4dfaaf06-6af4-4465-b6fd-33263792e689
+		summarizeBy: none
+		sourceColumn: Dias_Mes
+
+		annotation SummarizationSetBy = Automatic
+
+	column N_Dias
+		dataType: int64
+		formatString: 0
+		lineageTag: cfb32479-d2b6-4d59-bd22-5fc9b47a2bbe
+		summarizeBy: none
+		sourceColumn: N_Dias
+
+		annotation SummarizationSetBy = Automatic
+
+	column Precip
+		dataType: double
+		formatString: 0.0
+		lineageTag: b12555fb-8eb8-44c8-a794-613259f527db
+		summarizeBy: none
+		sourceColumn: Precip
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETo
+		dataType: double
+		formatString: 0.0
+		lineageTag: 0b522067-35ff-4353-9573-b6ead29779e6
+		summarizeBy: none
+		sourceColumn: ETo
+
+		annotation SummarizationSetBy = Automatic
+
+	column N_Dias_ETo
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d9862d6e-5a99-4209-abfb-4e231a02486b
+		summarizeBy: none
+		sourceColumn: N_Dias_ETo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rad_MJ
+		dataType: double
+		formatString: 0.0
+		lineageTag: 6463968d-ec98-4e31-a9df-e02c396bd542
+		summarizeBy: none
+		sourceColumn: Rad_MJ
+
+		annotation SummarizationSetBy = Automatic
+
+	column Irradiancia
+		dataType: double
+		formatString: 0
+		lineageTag: 34520751-daf3-449e-964e-23cfa1443529
+		summarizeBy: none
+		sourceColumn: Irradiancia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 8f64a2e0-4a8b-4e72-a7b3-d8b6fb133a61
+		summarizeBy: none
+		sourceColumn: Temp_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Max_Abs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 6b3c4b17-8116-49ac-a9ac-d954933f1265
+		summarizeBy: none
+		sourceColumn: Temp_Max_Abs
+
+		annotation SummarizationSetBy = Automatic
+
+	column Temp_Min_Abs
+		dataType: double
+		formatString: 0.0
+		lineageTag: c915f205-5e7f-4b3a-84fd-af02047ca1b5
+		summarizeBy: none
+		sourceColumn: Temp_Min_Abs
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Max
+		dataType: double
+		formatString: 0.0
+		lineageTag: 22af7aae-6826-49b0-b0c8-94869c97ca17
+		summarizeBy: none
+		sourceColumn: IC_Max
+
+		annotation SummarizationSetBy = Automatic
+
+	column BH
+		dataType: double
+		formatString: 0.0
+		lineageTag: 3b0ad49a-5e81-44d4-ac83-0e95ae8bea88
+		summarizeBy: none
+		sourceColumn: BH
+
+		annotation SummarizationSetBy = Automatic
+
+	column ETo_Dia
+		dataType: double
+		formatString: 0.0
+		lineageTag: a466457c-4ab1-4223-b4e1-4846ce29c92c
+		summarizeBy: none
+		sourceColumn: ETo_Dia
+
+		annotation SummarizationSetBy = Automatic
+
+	column Completitud
+		dataType: double
+		formatString: 0%
+		lineageTag: 8b7dfeb1-f55e-43d2-a33f-23eb6426a126
+		summarizeBy: none
+		sourceColumn: Completitud
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Completo
+		dataType: boolean
+		lineageTag: 8a0b6651-ab60-4ec4-ac8a-3c9c1d93e085
+		summarizeBy: none
+		sourceColumn: Mes_Completo
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mes_Valido
+		dataType: boolean
+		lineageTag: fa08c63e-12f0-457c-b3f0-ae6d6c0f73d7
+		summarizeBy: none
+		sourceColumn: Mes_Valido
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Media
+		dataType: double
+		formatString: 0.0
+		lineageTag: 77ed8b6e-91cc-4f77-863b-bbe437370540
+		summarizeBy: none
+		sourceColumn: IC_Media
+
+		annotation SummarizationSetBy = Automatic
+
+	column IC_Min_Abs
+		dataType: double
+		formatString: 0.0
+		lineageTag: 52e1ac96-88d3-4337-8866-ee2880a619d5
+		summarizeBy: none
+		sourceColumn: IC_Min_Abs
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Mensual_met = m
+		mode: import
+		source =
+				let
+				    Fuente = TablaEstaciones_met,
+				    EjecutarAPI = Table.AddColumn(Fuente, "Lecturas", each fxLecturasEstacion_met_diario([estacionid], RangeStart, RangeEnd)),
+				    ExpandirLista = Table.ExpandListColumn(EjecutarAPI, "Lecturas"),
+				    QuitarVacias = Table.SelectRows(ExpandirLista, each [Lecturas] <> null),
+				    ExpandirCampos = Table.ExpandRecordColumn(QuitarVacias, "Lecturas",
+				        {"dia", "tempavg", "tempmin", "tempmax", "radiaciontotal", "lluviasum", "etosum", "indicecaloravg", "indicecalormin", "indicecalormax"},
+				        {"Fecha", "Temp_Media", "Temp_Min", "Temp_Max", "Rad_Total", "Precip_Total", "ETO_Total", "IC_Media", "IC_Min", "IC_Max"}),
+				    // ETo puede llegar como texto vacío: se deja nulo (no 0)
+				    EtoTexto = Table.TransformColumnTypes(ExpandirCampos, {{"ETO_Total", type text}}),
+				    EtoVacio = Table.ReplaceValue(EtoTexto, "", null, Replacer.ReplaceValue, {"ETO_Total"}),
+				    Tipos = Table.TransformColumnTypes(EtoVacio, {
+				        {"estacionid", Int64.Type}, {"Fecha", type date}, {"Temp_Media", type number}, {"Temp_Min", type number},
+				        {"Temp_Max", type number}, {"Rad_Total", type number}, {"Precip_Total", type number}, {"ETO_Total", type number},
+				        {"IC_Media", type number}, {"IC_Min", type number}, {"IC_Max", type number}
+				    }),
+				    // Control de calidad: valores fuera de rango → nulo (límites en fxLimpiarDiario)
+				    Limpio = fxLimpiarDiario(Tipos),
+				    // Filtro de actualización incremental (particiones por mes: un mes nunca queda partido)
+				    Incremental = Table.SelectRows(Limpio, each
+				        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
+				        [Fecha] < Date.From(RangeEnd)),
+				    Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
+				    Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
+				    // Día → mes por estación (como mensual_por_estacion() de los scripts R)
+				    Mensual = Table.Group(Mes, {"estacionid", "Anio", "Mes"}, {
+				        {"N_Dias", each Table.RowCount(_), Int64.Type},
+				        {"Precip", each List.Sum([Precip_Total]), type nullable number},
+				        {"ETo", each List.Sum([ETO_Total]), type nullable number},
+				        {"N_Dias_ETo", each List.Count(List.RemoveNulls([ETO_Total])), Int64.Type},
+				        // Energía (MJ/m²) = Σ lecturas de 15 min (W/m²) × 900 s / 10⁶
+				        {"Rad_MJ", each List.Sum([Rad_Total]) * 900 / 1000000, type nullable number},
+				        // Irradiancia diurna media (W/m²) = Σ W/m² del día / 52 lecturas (06:00–18:59)
+				        {"Irradiancia", each List.Average([Rad_Total]) / 52, type nullable number},
+				        {"Temp_Media", each List.Average([Temp_Media]), type nullable number},
+				        {"Temp_Max_Abs", each List.Max([Temp_Max]), type nullable number},
+				        {"Temp_Min_Abs", each List.Min([Temp_Min]), type nullable number},
+				        {"IC_Media", each List.Average([IC_Media]), type nullable number},
+				        {"IC_Max", each List.Max([IC_Max]), type nullable number},
+				        {"IC_Min_Abs", each List.Min([IC_Min]), type nullable number}
+				    }),
+				    Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
+				    FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
+				    DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
+				    BH = Table.AddColumn(DiasMes, "BH", each if [N_Dias_ETo] > 0 and [Precip] <> null then [Precip] - [ETo] else null, type nullable number),
+				    EToDia = Table.AddColumn(BH, "ETo_Dia", each if [N_Dias_ETo] > 0 then [ETo] / [N_Dias_ETo] else null, type nullable number),
+				    Completitud = Table.AddColumn(EToDia, "Completitud", each [N_Dias] / [Dias_Mes], type number),
+				    // Mes cerrado: terminó antes de hoy (hora de Guatemala). Válido: cerrado y con ≥ 80 % de días con dato
+				    Cerrado = Table.AddColumn(Completitud, "Mes_Completo", each Date.EndOfMonth([Fecha_Mes]) < Hoy, type logical),
+				    Valido = Table.AddColumn(Cerrado, "Mes_Valido", each [Mes_Completo] and [Completitud] >= 0.8, type logical)
+				in
+				    Valido
+
+	annotation PBI_ResultType = Table
+
