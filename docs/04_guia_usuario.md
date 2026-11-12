@@ -39,6 +39,7 @@ Tablero de condiciones meteorológicas observadas de la Red Meteorológica del I
 | Página | Uso |
 |---|---|
 | Comparativas por estación / por año / de temperaturas | Líneas mensuales por año (o por estación) para comparar campañas. |
+| Comparativas mensuales | Une las tres anteriores: elegir variable y vista (mensual o acumulado mensual); botón «Comparar años» (cada línea es un año, segmentador de años con selección múltiple) o «Comparar estaciones» (cada línea es una estación en el año de análisis). Debajo, tabla con los valores por mes y el total anual. |
 | Comparación de radiación | Radiación media diaria por pentada frente a los niveles subóptimo, aceptable y óptimo (deslizables). |
 | Precipitación diaria, mapas | Lluvia, radiación o sensación térmica por estación en el periodo elegido. |
 | Balance hídrico por pentadas | Lluvia y ETo por pentada; clic en una pentada para ver sus fechas. |

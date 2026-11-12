@@ -30,7 +30,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Lluvia diaria por estación y acumulado anual del grupo seleccionado.",
+                    "value": "Columnas: lluvia diaria por estación. Línea: acumulado desde el 1 de enero, promedio de las estaciones seleccionadas (no es la suma).",
                     "textStyle": {
                       "fontSize": "10pt",
                       "color": "#595959"

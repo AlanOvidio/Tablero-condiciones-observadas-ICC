@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "285fe28772d94a0eabb0",
   "position": {
-    "x": 1050.9783257702413,
-    "y": 306.67399092428946,
+    "x": 1051.25,
+    "y": 316.25,
     "z": 9000,
-    "height": 58,
+    "height": 64.375,
     "width": 220,
     "tabOrder": 9000
   },
@@ -103,6 +103,20 @@
                           [
                             {
                               "Literal": {
+                                "Value": "'Rango histórico (mín–máx)'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Rango normal (P33–P66)'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
                                 "Value": "'Años adicionales'"
                               }
                             }
@@ -110,7 +124,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Rangos históricos'"
+                                "Value": "'Anomalías'"
                               }
                             }
                           ]
@@ -150,7 +164,7 @@
             "singleSelect": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

@@ -1,6 +1,6 @@
 # Catálogo de medidas DAX
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-10 (100 medidas). No editar a mano.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-12 (108 medidas). No editar a mano.
 
 Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones, las variables acumulativas (precipitación, ETo, balance, radiación) **suman por estación y luego promedian entre estaciones**; los promedios se calculan por estación y luego entre estaciones; las temperaturas máxima y mínima mensuales son el extremo de cada estación, promediado. Las medidas que dependen de la variable usan `Var_Sel` (tabla `Variables`). Ver `01_arquitectura.md` y `06_decisiones_y_cambios.md`.
 
@@ -13,8 +13,8 @@ Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones,
 - [4 Anomalías](#4-anomalías) (8)
 - [5 Años adicionales](#5-años-adicionales) (16)
 - [6 Acumulados](#6-acumulados) (7)
-- [7 Textos y banderas](#7-textos-y-banderas) (16)
-- [8 Páginas heredadas](#8-páginas-heredadas) (20)
+- [7 Textos y banderas](#7-textos-y-banderas) (17)
+- [8 Páginas heredadas](#8-páginas-heredadas) (27)
 - [9 Validación](#9-validación) (4)
 
 ## 0 Contexto
@@ -430,7 +430,7 @@ IF ( NOT ISBLANK ( [Valor_Mensual] ) && NOT ISBLANK ( [Hist_Media] ), [Valor_Men
 <details><summary><code>Anomalia_Pct</code></summary>
 
 ```dax
-IF ( NOT ISBLANK ( [Anomalia] ), DIVIDE ( [Anomalia], [Hist_Media] ) )
+IF ( NOT ISBLANK ( [Anomalia] ), DIVIDE ( [Anomalia], ABS ( [Hist_Media] ) ) )
 ```
 </details>
 
@@ -440,11 +440,12 @@ IF ( NOT ISBLANK ( [Anomalia] ), DIVIDE ( [Anomalia], [Hist_Media] ) )
 VAR _a = [Anomalia]
 VAR _v = [Var_Sel]
 VAR _tipo = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Anom_Tipo] )
+VAR _dec = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Decimales] )
 RETURN
     IF (
         NOT ISBLANK ( _a ),
-        FORMAT ( _a, "+0.#;-0.#;0" ) & " " & [Var_Unidad]
-            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Pct], "+0.#%;-0.#%;0%" ) & ")" )
+        FORMAT ( _a, IF ( _dec > 0, "+0.0;-0.0;0", "+0;-0;0" ) ) & " " & [Var_Unidad]
+            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Pct], "+0%;-0%;0%" ) & ")" )
     )
 ```
 </details>
@@ -469,7 +470,7 @@ IF ( NOT ISBLANK ( [Acum_Mensual] ) && NOT ISBLANK ( [Hist_Acum_Media] ), [Acum_
 <details><summary><code>Anomalia_Acum_Pct</code></summary>
 
 ```dax
-IF ( NOT ISBLANK ( [Anomalia_Acum] ), DIVIDE ( [Anomalia_Acum], [Hist_Acum_Media] ) )
+IF ( NOT ISBLANK ( [Anomalia_Acum] ), DIVIDE ( [Anomalia_Acum], ABS ( [Hist_Acum_Media] ) ) )
 ```
 </details>
 
@@ -479,11 +480,12 @@ IF ( NOT ISBLANK ( [Anomalia_Acum] ), DIVIDE ( [Anomalia_Acum], [Hist_Acum_Media
 VAR _a = [Anomalia_Acum]
 VAR _v = [Var_Sel]
 VAR _tipo = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Anom_Tipo] )
+VAR _dec = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Decimales] )
 RETURN
     IF (
         NOT ISBLANK ( _a ),
-        FORMAT ( _a, "+0.#;-0.#;0" ) & " " & [Var_Unidad]
-            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Acum_Pct], "+0.#%;-0.#%;0%" ) & ")" )
+        FORMAT ( _a, IF ( _dec > 0, "+0.0;-0.0;0", "+0;-0;0" ) ) & " " & [Var_Unidad]
+            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Acum_Pct], "+0%;-0%;0%" ) & ")" )
     )
 ```
 </details>
@@ -861,7 +863,7 @@ RETURN
 | `Color_Normal` |  |  |
 | `Mostrar_Actual` | 0 | Bandera de los scripts R (sin selección: encendida) |
 | `Mostrar_Media` | 0 | Bandera de los scripts R (sin selección: apagada) |
-| `Mostrar_Rangos` | 0 | Bandera de los scripts R (sin selección: encendida) |
+| `Mostrar_Rangos` | 0 | Bandas: 1 = rango histórico (mín–máx), 2 = rango normal (P33–P66), 3 = ambas (sin selección: ambas) |
 | `Mostrar_Anios` | 0 | Bandera de los scripts R (sin selección: encendida) |
 | `Mostrar_Anomalias` | 0 | Bandera de los scripts R (sin selección: encendida) |
 | `Etiqueta_Actual` |  |  |
@@ -872,6 +874,7 @@ RETURN
 | `Subtitulo_Acumulado` |  | El periodo histórico va en la leyenda |
 | `Eje_Y` |  |  |
 | `Eje_Y_Acum` |  |  |
+| `Titulo_Pentada` |  | Título dinámico del gráfico de balance por pentadas |
 
 <details><summary><code>Color_Actual</code></summary>
 
@@ -914,7 +917,12 @@ IF ( ISFILTERED ( Capas[Capa] ), IF ( "Media histórica" IN VALUES ( Capas[Capa]
 <details><summary><code>Mostrar_Rangos</code></summary>
 
 ```dax
-IF ( ISFILTERED ( Capas[Capa] ), IF ( "Rangos históricos" IN VALUES ( Capas[Capa] ), 1, 0 ), 1 )
+IF (
+    ISFILTERED ( Capas[Capa] ),
+    IF ( "Rango histórico (mín–máx)" IN VALUES ( Capas[Capa] ), 1, 0 )
+        + IF ( "Rango normal (P33–P66)" IN VALUES ( Capas[Capa] ), 2, 0 ),
+    3
+)
 ```
 </details>
 
@@ -954,7 +962,7 @@ RETURN
     IF (
         COUNTROWS ( _p ) = 1,
         IF ( MAXX ( _p, Estaciones_met[País] ) = "Guatemala", "Costa sur de Guatemala", MAXX ( _p, Estaciones_met[País] ) ),
-        "Red ICC (Guatemala y El Salvador)"
+        "Red meteorológica ICC (Guatemala y El Salvador)"
     )
 ```
 </details>
@@ -1021,6 +1029,13 @@ RETURN
 ```
 </details>
 
+<details><summary><code>Titulo_Pentada</code></summary>
+
+```dax
+"Precipitación y ETo por pentada  |  " & [Titulo_Seleccion]
+```
+</details>
+
 ## 8 Páginas heredadas
 
 | Medida | Formato | Descripción |
@@ -1045,6 +1060,13 @@ RETURN
 | `Acum_Periodo_A` | 0.0 | Acumulado desde el inicio del Periodo A (eje: día del periodo) |
 | `Valor_Periodo_B` | 0.0 | Variable en las fechas del Periodo B |
 | `Acum_Periodo_B` | 0.0 | Acumulado desde el inicio del Periodo B (eje: día del periodo) |
+| `Comp_Acum` |  | Vista acumulada activa y variable acumulativa (Suma) |
+| `Comp_Valor` | 0.0 | Comparativas mensuales: valor mensual o acumulado de enero al mes, según la vista |
+| `Comp_Valor_Anio` | 0.0 | Comparativas mensuales por estación: el valor en el año de análisis |
+| `Titulo_Comp` |  |  |
+| `Titulo_Comp_Nota` |  |  |
+| `Titulo_Comp_Anios` |  |  |
+| `Titulo_Comp_Estaciones` |  |  |
 
 <details><summary><code>Mensual_Por_Anio</code></summary>
 
@@ -1251,6 +1273,56 @@ RETURN
             CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), DATESBETWEEN ( Calendario[Fecha], _ini, _f ) )
         )
     )
+```
+</details>
+
+<details><summary><code>Comp_Acum</code></summary>
+
+```dax
+SELECTEDVALUE ( Vista_Comp[Vista], "Mensual" ) = "Acumulado mensual" && [Var_Regla] = "Suma"
+```
+</details>
+
+<details><summary><code>Comp_Valor</code></summary>
+
+```dax
+IF ( [Comp_Acum], [Acum_Mes_Por_Anio], [Mensual_Por_Anio] )
+```
+</details>
+
+<details><summary><code>Comp_Valor_Anio</code></summary>
+
+```dax
+VAR _y = [Anio_Analisis]
+RETURN CALCULATE ( [Comp_Valor], Calendario[Anio] = _y )
+```
+</details>
+
+<details><summary><code>Titulo_Comp</code></summary>
+
+```dax
+[Var_Nombre] & IF ( [Comp_Acum], " acumulada", " mensual" ) & " (" & [Var_Unidad] & ")"
+```
+</details>
+
+<details><summary><code>Titulo_Comp_Nota</code></summary>
+
+```dax
+IF ( SELECTEDVALUE ( Vista_Comp[Vista], "Mensual" ) = "Acumulado mensual" && NOT [Comp_Acum], "  |  el acumulado solo aplica a variables acumulativas" )
+```
+</details>
+
+<details><summary><code>Titulo_Comp_Anios</code></summary>
+
+```dax
+[Titulo_Comp] & " por año  |  " & [Titulo_Seleccion] & [Titulo_Comp_Nota]
+```
+</details>
+
+<details><summary><code>Titulo_Comp_Estaciones</code></summary>
+
+```dax
+[Titulo_Comp] & " por estación  |  Año " & [Anio_Analisis] & [Titulo_Comp_Nota]
 ```
 </details>
 

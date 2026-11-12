@@ -341,7 +341,7 @@ table _Medidas
 		displayFolder: 4 Anomalías
 		lineageTag: 1ceb62e7-5fad-4fcb-b3f7-c4dda23dba07
 
-	measure Anomalia_Pct = IF ( NOT ISBLANK ( [Anomalia] ), DIVIDE ( [Anomalia], [Hist_Media] ) )
+	measure Anomalia_Pct = IF ( NOT ISBLANK ( [Anomalia] ), DIVIDE ( [Anomalia], ABS ( [Hist_Media] ) ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 4 Anomalías
 		lineageTag: 1168abc2-f11c-4a77-b74a-1835df0e7061
@@ -351,11 +351,12 @@ table _Medidas
 			VAR _a = [Anomalia]
 			VAR _v = [Var_Sel]
 			VAR _tipo = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Anom_Tipo] )
+			VAR _dec = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Decimales] )
 			RETURN
 			    IF (
 			        NOT ISBLANK ( _a ),
-			        FORMAT ( _a, "+0.#;-0.#;0" ) & " " & [Var_Unidad]
-			            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Pct], "+0.#%;-0.#%;0%" ) & ")" )
+			        FORMAT ( _a, IF ( _dec > 0, "+0.0;-0.0;0", "+0;-0;0" ) ) & " " & [Var_Unidad]
+			            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Pct], "+0%;-0%;0%" ) & ")" )
 			    )
 		displayFolder: 4 Anomalías
 		lineageTag: 7d248674-2282-40e5-aba7-37edfa3dc871
@@ -684,7 +685,7 @@ table _Medidas
 		displayFolder: 4 Anomalías
 		lineageTag: 335787b4-0860-473c-9404-8396885bf94b
 
-	measure Anomalia_Acum_Pct = IF ( NOT ISBLANK ( [Anomalia_Acum] ), DIVIDE ( [Anomalia_Acum], [Hist_Acum_Media] ) )
+	measure Anomalia_Acum_Pct = IF ( NOT ISBLANK ( [Anomalia_Acum] ), DIVIDE ( [Anomalia_Acum], ABS ( [Hist_Acum_Media] ) ) )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 4 Anomalías
 		lineageTag: 18fb5ef0-07cf-46de-8395-673d8abf60bf
@@ -694,11 +695,12 @@ table _Medidas
 			VAR _a = [Anomalia_Acum]
 			VAR _v = [Var_Sel]
 			VAR _tipo = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Anom_Tipo] )
+			VAR _dec = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables[Decimales] )
 			RETURN
 			    IF (
 			        NOT ISBLANK ( _a ),
-			        FORMAT ( _a, "+0.#;-0.#;0" ) & " " & [Var_Unidad]
-			            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Acum_Pct], "+0.#%;-0.#%;0%" ) & ")" )
+			        FORMAT ( _a, IF ( _dec > 0, "+0.0;-0.0;0", "+0;-0;0" ) ) & " " & [Var_Unidad]
+			            & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Acum_Pct], "+0%;-0%;0%" ) & ")" )
 			    )
 		displayFolder: 4 Anomalías
 		lineageTag: 57cae797-78db-43e6-9be1-ed47a6a88238
@@ -725,8 +727,14 @@ table _Medidas
 		displayFolder: 7 Textos y banderas
 		lineageTag: 1b2f42cd-d9ce-4f68-8333-8d2e6d18a606
 
-	/// Bandera de los scripts R (sin selección: encendida)
-	measure Mostrar_Rangos = IF ( ISFILTERED ( Capas[Capa] ), IF ( "Rangos históricos" IN VALUES ( Capas[Capa] ), 1, 0 ), 1 )
+	/// Bandas: 1 = rango histórico (mín–máx), 2 = rango normal (P33–P66), 3 = ambas (sin selección: ambas)
+	measure Mostrar_Rangos =
+			IF (
+			    ISFILTERED ( Capas[Capa] ),
+			    IF ( "Rango histórico (mín–máx)" IN VALUES ( Capas[Capa] ), 1, 0 )
+			        + IF ( "Rango normal (P33–P66)" IN VALUES ( Capas[Capa] ), 2, 0 ),
+			    3
+			)
 		formatString: 0
 		displayFolder: 7 Textos y banderas
 		lineageTag: 9b2c1b9c-e60d-45a5-889b-8dcbf99a1a2e
@@ -759,7 +767,7 @@ table _Medidas
 			    IF (
 			        COUNTROWS ( _p ) = 1,
 			        IF ( MAXX ( _p, Estaciones_met[País] ) = "Guatemala", "Costa sur de Guatemala", MAXX ( _p, Estaciones_met[País] ) ),
-			        "Red ICC (Guatemala y El Salvador)"
+			        "Red meteorológica ICC (Guatemala y El Salvador)"
 			    )
 		displayFolder: 7 Textos y banderas
 		lineageTag: 704bf238-58f4-4f8e-bce1-5b70f3fa5095
@@ -1033,6 +1041,52 @@ table _Medidas
 		isHidden
 		displayFolder: 0 Contexto
 		lineageTag: 562c20e7-7c90-4b1a-b44a-bfca4b89df31
+
+	/// Vista acumulada activa y variable acumulativa (Suma)
+	measure Comp_Acum = SELECTEDVALUE ( Vista_Comp[Vista], "Mensual" ) = "Acumulado mensual" && [Var_Regla] = "Suma"
+		isHidden
+		displayFolder: 8 Páginas heredadas
+		lineageTag: 6ff33a02-add0-47a5-bbc8-be680a9d0f67
+
+	/// Comparativas mensuales: valor mensual o acumulado de enero al mes, según la vista
+	measure Comp_Valor = IF ( [Comp_Acum], [Acum_Mes_Por_Anio], [Mensual_Por_Anio] )
+		formatString: 0.0
+		displayFolder: 8 Páginas heredadas
+		lineageTag: 3e9ce014-ce58-4d55-bb53-81362ea63fa9
+
+	/// Comparativas mensuales por estación: el valor en el año de análisis
+	measure Comp_Valor_Anio =
+			VAR _y = [Anio_Analisis]
+			RETURN CALCULATE ( [Comp_Valor], Calendario[Anio] = _y )
+		formatString: 0.0
+		displayFolder: 8 Páginas heredadas
+		lineageTag: 431d0df9-3f09-474e-b5d5-c2484670339b
+
+	measure Titulo_Comp = [Var_Nombre] & IF ( [Comp_Acum], " acumulada", " mensual" ) & " (" & [Var_Unidad] & ")"
+		isHidden
+		displayFolder: 8 Páginas heredadas
+		lineageTag: e326d0bf-eee7-4d92-b135-8970439077e7
+
+	measure Titulo_Comp_Nota = IF ( SELECTEDVALUE ( Vista_Comp[Vista], "Mensual" ) = "Acumulado mensual" && NOT [Comp_Acum], "  |  el acumulado solo aplica a variables acumulativas" )
+		isHidden
+		displayFolder: 8 Páginas heredadas
+		lineageTag: 2ffecabd-617e-4969-ab2a-f580c4bf9907
+
+	measure Titulo_Comp_Anios = [Titulo_Comp] & " por año  |  " & [Titulo_Seleccion] & [Titulo_Comp_Nota]
+		isHidden
+		displayFolder: 8 Páginas heredadas
+		lineageTag: bff17f42-bfb4-40c1-886c-b28a6c85cea3
+
+	measure Titulo_Comp_Estaciones = [Titulo_Comp] & " por estación  |  Año " & [Anio_Analisis] & [Titulo_Comp_Nota]
+		isHidden
+		displayFolder: 8 Páginas heredadas
+		lineageTag: 176a4e8a-f32f-41d7-99bf-fd3b7b963514
+
+	/// Título dinámico del gráfico de balance por pentadas
+	measure Titulo_Pentada = "Precipitación y ETo por pentada  |  " & [Titulo_Seleccion]
+		isHidden
+		displayFolder: 7 Textos y banderas
+		lineageTag: f9e559e8-5498-46ab-9152-1b049f00a3ea
 
 	column Column
 		isHidden

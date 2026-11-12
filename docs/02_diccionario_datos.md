@@ -1,6 +1,6 @@
 # Diccionario de datos
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-10. No editar a mano: los cambios se pierden al regenerar.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-12. No editar a mano: los cambios se pierden al regenerar.
 
 ## Parámetros y funciones de Power Query
 
@@ -149,9 +149,10 @@ DATATABLE (
     {
         {"Año actual", 1},
         {"Media histórica", 2},
-        {"Rangos históricos", 3},
-        {"Años adicionales", 4},
-        {"Anomalías", 5}
+        {"Rango histórico (mín–máx)", 3},
+        {"Rango normal (P33–P66)", 4},
+        {"Años adicionales", 5},
+        {"Anomalías", 6}
     }
 )
 ```
@@ -661,7 +662,7 @@ DATATABLE (
         {"PCP", "Precipitación", "mm", "Suma", 1, "Agua", "pct", 15, 40, "#00008B", "#4682B4", "#36648B", 0, 1},
         {"ETO", "Evapotranspiración potencial (ETo)", "mm", "Suma", 2, "Agua", "pct", 15, 40, "#006400", "#8FBC8F", "#2E8B57", 0, 0},
         {"ETOD", "ETo media diaria", "mm/día", "Promedio", 3, "Agua", "pct", 15, 40, "#006400", "#8FBC8F", "#2E8B57", 1, 0},
-        {"BH", "Balance hídrico (P − ETo)", "mm", "Suma", 4, "Agua", "abs", 25, 50, "#00008B", "#7EC8E3", "#4A90D9", 0, 1},
+        {"BH", "Balance hídrico (P − ETo)", "mm", "Suma", 4, "Agua", "pct", 25, 50, "#1B2A49", "#C9CED8", "#6B7A99", 0, 1},
         {"RAD", "Radiación solar", "MJ/m²", "Suma", 5, "Radiación", "pct", 10, 20, "#8B4513", "#F4A460", "#CD853F", 0, 0},
         {"IRR", "Irradiancia diurna media", "W/m²", "Promedio", 6, "Radiación", "pct", 10, 20, "#8B4513", "#F4A460", "#CD853F", 0, 0},
         {"TMED", "Temperatura media", "°C", "Promedio", 7, "Temperatura", "abs", 0.5, 1, "#8B0000", "#CD4F39", "#FF6347", 1, 0},
@@ -670,6 +671,27 @@ DATATABLE (
         {"ICMED", "Sensación térmica media", "°C", "Promedio", 10, "Temperatura", "abs", 0.5, 1, "#A63603", "#FDAE6B", "#E6550D", 1, 0},
         {"IC", "Sensación térmica máxima", "°C", "Máximo", 11, "Temperatura", "abs", 0.5, 1, "#A63603", "#FDAE6B", "#E6550D", 1, 0},
         {"ICMIN", "Sensación térmica mínima", "°C", "Mínimo", 12, "Temperatura", "abs", 0.5, 1, "#A63603", "#FDAE6B", "#E6550D", 1, 0}
+    }
+)
+```
+</details>
+
+
+### `Vista_Comp`
+
+| Columna | Tipo | Formato | Ordenar por | Notas |
+|---|---|---|---|---|
+| `Vista` | string |  | `Orden` |  |
+| `Orden` | int64 | 0 |  | oculta |
+
+<details><summary>Expresión DAX (tabla calculada)</summary>
+
+```dax
+DATATABLE (
+    "Vista", STRING, "Orden", INTEGER,
+    {
+        {"Mensual", 1},
+        {"Acumulado mensual", 2}
     }
 )
 ```

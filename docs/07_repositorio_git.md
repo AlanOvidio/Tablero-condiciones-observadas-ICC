@@ -24,6 +24,6 @@ Deshacer: *History* → clic derecho → **Undo commit** (sin push) o **Revert c
 
 | Se versiona | No se versiona (`.gitignore`) |
 |---|---|
-| `.pbip`, TMDL del modelo, JSON del reporte, `diagramLayout.json`, `docs/`, `tools/`, `config/`, `deneb/`, shapefile de regiones | `.pbi/cache.abf` (datos), `.pbi/localSettings.json`, `_respaldo*/`, scripts `.R` de `otros_archivos/` (credenciales), `.Renviron`, `.Rhistory`, índices `.sbn/.sbx` |
+| `.pbip`, TMDL del modelo, JSON del reporte, `diagramLayout.json`, `docs/`, `tools/`, `config/`, `deneb/`, shapefile de regiones | `.pbi/cache.abf` (datos), `.pbi/localSettings.json`, `_respaldo*/`, `.Rhistory`, índices `.sbn/.sbx` |
 
 Después de clonar en otro equipo: abrir el `.pbip` y **Actualizar** (los datos no viajan en el repositorio).

@@ -39,13 +39,6 @@
       "data": [
         {
           "properties": {
-            "mode": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Between'"
-                }
-              }
-            },
             "startDate": {
               "expr": {
                 "Literal": {
@@ -57,6 +50,13 @@
               "expr": {
                 "Literal": {
                   "Value": "datetime'2026-11-01T00:00:00'"
+                }
+              }
+            },
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Between'"
                 }
               }
             }
@@ -122,7 +122,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2026-11-01T00:00:00'"
+                                "Value": "datetime'2026-11-02T00:00:00'"
                               }
                             }
                           }

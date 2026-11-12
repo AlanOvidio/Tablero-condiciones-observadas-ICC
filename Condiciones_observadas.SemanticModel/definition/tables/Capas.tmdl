@@ -30,9 +30,10 @@ table Capas
 				    {
 				        {"Año actual", 1},
 				        {"Media histórica", 2},
-				        {"Rangos históricos", 3},
-				        {"Años adicionales", 4},
-				        {"Anomalías", 5}
+				        {"Rango histórico (mín–máx)", 3},
+				        {"Rango normal (P33–P66)", 4},
+				        {"Años adicionales", 5},
+				        {"Anomalías", 6}
 				    }
 				)
 

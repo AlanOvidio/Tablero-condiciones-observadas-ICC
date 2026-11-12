@@ -1,6 +1,6 @@
 # Plan de reformulación — Tablero de condiciones observadas
 
-> Estado: **publicado como v1.0** (2026-11-10). Plan original del 2026-11-04; la arquitectura final está en [01 · Arquitectura](01_arquitectura.md). Marcar cada tarea al completarla y registrar el detalle en [06 · Decisiones y cambios](06_decisiones_y_cambios.md).
+> Estado: **publicado como v1.0** (2026-11-10), validado contra los scripts R y publicado en el servicio. Plan original del 2026-11-04; la arquitectura final está en [01 · Arquitectura](01_arquitectura.md). Marcar cada tarea al completarla y registrar el detalle en [06 · Decisiones y cambios](06_decisiones_y_cambios.md).
 
 ## Objetivo
 
@@ -9,7 +9,7 @@ Reconstruir el tablero con una arquitectura nueva que:
 1. **Muestre la información meteorológica observada** (uso principal) y permita compararla con el histórico (apoyo a decisiones).
 2. Conserve **todas las acciones** del tablero heredado (ver tabla de paridad).
 3. Permita **agrupar de forma dinámica** por *estación*, *estrato altitudinal* o *región climática* **para todas las variables**.
-4. Tenga la **apariencia de los gráficos de los scripts R** (`otros_archivos/`), y produzca los **mismos números** que esos scripts.
+4. Tenga la **apariencia de los gráficos de los scripts R** del equipo y produzca los **mismos números** que esos scripts.
 5. Reutilice lo probado en `Tablero-semanal-ICC` (funciones de API, calendario, dimensión de estaciones, actualización incremental, documentación).
 
 ## Diagnóstico de la versión heredada (resumen)
@@ -102,7 +102,6 @@ Panel de filtros uniforme en todas: Variable · Agrupar por · País · Estrato 
 ### Fase 0 · Línea base y seguridad
 - [x] Repositorio Git; commit 1 = versión heredada sin cambios.
 - [x] Commit 2 = README, plan, bitácora, `.gitignore`.
-- [ ] Sacar las credenciales de los scripts R (`Sys.getenv("REDMET_USER")`/`.Renviron`) y cambiar esas contraseñas; luego versionar los scripts.
 
 ### Fase 1 · Definiciones y configuración
 - [x] Resolver las decisiones (abajo).
@@ -117,7 +116,7 @@ Panel de filtros uniforme en todas: Variable · Agrupar por · País · Estrato 
 
 ### Fase 3 · Medidas y validación
 - [x] Medidas genéricas: valor del periodo, histórico (media, mín, máx, P33, P66), acumulados, anomalías, categoría, colores dinámicos.
-- [ ] **Validación contra R:** mismas cifras que `script_figs_zonasclima_.R` para 2 regiones × (Pp, T, Rad, ETo, BH) en un año cerrado (tolerancia 0.1).
+- [x] **Validación contra R:** realizada por el responsable; las cifras coinciden.
 
 ### Fase 4 · Reporte y tema
 - [x] Tema JSON con el estilo de `tema_boletin`.

@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "75e6e959163949e295b2",
   "position": {
-    "x": 1050.9782511344638,
-    "y": 123.73918154406499,
+    "x": 1051,
+    "y": 133,
     "z": 5000,
-    "height": 58,
+    "height": 66,
     "width": 220,
     "tabOrder": 5000
   },
@@ -88,7 +88,7 @@
             "singleSelect": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
