@@ -4,5 +4,17 @@
   "displayName": "Balance hídrico por pentadas",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "7297e4ac75d44e77b91e",
+      "target": "7f1eeb4be70150c08b46",
+      "type": "DataFilter"
+    },
+    {
+      "source": "01d5952b78a9405bbeb1",
+      "target": "7297e4ac75d44e77b91e",
+      "type": "DataFilter"
+    }
+  ]
 }

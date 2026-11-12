@@ -1,8 +1,8 @@
 # Inventario de páginas y visuales
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-10. No editar a mano.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-12. No editar a mano.
 
-## Comparativas por estación
+## Comparativas por estación (oculta)
 
 Tamaño 1280×720 · 12 visuales · carpeta `1cc2fb9c6bf4488c97b6`
 
@@ -19,7 +19,7 @@ Tamaño 1280×720 · 12 visuales · carpeta `1cc2fb9c6bf4488c97b6`
 | slicer |  | Estación | `39ad6a` |
 | lineChart | Promedio mensual de evapotranspiración diaria (mm/día) | Mes, Anio, Mensual_ETPd | `d7078d` |
 
-## Comparativas por año
+## Comparativas por año (oculta)
 
 Tamaño 1280×720 · 12 visuales · carpeta `d83fe8551d2e40389741`
 
@@ -36,7 +36,7 @@ Tamaño 1280×720 · 12 visuales · carpeta `d83fe8551d2e40389741`
 | slicer |  | Estación | `dd4ec1` |
 | lineChart | Promedio mensual de evapotranspiración diaria (mm/día) | Mes, Estación, Mensual_ETPd | `5d7261` |
 
-## Comparación de temperaturas
+## Comparación de temperaturas (oculta)
 
 Tamaño 1280×720 · 12 visuales · carpeta `70d9cb332c9e4d23b1a9`
 
@@ -53,7 +53,7 @@ Tamaño 1280×720 · 12 visuales · carpeta `70d9cb332c9e4d23b1a9`
 | slicer |  | Estación | `afba2f` |
 | lineChart | Temperatura mínima mensual (°C) | Mes, Anio, Mensual_TMin | `052c87` |
 
-## Comparación de radiación
+## Comparación de radiación (oculta)
 
 Tamaño 1280×720 · 12 visuales · carpeta `387dc72937f24d79b0fd`
 
@@ -70,6 +70,28 @@ Tamaño 1280×720 · 12 visuales · carpeta `387dc72937f24d79b0fd`
 | slicer |  | Cuenca | `319eff` |
 | slicer |  | Estación | `e80ab6` |
 
+## Comparativas mensuales
+
+Tamaño 1280×720 · 21 visuales · carpeta `e5b94154733f4e55b2a7`
+
+| Visual | Título | Campos | ID |
+|---|---|---|---|
+| card |  | Ultima_Fecha | `e6c530` |
+| slicer |  | Variable | `f1bb96` |
+| lineChart | [Titulo_Comp_Anios] | Mes, Anio, Comp_Valor | `bd4dac` |
+| lineChart | [Titulo_Comp_Estaciones] | Mes, Estación, Comp_Valor_Anio | `43244c` |
+| slicer |  | Vista | `bda25a` |
+| slicer |  | Anio | `05fd2d` |
+| slicer |  | Año | `c61976` |
+| slicer |  | País | `c4d7db` |
+| slicer |  | Región climática | `99d64c` |
+| slicer |  | Estrato | `075ca8` |
+| pivotTable |  | Mes, Anio, Comp_Valor | `2bc4ae` |
+| pivotTable |  | Mes, Estación, Comp_Valor_Anio | `d1731c` |
+| azureMap |  | Estación), Región climática, Estrato, Cuenca, Longitud, Latitud | `7e28b4` |
+| slicer |  | Cuenca | `0b925d` |
+| slicer |  | Estación | `25f694` |
+
 ## Precipitación diaria
 
 Tamaño 1280×720 · 11 visuales · carpeta `1c9088cca6274ecba183`
@@ -77,14 +99,14 @@ Tamaño 1280×720 · 11 visuales · carpeta `1c9088cca6274ecba183`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `88cc33` |
+| azureMap | Precipitación del periodo por estación (mm) | Valor_Diario, Estación), Región climática, Estrato, Cuenca, Longitud, Latitud | `b0d628` |
 | slicer |  | Fecha | `1bdd9f` |
-| azureMap | Precipitación del periodo por estación (mm) | Valor_Diario, Región climática, Estrato, Cuenca, Longitud, Latitud | `b0d628` |
 | slicer |  | País | `ce6de0` |
 | slicer |  | Región climática | `4f5223` |
 | slicer |  | Estrato | `1df381` |
 | slicer |  | Cuenca | `93ea9c` |
-| slicer |  | Estación | `3dbdec` |
 | lineClusteredColumnComboChart | Precipitación diaria (mm) | Fecha, Estación, Valor_Diario, Acum_Diario | `530eb3` |
+| slicer |  | Estación | `3dbdec` |
 
 ## Mapa de precipitación
 
@@ -93,8 +115,8 @@ Tamaño 1280×720 · 12 visuales · carpeta `739e2f206a594c759a67`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `4a9585` |
+| azureMap | Precipitación del periodo por estación (mm) | Valor_Diario, Estación), Región climática, Estrato, Cuenca, Longitud, Latitud | `4d04c1` |
 | slicer |  | Fecha | `6fa313` |
-| azureMap | Precipitación del periodo por estación (mm) | Valor_Diario, Región climática, Estrato, Cuenca, Longitud, Latitud | `4d04c1` |
 | slicer |  | País | `324e9f` |
 | slicer |  | Región climática | `7967a4` |
 | slicer |  | Estrato | `493fa9` |
@@ -110,8 +132,8 @@ Tamaño 1280×720 · 14 visuales · carpeta `844d081e734a471f9477`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `e4438e` |
-| slicer |  | Año | `ad30a7` |
 | Deneb (Vega-Lite) |  | Mes_Num, Valor_Mensual, Hist_Media, Hist_Min, Hist_Max, Hist_P33, Hist_P66, Anomalia_Etiqueta, Anomalia_Color, Subtitulo_Seleccion, Eje_Y, Valor_Comp_1, Anio_Comp_1_Txt, Valor_Comp_2, Anio_Comp_2_Txt, Valor_Comp_3, Anio_Comp_3_Txt, Valor_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `98a065` |
+| slicer |  | Año | `ad30a7` |
 | slicer |  | Año | `24be25` |
 | slicer |  | Año | `4aebce` |
 | slicer |  | Capa | `455322` |
@@ -128,8 +150,8 @@ Tamaño 1280×720 · 16 visuales · carpeta `db33fa28d3f74f74add9`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `97bf36` |
-| slicer |  | Variable | `c8beba` |
 | Deneb (Vega-Lite) |  | Pos, Acum_Mensual, Hist_Acum_Media, Hist_Acum_Min, Hist_Acum_Max, Hist_Acum_P33, Hist_Acum_P66, Anomalia_Acum_Etiqueta, Anomalia_Acum_Color, Subtitulo_Acumulado, Eje_Y_Acum, Acum_Comp_1, Anio_Comp_1_Txt, Acum_Comp_2, Anio_Comp_2_Txt, Acum_Comp_3, Anio_Comp_3_Txt, Acum_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `c57951` |
+| slicer |  | Variable | `c8beba` |
 | slicer |  | Modo | `0dfdae` |
 | slicer |  | Año | `b37f05` |
 | slicer |  | Año | `d83868` |
@@ -137,8 +159,8 @@ Tamaño 1280×720 · 16 visuales · carpeta `db33fa28d3f74f74add9`
 | slicer |  | Capa | `1c7efe` |
 | slicer |  | País | `db3c43` |
 | slicer |  | Región climática | `1bd0dd` |
-| slicer |  | Estrato | `f577c2` |
 | slicer |  | Estación | `14b3f8` |
+| slicer |  | Estrato | `f577c2` |
 | slicer |  | Cuenca | `6cf2a3` |
 
 ## Comparativo histórico: temperaturas
@@ -167,8 +189,8 @@ Tamaño 1280×720 · 15 visuales · carpeta `36c51d105ec04e1899e9`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `2f98dc` |
-| slicer |  | Variable | `06bbaf` |
 | Deneb (Vega-Lite) |  | Mes_Num, Valor_Mensual, Hist_Media, Hist_Min, Hist_Max, Hist_P33, Hist_P66, Anomalia_Etiqueta, Anomalia_Color, Subtitulo_Seleccion, Eje_Y, Valor_Comp_1, Anio_Comp_1_Txt, Valor_Comp_2, Anio_Comp_2_Txt, Valor_Comp_3, Anio_Comp_3_Txt, Valor_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `c9160f` |
+| slicer |  | Variable | `06bbaf` |
 | slicer |  | Año | `dea282` |
 | slicer |  | Año | `8df384` |
 | slicer |  | Año | `3c0280` |
@@ -186,8 +208,8 @@ Tamaño 1280×720 · 15 visuales · carpeta `87186e2cb3f24bbd8f5b`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `4df452` |
-| slicer |  | Variable | `04220c` |
 | Deneb (Vega-Lite) |  | Mes_Num, Valor_Mensual, Hist_Media, Hist_Min, Hist_Max, Hist_P33, Hist_P66, Anomalia_Etiqueta, Anomalia_Color, Subtitulo_Seleccion, Eje_Y, Valor_Comp_1, Anio_Comp_1_Txt, Valor_Comp_2, Anio_Comp_2_Txt, Valor_Comp_3, Anio_Comp_3_Txt, Valor_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `2a11f1` |
+| slicer |  | Variable | `04220c` |
 | slicer |  | Año | `df731a` |
 | slicer |  | Año | `bbb74b` |
 | slicer |  | Año | `68ba88` |
@@ -195,8 +217,8 @@ Tamaño 1280×720 · 15 visuales · carpeta `87186e2cb3f24bbd8f5b`
 | slicer |  | País | `3bef66` |
 | slicer |  | Región climática | `d2df33` |
 | slicer |  | Estrato | `fa3d67` |
-| slicer |  | Cuenca | `76602b` |
 | slicer |  | Estación | `081986` |
+| slicer |  | Cuenca | `76602b` |
 
 ## Comparativo histórico: sensación térmica
 
@@ -205,8 +227,8 @@ Tamaño 1280×720 · 15 visuales · carpeta `05bfc283239544d1bf9a`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `4d0ab5` |
-| slicer |  | Variable | `3eea37` |
 | Deneb (Vega-Lite) |  | Mes_Num, Valor_Mensual, Hist_Media, Hist_Min, Hist_Max, Hist_P33, Hist_P66, Anomalia_Etiqueta, Anomalia_Color, Subtitulo_Seleccion, Eje_Y, Valor_Comp_1, Anio_Comp_1_Txt, Valor_Comp_2, Anio_Comp_2_Txt, Valor_Comp_3, Anio_Comp_3_Txt, Valor_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `bb1ee5` |
+| slicer |  | Variable | `3eea37` |
 | slicer |  | Año | `a4ccb2` |
 | slicer |  | Año | `f2ed91` |
 | slicer |  | Año | `c5d5dd` |
@@ -224,8 +246,8 @@ Tamaño 1280×720 · 14 visuales · carpeta `899174f65fe448dda678`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `ee9f99` |
-| slicer |  | Año | `478b8b` |
 | Deneb (Vega-Lite) |  | Mes_Num, Valor_Mensual, Hist_Media, Hist_Min, Hist_Max, Hist_P33, Hist_P66, Anomalia_Etiqueta, Anomalia_Color, Subtitulo_Seleccion, Eje_Y, Valor_Comp_1, Anio_Comp_1_Txt, Valor_Comp_2, Anio_Comp_2_Txt, Valor_Comp_3, Anio_Comp_3_Txt, Valor_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `a82ef8` |
+| slicer |  | Año | `478b8b` |
 | slicer |  | Año | `92df7e` |
 | slicer |  | Año | `d3f8cf` |
 | slicer |  | Capa | `6fc914` |
@@ -242,14 +264,14 @@ Tamaño 1280×720 · 12 visuales · carpeta `46822704f9764f7a9905`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `e64013` |
+| azureMap | Radiación del periodo por estación | Valor_Diario, Estación), Región climática, Estrato, Cuenca, Longitud, Latitud | `df7135` |
 | slicer |  | Variable | `f66d3b` |
-| azureMap | Radiación del periodo por estación | Valor_Diario, Región climática, Estrato, Cuenca, Longitud, Latitud | `df7135` |
 | slicer |  | Fecha | `c1186a` |
 | slicer |  | País | `ec8f0e` |
 | slicer |  | Región climática | `9c27df` |
 | slicer |  | Estrato | `c650eb` |
-| slicer |  | Cuenca | `54df9d` |
 | lineChart | Radiación diaria por estación | Fecha, Estación, Valor_Diario | `05b251` |
+| slicer |  | Cuenca | `54df9d` |
 | slicer |  | Estación | `8c2e76` |
 
 ## Mapa de sensación térmica
@@ -269,13 +291,13 @@ Tamaño 1280×720 · 10 visuales · carpeta `a4384055951540ebb6b3`
 
 ## Balance hídrico por pentadas
 
-Tamaño 1280×720 · 12 visuales · carpeta `71873242caae4f6383ef`
+Tamaño 1280×720 · 13 visuales · carpeta `71873242caae4f6383ef`
 
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `3a39bf` |
-| areaChart | Precipitación y ETo por pentada (mm) | Pentada, ETO_Anio, PCP_Anio | `7297e4` |
 | slicer |  | Año | `efc0d0` |
+| areaChart | [Titulo_Pentada] | Pentada, ETO_Anio, PCP_Anio | `7297e4` |
 | slicer |  | País | `a1e943` |
 | slicer |  | Región climática | `6f0c22` |
 | slicer |  | Estrato | `1ed861` |
@@ -284,7 +306,7 @@ Tamaño 1280×720 · 12 visuales · carpeta `71873242caae4f6383ef`
 | tableEx | Fechas de la pentada | Pentada, Pentada_Inicio, Pentada_Fin | `01d595` |
 | slicer |  | Estación | `c364a8` |
 
-## Comparación entre periodos
+## Comparación entre periodos (oculta)
 
 Tamaño 1280×720 · 13 visuales · carpeta `670a8726cfdb4a5f94a3`
 
@@ -302,7 +324,7 @@ Tamaño 1280×720 · 13 visuales · carpeta `670a8726cfdb4a5f94a3`
 | slicer |  | Cuenca | `fd1f44` |
 | slicer |  | Estación | `75d86e` |
 
-## Notas metodológicas
+## Notas metodológicas (oculta)
 
 Tamaño 1280×720 · 1 visuales · carpeta `c096f5082a7a4c3ea0c3`
 

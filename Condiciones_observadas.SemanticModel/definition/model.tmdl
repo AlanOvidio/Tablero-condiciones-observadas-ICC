@@ -30,6 +30,7 @@ ref table Periodo_A
 ref table Periodo_B
 ref table Dias_Periodo
 ref table _Medidas
+ref table Vista_Comp
 
 ref cultureInfo es-GT
 

@@ -3,9 +3,9 @@
   "name": "74b923684a114cba85f7",
   "position": {
     "x": 1050,
-    "y": 302.28570992606024,
+    "y": 312.14285714285717,
     "z": 9000,
-    "height": 58,
+    "height": 64.285714285714292,
     "width": 220,
     "tabOrder": 9000
   },
@@ -96,7 +96,21 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Rangos históricos'"
+                                "Value": "'Media histórica'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Rango histórico (mín–máx)'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Rango normal (P33–P66)'"
                               }
                             }
                           ],
@@ -111,13 +125,6 @@
                             {
                               "Literal": {
                                 "Value": "'Anomalías'"
-                              }
-                            }
-                          ],
-                          [
-                            {
-                              "Literal": {
-                                "Value": "'Media histórica'"
                               }
                             }
                           ]
@@ -157,7 +164,7 @@
             "singleSelect": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

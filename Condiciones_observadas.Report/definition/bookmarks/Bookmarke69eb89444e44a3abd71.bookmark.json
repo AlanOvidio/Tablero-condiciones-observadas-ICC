@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Comparativas: comparar años",
+  "name": "Bookmarke69eb89444e44a3abd71",
+  "options": {
+    "applyOnlyToTargetVisuals": true,
+    "targetVisualNames": [
+      "bd4dac62c3d947c99109",
+      "2bc4ae6d7e9f43cba197",
+      "05fd2d9ca47149d29c06",
+      "43244cb08b5848549b32",
+      "d1731c32dbca4022bd5f",
+      "c61976ba7d134ddc8417",
+      "991af4b128ea4cb5ba09",
+      "031447265d5c49a9b95d",
+      "d1a32955ae4d483eb0c9",
+      "59ffdd2fcd984584b991"
+    ],
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.0",
+    "activeSection": "e5b94154733f4e55b2a7",
+    "sections": {
+      "e5b94154733f4e55b2a7": {
+        "visualContainers": {
+          "bd4dac62c3d947c99109": {
+            "singleVisual": {
+              "visualType": "lineChart"
+            }
+          },
+          "2bc4ae6d7e9f43cba197": {
+            "singleVisual": {
+              "visualType": "pivotTable"
+            }
+          },
+          "05fd2d9ca47149d29c06": {
+            "singleVisual": {
+              "visualType": "slicer"
+            }
+          },
+          "43244cb08b5848549b32": {
+            "singleVisual": {
+              "visualType": "lineChart",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "d1731c32dbca4022bd5f": {
+            "singleVisual": {
+              "visualType": "pivotTable",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "c61976ba7d134ddc8417": {
+            "singleVisual": {
+              "visualType": "slicer",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "991af4b128ea4cb5ba09": {
+            "singleVisual": {
+              "visualType": "actionButton"
+            }
+          },
+          "031447265d5c49a9b95d": {
+            "singleVisual": {
+              "visualType": "actionButton"
+            }
+          },
+          "d1a32955ae4d483eb0c9": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "59ffdd2fcd984584b991": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

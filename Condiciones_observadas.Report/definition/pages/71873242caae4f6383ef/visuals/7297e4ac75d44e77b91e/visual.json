@@ -3,7 +3,7 @@
   "name": "7297e4ac75d44e77b91e",
   "position": {
     "x": 10,
-    "y": 62.857142857142861,
+    "y": 72.5,
     "z": 2000,
     "height": 484.28571428571433,
     "width": 1020.0000000000001,
@@ -89,8 +89,56 @@
             },
             "text": {
               "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Titulo_Pentada"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
                 "Literal": {
-                  "Value": "'Precipitación y ETo por pentada (mm)'"
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Subtitulo_Seleccion"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#666666'"
+                    }
+                  }
                 }
               }
             }
@@ -98,6 +146,28 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'P y ETo (mm)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

@@ -18,7 +18,7 @@ Modelo semántico y reporte de Power BI que muestran las condiciones meteorológ
 ├── deneb/                                 ← especificaciones Vega-Lite de las gráficas tipo R
 ├── docs/                                  ← documentación
 ├── tools/                                 ← regiones y documentación automática
-└── otros_archivos/                        ← shapefile de regiones (scripts R de referencia: no se versionan)
+└── otros_archivos/                        ← shapefile de regiones climáticas
 ```
 
 ## Documentación

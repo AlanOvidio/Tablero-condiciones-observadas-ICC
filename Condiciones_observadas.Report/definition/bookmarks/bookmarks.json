@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "Comparativas mensuales",
+      "displayName": "Comparativas mensuales",
+      "children": [
+        "Bookmarke69eb89444e44a3abd71",
+        "Bookmarkd614bd8b8871416eb1a9"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+table Vista_Comp
+	lineageTag: fff929c0-febf-42bb-9479-51fdc1f63cf7
+
+	column Vista
+		dataType: string
+		lineageTag: 8ce2a19c-f792-48e8-821b-a3568985ac91
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Vista]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7593e708-6942-4ca1-9f1a-4da853da1aa9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Vista_Comp = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Vista", STRING, "Orden", INTEGER,
+				    {
+				        {"Mensual", 1},
+				        {"Acumulado mensual", 2}
+				    }
+				)
+

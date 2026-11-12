@@ -83,4 +83,23 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 ## 2026-11-10 · Versión v1.0
 - Fusión de la rama `v2` en `main` (Pull Request #1) y etiqueta `v1.0`.
 - Se conserva temporalmente la versión heredada como referencia.
-- Pendientes: completar cuencas en el Excel de SharePoint (`Hoja2`); decidir si se unen las comparativas por estación, por año y de temperaturas; retirar la versión heredada.
+- Pendientes (en ese momento): completar cuencas; decidir si se unen las comparativas por estación, por año y de temperaturas; retirar la versión heredada.
+
+## 2026-11-11 · Ajustes posteriores a v1.0
+- Validación contra los scripts R realizada por el responsable: cifras correctas. El tablero está publicado en el servicio.
+- Los scripts R de figuras son solo la base de referencia y no forman parte del repositorio; se retiraron de la documentación las menciones a versionarlos.
+- Segmentadores desplegables (país, estrato, región, cuenca, estación, años de comparación, capas): selección múltiple sin Ctrl. Los segmentadores de mosaico con nombres de estación mantienen la selección con Ctrl; los de selección única (variable, año, modo) no cambian.
+- Cuencas: se mantienen como están; a futuro se prevé una columna en `config/estaciones_region.csv` cuando exista la capa de cuencas.
+- Nueva pestaña **Comparativas mensuales** (las páginas originales se conservan hasta decidir cuáles retirar): selector de variable, vista Mensual / Acumulado mensual (tabla `Vista_Comp`; el acumulado solo aplica a variables acumulativas), botones con marcadores para alternar «Comparar años» y «Comparar estaciones», y matriz de valores por mes. Medidas nuevas: `Comp_Valor`, `Comp_Valor_Anio`, `Comp_Acum` y títulos `Titulo_Comp*`.
+- Estaciones: se mantiene la lista fija de 61 estaciones del tablero heredado (todas de Guatemala y El Salvador). Las RLS Acarigua, Tres Ríos, El Rosario y Motagua no se incluyen.
+- Comparativas mensuales: cada botón tiene una versión activa (azul) y otra inactiva (gris) que los marcadores alternan, para que se vea cuál modo está seleccionado. Mini mapa de las estaciones seleccionadas junto a la tabla de valores.
+
+## 2026-11-12 · Interacción y anomalías en las gráficas tipo R
+- Gráficas Deneb: cursor como en los visuales nativos (línea vertical en el mes más cercano y tooltip con año actual, media, rango normal, mínimo–máximo, anomalía y años adicionales). Especificaciones en `deneb/` actualizadas (nuevo `balance.json`).
+- Etiquetas de anomalía sin decimales (las variables con decimales, como temperaturas y ETo diaria, conservan uno); porcentaje sin decimales y calculado sobre el valor absoluto de la media.
+- Balance hídrico: la anomalía muestra también el porcentaje; línea del cero en rojo oscuro (#8B0000); paleta pizarra (#1B2A49 / #6B7A99 / #C9CED8) para distinguirla de la lluvia.
+- Precipitación diaria: se aclara en el subtítulo que la línea es el acumulado desde el 1 de enero, promedio de las estaciones seleccionadas.
+- Corrección del cursor: el tooltip se arma con campos calculados en la capa (con `nearest` el *datum* de un tooltip de marca es el del voronoi y salía `undefined`). Muestra mes, año actual, media, rango normal y rango histórico (separador «a» para no confundir con el signo negativo); la anomalía queda solo en la anotación y los años adicionales no se incluyen.
+- Capas: «Rangos históricos» se separa en «Rango histórico (mín–máx)» y «Rango normal (P33–P66)». `Mostrar_Rangos` devuelve 1 (histórico), 2 (normal) o 3 (ambos); la leyenda solo muestra las capas visibles.
+- Balance hídrico por pentadas: título dinámico (`Titulo_Pentada`), subtítulo con año, delimitación y número de estaciones (`Subtitulo_Seleccion`) y eje Y abreviado («P y ETo (mm)»).
+- Delimitación por defecto: «Red meteorológica ICC (Guatemala y El Salvador)» en lugar de «Red ICC».

@@ -17,7 +17,7 @@
     {
       "transform": [
         {
-          "filter": "datum.f_rib == 1 && datum.h_min != null"
+          "filter": "(datum.f_rib == 1 || datum.f_rib == 3) && datum.h_min != null"
         }
       ],
       "mark": {
@@ -59,7 +59,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -100,7 +100,7 @@
           "legend": {
             "labelExpr": "datum.value == 'act' ? data('dataset')[0].lbl_act : datum.value == 'rango' ? data('dataset')[0].lbl_rango : datum.value == 'normal' ? 'Rango normal (P33–P66)' : 'Media histórica'",
             "values": {
-              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 ? ['act','media'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_rib == 1 ? ['act','rango','normal'] : data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['media','rango','normal'] : data('dataset')[0].f_act == 1 ? ['act'] : data('dataset')[0].f_med == 1 ? ['media'] : data('dataset')[0].f_rib == 1 ? ['rango','normal'] : []"
+              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media','rango'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','rango','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','rango'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','rango','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media','rango'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['rango','normal'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['rango'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['normal'] : []"
             }
           },
           "datum": "rango"
@@ -110,7 +110,7 @@
     {
       "transform": [
         {
-          "filter": "datum.f_rib == 1 && datum.h_p33 != null"
+          "filter": "datum.f_rib >= 2 && datum.h_p33 != null"
         }
       ],
       "mark": {
@@ -152,7 +152,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -193,7 +193,7 @@
           "legend": {
             "labelExpr": "datum.value == 'act' ? data('dataset')[0].lbl_act : datum.value == 'rango' ? data('dataset')[0].lbl_rango : datum.value == 'normal' ? 'Rango normal (P33–P66)' : 'Media histórica'",
             "values": {
-              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 ? ['act','media'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_rib == 1 ? ['act','rango','normal'] : data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['media','rango','normal'] : data('dataset')[0].f_act == 1 ? ['act'] : data('dataset')[0].f_med == 1 ? ['media'] : data('dataset')[0].f_rib == 1 ? ['rango','normal'] : []"
+              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media','rango'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','rango','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','rango'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','rango','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media','rango'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['rango','normal'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['rango'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['normal'] : []"
             }
           },
           "datum": "normal"
@@ -253,7 +253,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -291,7 +291,7 @@
           "legend": {
             "labelExpr": "datum.value == 'act' ? data('dataset')[0].lbl_act : datum.value == 'rango' ? data('dataset')[0].lbl_rango : datum.value == 'normal' ? 'Rango normal (P33–P66)' : 'Media histórica'",
             "values": {
-              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 ? ['act','media'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_rib == 1 ? ['act','rango','normal'] : data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['media','rango','normal'] : data('dataset')[0].f_act == 1 ? ['act'] : data('dataset')[0].f_med == 1 ? ['media'] : data('dataset')[0].f_rib == 1 ? ['rango','normal'] : []"
+              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media','rango'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','rango','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','rango'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','rango','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media','rango'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['rango','normal'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['rango'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['normal'] : []"
             }
           },
           "datum": "media"
@@ -372,7 +372,7 @@
             "y": {
               "type": "quantitative",
               "scale": {
-                "zero": true,
+                "zero": 1,
                 "nice": true
               },
               "axis": {
@@ -449,7 +449,7 @@
             "y": {
               "type": "quantitative",
               "scale": {
-                "zero": true,
+                "zero": 1,
                 "nice": true
               },
               "axis": {
@@ -530,7 +530,7 @@
             "y": {
               "type": "quantitative",
               "scale": {
-                "zero": true,
+                "zero": 1,
                 "nice": true
               },
               "axis": {
@@ -601,7 +601,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -639,7 +639,7 @@
           "legend": {
             "labelExpr": "datum.value == 'act' ? data('dataset')[0].lbl_act : datum.value == 'rango' ? data('dataset')[0].lbl_rango : datum.value == 'normal' ? 'Rango normal (P33–P66)' : 'Media histórica'",
             "values": {
-              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 ? ['act','media'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_rib == 1 ? ['act','rango','normal'] : data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['media','rango','normal'] : data('dataset')[0].f_act == 1 ? ['act'] : data('dataset')[0].f_med == 1 ? ['media'] : data('dataset')[0].f_rib == 1 ? ['rango','normal'] : []"
+              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media','rango'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','rango','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','rango'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','rango','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media','rango'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['rango','normal'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['rango'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['normal'] : []"
             }
           },
           "datum": "act"
@@ -693,7 +693,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -731,7 +731,7 @@
           "legend": {
             "labelExpr": "datum.value == 'act' ? data('dataset')[0].lbl_act : datum.value == 'rango' ? data('dataset')[0].lbl_rango : datum.value == 'normal' ? 'Rango normal (P33–P66)' : 'Media histórica'",
             "values": {
-              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 ? ['act','media'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_rib == 1 ? ['act','rango','normal'] : data('dataset')[0].f_med == 1 && data('dataset')[0].f_rib == 1 ? ['media','rango','normal'] : data('dataset')[0].f_act == 1 ? ['act'] : data('dataset')[0].f_med == 1 ? ['media'] : data('dataset')[0].f_rib == 1 ? ['rango','normal'] : []"
+              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media','rango'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','rango','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','rango'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','rango','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media','rango'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['rango','normal'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['rango'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['normal'] : []"
             }
           },
           "datum": "act"
@@ -871,7 +871,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -987,7 +987,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -1112,7 +1112,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -1228,7 +1228,7 @@
         "y": {
           "type": "quantitative",
           "scale": {
-            "zero": true,
+            "zero": 1,
             "nice": true
           },
           "axis": {
@@ -1250,6 +1250,112 @@
           "type": "nominal",
           "scale": null
         }
+      }
+    },
+    {
+      "transform": [
+        {
+          "calculate": "(data('dataset')[0].modo_h == 1 ? ['','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'] : ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'])[datum.x]",
+          "as": "t_mes"
+        },
+        {
+          "calculate": "isValid(datum.valor) ? format(datum.valor, ',.1f') + ' ' + data('dataset')[0].unidad : '—'",
+          "as": "t_act"
+        },
+        {
+          "calculate": "isValid(datum.h_media) ? format(datum.h_media, ',.1f') + ' ' + data('dataset')[0].unidad : '—'",
+          "as": "t_med"
+        },
+        {
+          "calculate": "isValid(datum.h_p33) ? format(datum.h_p33, ',.1f') + ' a ' + format(datum.h_p66, ',.1f') + ' ' + data('dataset')[0].unidad : '—'",
+          "as": "t_nor"
+        },
+        {
+          "calculate": "isValid(datum.h_min) ? format(datum.h_min, ',.1f') + ' a ' + format(datum.h_max, ',.1f') + ' ' + data('dataset')[0].unidad : '—'",
+          "as": "t_his"
+        }
+      ],
+      "params": [
+        {
+          "name": "cursor",
+          "select": {
+            "type": "point",
+            "fields": [
+              "x"
+            ],
+            "nearest": true,
+            "on": "pointerover",
+            "clear": "pointerout"
+          }
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#555555",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "title": "Mes",
+          "scale": {
+            "domain": [
+              0.35,
+              12.65
+            ],
+            "nice": false
+          },
+          "axis": {
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12
+            ],
+            "labelExpr": "(data('dataset')[0].modo_h == 1 ? ['','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'] : ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'])[datum.value]",
+            "grid": true,
+            "labelPadding": 6
+          }
+        },
+        "opacity": {
+          "condition": {
+            "param": "cursor",
+            "empty": false,
+            "value": 0.7
+          },
+          "value": 0
+        },
+        "tooltip": [
+          {
+            "field": "t_mes",
+            "title": "Mes"
+          },
+          {
+            "field": "t_act",
+            "title": "Año actual"
+          },
+          {
+            "field": "t_med",
+            "title": "Media histórica"
+          },
+          {
+            "field": "t_nor",
+            "title": "Rango normal"
+          },
+          {
+            "field": "t_his",
+            "title": "Rango histórico"
+          }
+        ]
       }
     }
   ]

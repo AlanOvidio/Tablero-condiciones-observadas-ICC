@@ -20,7 +20,7 @@ __pycache__/
 
 **/.pbi/unappliedChanges.json
 
-# ── Scripts R con credenciales en texto plano (no subir hasta moverlas a .Renviron) ──
+# ── Scripts locales de figuras en R (referencia; no forman parte del repositorio) ──
 otros_archivos/*.R
 .Renviron
 .Rhistory
@@ -32,3 +32,6 @@ graficas*/
 # ── Índices espaciales de ArcGIS (se regeneran; no los usa sf) ──
 *.sbn
 *.sbx
+
+# Archivos de apoyo generados en las sesiones con Claude
+Claude outputs/

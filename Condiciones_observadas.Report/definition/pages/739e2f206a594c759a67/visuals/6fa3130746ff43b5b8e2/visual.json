@@ -42,14 +42,14 @@
             "startDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2025-11-01T00:00:00'"
+                  "Value": "datetime'2026-11-01T00:00:00'"
                 }
               }
             },
             "endDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2026-11-01T00:00:00'"
+                  "Value": "datetime'2026-11-12T00:00:00'"
                 }
               }
             },
@@ -102,7 +102,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2025-11-01T00:00:00'"
+                                "Value": "datetime'2026-11-01T00:00:00'"
                               }
                             }
                           }
@@ -122,7 +122,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2026-11-02T00:00:00'"
+                                "Value": "datetime'2026-11-13T00:00:00'"
                               }
                             }
                           }
