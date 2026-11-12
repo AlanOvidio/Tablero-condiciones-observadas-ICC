@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "5d37d8db7b9a46e39f39",
   "position": {
-    "x": 1052.2856794084821,
-    "y": 396.28571864536832,
+    "x": 1050,
+    "y": 440.625,
     "z": 8000,
-    "height": 58,
-    "width": 220,
+    "height": 63.636363636363633,
+    "width": 219.99999999999997,
     "tabOrder": 8000
   },
   "visual": {
@@ -104,5 +104,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "73e00e184a61d91ace00",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Estrato"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

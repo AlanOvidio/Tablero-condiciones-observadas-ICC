@@ -5,7 +5,7 @@
     "x": 1052.9348280391689,
     "y": 135.47838174707434,
     "z": 5000,
-    "height": 58,
+    "height": 100,
     "width": 220,
     "tabOrder": 5000
   },
@@ -143,6 +143,19 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "slider": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

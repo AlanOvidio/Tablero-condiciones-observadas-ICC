@@ -162,21 +162,21 @@
             "zoom": {
               "expr": {
                 "Literal": {
-                  "Value": "6.71D"
+                  "Value": "6.55D"
                 }
               }
             },
             "centerLatitude": {
               "expr": {
                 "Literal": {
-                  "Value": "14.06693536928907D"
+                  "Value": "14.033612849893856D"
                 }
               }
             },
             "centerLongitude": {
               "expr": {
                 "Literal": {
-                  "Value": "-89.76565087870381D"
+                  "Value": "-90.14283210000002D"
                 }
               }
             },
@@ -286,5 +286,112 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "436e53d1085640331004",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "Valor_Diario"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "3f6f80bc0a9708864516",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Estaciones_met"
+                  }
+                },
+                "Property": "Estación"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a4955a7c20683443ecc3",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Región climática"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "fd2f0b8ec0745dc83dc9",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Estrato"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "db7608c0b904c5306120",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Cuenca"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "efbc97e59e50bb086d7e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Longitud"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "781943b007a83c763b61",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Latitud"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

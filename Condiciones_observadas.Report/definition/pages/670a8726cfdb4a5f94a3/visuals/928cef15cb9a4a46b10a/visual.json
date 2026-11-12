@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "928cef15cb9a4a46b10a",
   "position": {
-    "x": 1050,
-    "y": 200,
+    "x": 1162.1238397447862,
+    "y": 141.79022925115814,
     "z": 6000,
-    "height": 58,
-    "width": 220,
+    "height": 116.76842408918904,
+    "width": 118.1585243759651,
     "tabOrder": 6000
   },
   "visual": {
@@ -148,8 +148,39 @@
             }
           }
         }
+      ],
+      "slider": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3ed642dab987ad8809d1",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Periodo_B"
+              }
+            },
+            "Property": "Fecha"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

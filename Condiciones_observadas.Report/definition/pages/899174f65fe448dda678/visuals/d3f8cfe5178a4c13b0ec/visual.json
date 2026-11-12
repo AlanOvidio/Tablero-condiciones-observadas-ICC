@@ -121,5 +121,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "1c0c16ef0bc2d5c90061",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Anios_Comparacion"
+              }
+            },
+            "Property": "Año"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

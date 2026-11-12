@@ -3,10 +3,10 @@
   "name": "e5c7c86dc5a546f5981d",
   "position": {
     "x": 1050,
-    "y": 70,
+    "y": 60.000000000000007,
     "z": 3000,
-    "height": 71.428571428571431,
-    "width": 220,
+    "height": 95.714285714285722,
+    "width": 220.71428571428572,
     "tabOrder": 3000
   },
   "visual": {
@@ -154,11 +154,36 @@
                   }
                 }
               }
+            },
+            "handleSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "18D"
+                }
+              }
             }
           }
         }
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "332af019a996c716c625",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Umbral_Rad_Sub"
+              }
+            },
+            "Property": "MJ"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Comparativo histórico: precipitación acumulada",
+                    "value": "Comparativo histórico: variables acumulativas",
                     "textStyle": {
                       "fontWeight": "bold",
                       "fontSize": "18pt"
@@ -30,7 +30,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Promedio de las estaciones seleccionadas (por defecto, toda la red). Agrupar con los filtros de región y estrato o eligiendo estaciones abajo.",
+                    "value": "Promedio de las estaciones seleccionadas (por defecto, toda la red). Seleccionar variable y agrupar con los filtros de región y estrato o eligiendo estaciones abajo. ",
                     "textStyle": {
                       "fontSize": "10pt",
                       "color": "#595959"

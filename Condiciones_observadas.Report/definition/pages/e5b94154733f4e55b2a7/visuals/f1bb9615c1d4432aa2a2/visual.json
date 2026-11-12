@@ -89,7 +89,7 @@
                           [
                             {
                               "Literal": {
-                                "Value": "'Temperatura media'"
+                                "Value": "'Irradiancia diurna media'"
                               }
                             }
                           ]
@@ -145,5 +145,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "247e4e277740e720c1a7",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Variables"
+              }
+            },
+            "Property": "Variable"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

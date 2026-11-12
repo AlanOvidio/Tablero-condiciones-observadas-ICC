@@ -3,7 +3,7 @@
   "name": "324e9ff9ef5b4048ae50",
   "position": {
     "x": 1052.8571428571429,
-    "y": 150,
+    "y": 188.86,
     "z": 6000,
     "height": 66.428571428571431,
     "width": 220,
@@ -104,5 +104,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7b4df6e7908b5ca41572",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "País"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

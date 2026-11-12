@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "e80ab6c2f9b043f18a17",
   "position": {
-    "x": 1052.2856794084821,
-    "y": 516.28571864536877,
+    "x": 1051.25,
+    "y": 568.125,
     "z": 10000,
-    "height": 58,
-    "width": 220,
+    "height": 63.75,
+    "width": 220.625,
     "tabOrder": 10000
   },
   "visual": {
@@ -104,5 +104,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "07033eb242613b549a77",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Estación"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "031f96e77f1148dca457",
   "position": {
-    "x": 1052.2856794084821,
-    "y": 216.28571864536821,
+    "x": 1050,
+    "y": 313.57142857142861,
     "z": 5000,
-    "height": 58,
+    "height": 63.333333333333336,
     "width": 220,
     "tabOrder": 5000
   },
@@ -162,5 +162,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f19a50253ab003c06980",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Anio_Sel"
+              }
+            },
+            "Property": "Año"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

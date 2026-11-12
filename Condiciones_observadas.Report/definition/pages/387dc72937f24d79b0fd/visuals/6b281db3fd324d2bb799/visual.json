@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "6b281db3fd324d2bb799",
   "position": {
-    "x": 1052.2856794084821,
-    "y": 336.28571864536832,
+    "x": 1050,
+    "y": 376.875,
     "z": 7000,
-    "height": 58,
+    "height": 63.75,
     "width": 220,
     "tabOrder": 7000
   },
@@ -104,5 +104,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "6382df506b4530515430",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Región climática"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

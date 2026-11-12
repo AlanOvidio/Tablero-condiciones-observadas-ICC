@@ -71,7 +71,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 17
+          "zIndex": 16
         },
         {
           "location": {
@@ -84,7 +84,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 16
+          "zIndex": 17
         },
         {
           "location": {
@@ -127,11 +127,11 @@
         },
         {
           "location": {
-            "x": 3976.6221629171368,
-            "y": 106.0594228334603
+            "x": 4055.2665073130051,
+            "y": 100.00985787993199
           },
           "nodeIndex": "Variables",
-          "nodeLineageTag": "8a326d6f-d0a0-450d-b51f-ba305c67ca04",
+          "nodeLineageTag": "ce5a6cf7-ff53-4b75-94c6-dce3ea084a50",
           "size": {
             "height": 300,
             "width": 234
@@ -140,11 +140,11 @@
         },
         {
           "location": {
-            "x": 4210.6221629171368,
-            "y": 192.0594228334603
+            "x": 4452.6047610582691,
+            "y": 81.1507320187747
           },
           "nodeIndex": "Capas",
-          "nodeLineageTag": "8987a9f4-7b3e-4947-bb5a-978340c19dad",
+          "nodeLineageTag": "521256ee-0321-4026-a3da-77da29672fe7",
           "size": {
             "height": 128,
             "width": 234
@@ -241,10 +241,23 @@
             "width": 234
           },
           "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 6014.8395264516821,
+            "y": 210.10534633333248
+          },
+          "nodeIndex": "Vista_Comp",
+          "nodeLineageTag": "fff929c0-febf-42bb-9479-51fdc1f63cf7",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 19
         }
       ],
       "name": "Todas las tablas",
-      "zoomValue": 39.450695702325696,
+      "zoomValue": 12.570207430874508,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,

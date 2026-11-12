@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "319eff1a215f4d5fbef0",
   "position": {
-    "x": 1052.2856794084821,
-    "y": 456.28571864536832,
+    "x": 1050,
+    "y": 504.375,
     "z": 9000,
-    "height": 58,
-    "width": 220,
+    "height": 63.636363636363633,
+    "width": 219.99999999999997,
     "tabOrder": 9000
   },
   "visual": {
@@ -104,5 +104,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "5b9f4bc6e48c404c0a46",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Cuenca"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

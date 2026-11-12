@@ -222,5 +222,79 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f236e7dad0ee14a00932",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Calendario"
+              }
+            },
+            "Property": "Pentada"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c84b2fca909025e0c274",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "Banda_Rad_Suboptima"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c7c41acac515cb8dd278",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "Banda_Rad_Aceptable"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "4371b7da400385803a8a",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "Banda_Rad_Optima"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a38f324f246cbd9e3cab",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Medidas"
+              }
+            },
+            "Property": "Rad_Media_Pentada"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

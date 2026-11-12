@@ -103,3 +103,6 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 - Capas: «Rangos históricos» se separa en «Rango histórico (mín–máx)» y «Rango normal (P33–P66)». `Mostrar_Rangos` devuelve 1 (histórico), 2 (normal) o 3 (ambos); la leyenda solo muestra las capas visibles.
 - Balance hídrico por pentadas: título dinámico (`Titulo_Pentada`), subtítulo con año, delimitación y número de estaciones (`Subtitulo_Seleccion`) y eje Y abreviado («P y ETo (mm)»).
 - Delimitación por defecto: «Red meteorológica ICC (Guatemala y El Salvador)» en lugar de «Red ICC».
+
+## 2026-11-12 · Segmentadores de fecha en la versión web
+- En «Publicar en la web» el informe se reduce y el segmentador «Entre» apila las cajas de inicio y fin; con 58 px de alto la fecha final quedaba oculta. Precipitación diaria, Mapa de precipitación y Mapa de radiación: segmentador de fecha de 100 px y sin deslizador. Comparación entre periodos: Periodo A y B colocados lado a lado.

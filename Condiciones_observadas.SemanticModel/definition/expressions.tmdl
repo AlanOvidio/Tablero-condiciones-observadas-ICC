@@ -12,7 +12,7 @@ expression RangeEnd = #datetime(2026, 11, 9, 0, 0, 0) meta [IsParameterQuery=tru
 expression InicioAnioHidrologico = #date(2025, 11, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
 	lineageTag: 6e9493a6-ba65-47ad-bcc4-e9f9144d9204
 
-	annotation PBI_ResultType = Date
+	annotation PBI_ResultType = Exception
 
 /// Lecturas diarias de una estación (endpoint getlecturasdia)
 expression fxLecturasEstacion_met_diario =
