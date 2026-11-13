@@ -185,51 +185,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "b1a459fa88de053d7789",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Calendario"
-              }
-            },
-            "Property": "Mes"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "fcae90833383be7d8325",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Calendario"
-              }
-            },
-            "Property": "Anio"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "2d42a863cd4bee25706c",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Medidas"
-              }
-            },
-            "Property": "Comp_Valor"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

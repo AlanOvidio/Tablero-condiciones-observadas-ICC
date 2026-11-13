@@ -130,6 +130,23 @@ table Estaciones_met
 
 		annotation SummarizationSetBy = Automatic
 
+	column Excluir_Agregados
+		dataType: int64
+		formatString: 0
+		lineageTag: 8f74fddc-c2d4-4969-8b2d-76088224f888
+		summarizeBy: none
+		sourceColumn: Excluir_Agregados
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		dataType: string
+		lineageTag: 5b0b3c38-4640-4ced-8d3e-0007cccb7e32
+		summarizeBy: none
+		sourceColumn: Tipo
+
+		annotation SummarizationSetBy = Automatic
+
 	partition Estaciones_met = m
 		mode: import
 		source =
@@ -276,9 +293,14 @@ table Estaciones_met
 				        {"codigo", "Código"}, {"finca", "Estación"}, {"latitud", "Latitud"},
 				        {"longitud", "Longitud"}, {"altitud", "Altitud"}, {"activa", "Activa"}, {"redmet", "Redmet"}
 				    }),
-				    Final = Table.RemoveColumns(Renombrar, {"RegionCSV"})
+				    SinCSV = Table.RemoveColumns(Renombrar, {"RegionCSV"}),
+				    // 1 = se excluye de las agregaciones (lista ExcluirAgregados de TablaEstaciones_met)
+				    ConTipo = Table.AddColumn(SinCSV, "Tipo", each if List.Contains(Table.SelectRows(TablaEstaciones_met, each [Tipo] = "B")[estacionid], [estacionid]) then "B" else "A", type text),
+				    Final = Table.AddColumn(ConTipo, "Excluir_Agregados", each if List.Contains(Table.SelectRows(TablaEstaciones_met, each [Excluir_Agregados] = 1)[estacionid], [estacionid]) then 1 else 0, Int64.Type)
 				in
 				    Final
 
 	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegación
 

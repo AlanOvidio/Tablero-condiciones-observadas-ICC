@@ -1,6 +1,6 @@
 # Diccionario de datos
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-12. No editar a mano: los cambios se pierden al regenerar.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-13. No editar a mano: los cambios se pierden al regenerar.
 
 ## Parámetros y funciones de Power Query
 
@@ -218,6 +218,8 @@ SELECTCOLUMNS ( GENERATESERIES ( 1, 366, 1 ), "Día", [Value] )
 | `Orden_Region` | int64 | 0 |  | oculta |
 | `Orden_Estrato` | int64 | 0 |  | oculta |
 | `Cuenca =` | string |  |  |  |
+| `Excluir_Agregados` | int64 | 0 |  |  |
+| `Tipo` | string |  |  |  |
 
 <details><summary>Consulta de Power Query (M)</summary>
 
@@ -365,7 +367,10 @@ let
         {"codigo", "Código"}, {"finca", "Estación"}, {"latitud", "Latitud"},
         {"longitud", "Longitud"}, {"altitud", "Altitud"}, {"activa", "Activa"}, {"redmet", "Redmet"}
     }),
-    Final = Table.RemoveColumns(Renombrar, {"RegionCSV"})
+    SinCSV = Table.RemoveColumns(Renombrar, {"RegionCSV"}),
+    // 1 = se excluye de las agregaciones (lista ExcluirAgregados de TablaEstaciones_met)
+    ConTipo = Table.AddColumn(SinCSV, "Tipo", each if List.Contains(Table.SelectRows(TablaEstaciones_met, each [Tipo] = "B")[estacionid], [estacionid]) then "B" else "A", type text),
+    Final = Table.AddColumn(ConTipo, "Excluir_Agregados", each if List.Contains(Table.SelectRows(TablaEstaciones_met, each [Excluir_Agregados] = 1)[estacionid], [estacionid]) then 1 else 0, Int64.Type)
 in
     Final
 ```
@@ -390,6 +395,8 @@ in
 | `IC_Media` | double | 0.0 |  |  |
 | `IC_Max` | double | 0.0 |  |  |
 | `IC_Min` | double | 0.0 |  |  |
+| `Excluir_Agregados` | int64 | 0 |  |  |
+| `Tipo` | string |  |  |  |
 
 <details><summary>Consulta de Power Query (M)</summary>
 
@@ -452,6 +459,7 @@ in
 | `Mes_Valido` | boolean |  |  |  |
 | `IC_Media` | double | 0.0 |  |  |
 | `IC_Min_Abs` | double | 0.0 |  |  |
+| `Mes_Preliminar` | boolean | """TRUE"";""TRUE"";""FALSE""" |  |  |
 
 <details><summary>Consulta de Power Query (M)</summary>
 
@@ -483,6 +491,15 @@ let
     // Día → mes por estación (como mensual_por_estacion() de los scripts R)
     Mensual = Table.Group(Mes, {"estacionid", "Anio", "Mes"}, {
         {"N_Dias", each Table.RowCount(_), Int64.Type},
+        // Días con dato por variable (completitud de cada variable, no solo de filas)
+        {"N_P", each List.Count(List.RemoveNulls([Precip_Total])), Int64.Type},
+        {"N_T", each List.Count(List.RemoveNulls([Temp_Media])), Int64.Type},
+        {"N_Tx", each List.Count(List.RemoveNulls([Temp_Max])), Int64.Type},
+        {"N_Tn", each List.Count(List.RemoveNulls([Temp_Min])), Int64.Type},
+        {"N_R", each List.Count(List.RemoveNulls([Rad_Total])), Int64.Type},
+        {"N_IC", each List.Count(List.RemoveNulls([IC_Media])), Int64.Type},
+        {"N_ICx", each List.Count(List.RemoveNulls([IC_Max])), Int64.Type},
+        {"N_ICn", each List.Count(List.RemoveNulls([IC_Min])), Int64.Type},
         {"Precip", each List.Sum([Precip_Total]), type nullable number},
         {"ETo", each List.Sum([ETO_Total]), type nullable number},
         {"N_Dias_ETo", each List.Count(List.RemoveNulls([ETO_Total])), Int64.Type},
@@ -500,14 +517,34 @@ let
     Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
     FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
     DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
-    BH = Table.AddColumn(DiasMes, "BH", each if [N_Dias_ETo] > 0 and [Precip] <> null then [Precip] - [ETo] else null, type nullable number),
-    EToDia = Table.AddColumn(BH, "ETo_Dia", each if [N_Dias_ETo] > 0 then [ETo] / [N_Dias_ETo] else null, type nullable number),
+    // Días de referencia: el mes completo si ya cerró; si está en curso, los días transcurridos (dato preliminar)
+    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(Hoy - [Fecha_Mes])}), Int64.Type),
+    // Valor mensual solo si la variable tiene dato en ≥ 80 % de los días de referencia; si no, nulo
+    UmbralCompletitud = 0.8,
+    Reglas = {{"Precip", "N_P"}, {"ETo", "N_Dias_ETo"}, {"Rad_MJ", "N_R"}, {"Irradiancia", "N_R"},
+              {"Temp_Media", "N_T"}, {"Temp_Max_Abs", "N_Tx"}, {"Temp_Min_Abs", "N_Tn"},
+              {"IC_Media", "N_IC"}, {"IC_Max", "N_ICx"}, {"IC_Min_Abs", "N_ICn"}},
+    PorVariable = List.Accumulate(Reglas, DiasRef, (tb, r) =>
+        Table.ReplaceValue(tb, each Record.Field(_, r{0}),
+            each if Record.Field(_, r{1}) >= UmbralCompletitud * [Dias_Ref] then Record.Field(_, r{0}) else null,
+            Replacer.ReplaceValue, {r{0}})),
+    SinConteos = Table.RemoveColumns(PorVariable, {"N_P", "N_T", "N_Tx", "N_Tn", "N_R", "N_IC", "N_ICx", "N_ICn"}),
+    // Table.ReplaceValue deja las columnas sin tipo: se vuelven a tipar como número
+    Tipado = Table.TransformColumnTypes(SinConteos, List.Transform(
+        {"Precip", "ETo", "Rad_MJ", "Irradiancia", "Temp_Media", "Temp_Max_Abs", "Temp_Min_Abs", "IC_Media", "IC_Max", "IC_Min_Abs"},
+        (c) => {c, type number})),
+    BH = Table.AddColumn(Tipado, "BH", each if [ETo] <> null and [Precip] <> null then [Precip] - [ETo] else null, type nullable number),
+    EToDia = Table.AddColumn(BH, "ETo_Dia", each if [ETo] <> null then [ETo] / [N_Dias_ETo] else null, type nullable number),
     Completitud = Table.AddColumn(EToDia, "Completitud", each [N_Dias] / [Dias_Mes], type number),
-    // Mes cerrado: terminó antes de hoy (hora de Guatemala). Válido: cerrado y con ≥ 80 % de días con dato
+    // Mes cerrado: terminó antes de hoy (hora de Guatemala). Válido: ≥ 80 % de días con registro (del mes, o de los días transcurridos si está en curso)
+    // (además, cada variable se anula arriba si no alcanza su propia completitud)
     Cerrado = Table.AddColumn(Completitud, "Mes_Completo", each Date.EndOfMonth([Fecha_Mes]) < Hoy, type logical),
-    Valido = Table.AddColumn(Cerrado, "Mes_Valido", each [Mes_Completo] and [Completitud] >= 0.8, type logical)
+    Valido = Table.AddColumn(Cerrado, "Mes_Valido", each if [Mes_Completo] then [Completitud] >= 0.8 else [N_Dias] >= 0.8 * [Dias_Ref], type logical),
+    // Mes en curso con datos suficientes: se muestra como preliminar
+    Preliminar = Table.AddColumn(Valido, "Mes_Preliminar", each not [Mes_Completo] and [Mes_Valido], type logical),
+    Final = Table.RemoveColumns(Preliminar, {"Dias_Ref"})
 in
-    Valido
+    Final
 ```
 </details>
 
@@ -558,6 +595,27 @@ DATATABLE (
 </details>
 
 
+### `Metodo_Agregacion`
+
+| Columna | Tipo | Formato | Ordenar por | Notas |
+|---|---|---|---|---|
+| `Método` | string |  | `Orden` |  |
+| `Orden` | int64 | 0 |  | oculta |
+
+<details><summary>Expresión DAX (tabla calculada)</summary>
+
+```dax
+DATATABLE (
+    "Método", STRING, "Orden", INTEGER,
+    {
+        {"Anomalías (tablero)", 1},
+        {"Promedio directo (scripts R)", 2}
+    }
+)
+```
+</details>
+
+
 ### `Periodo_A`
 
 | Columna | Tipo | Formato | Ordenar por | Notas |
@@ -591,15 +649,27 @@ SELECTCOLUMNS ( CALENDAR ( DATE ( 2008, 1, 1 ), TODAY () ), "Fecha", [Date] )
 | Columna | Tipo | Formato | Ordenar por | Notas |
 |---|---|---|---|---|
 | `estacionid` | int64 | 0 |  |  |
+| `Solo_Precip` | boolean | """TRUE"";""TRUE"";""FALSE""" |  |  |
+| `Excluir_Agregados` | int64 | 0 |  |  |
+| `Tipo` | string |  |  |  |
 
 <details><summary>Consulta de Power Query (M)</summary>
 
 ```powerquery
 let
     // Estaciones que se descargan. AQUÍ se agregan o quitan estaciones.
-    Estaciones = {1, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 36, 37, 38, 39, 40, 42, 45, 46, 47, 67, 69, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94},
+    Estaciones = {1, 3, 4, 5, 6, 8, 9, 10, 11, 13, 14, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 36, 37, 38, 39, 40, 45, 46, 47, 67, 73, 74, 75, 78, 79, 80, 94, 42, 69, 76, 77, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93},
+    // Tipo B (solo se combinan entre ellas en selecciones a mano); el resto es Tipo A (RLS incluidas)
+    TipoB = {81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93},
+    // Excluidas de las agregaciones (estrato, región, cuenca, país, red); entran si se eligen a mano
+    ExcluirAgregados = {81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 42, 69, 76, 77},
+    // Estaciones que solo miden precipitación (RLS): el resto de sus variables se descarta
+    SoloPrecipitacion = {42, 69, 76, 77},
     Tabla = Table.FromList(Estaciones, Splitter.SplitByNothing(), {"estacionid"}),
-    Tipos = Table.TransformColumnTypes(Tabla, {{"estacionid", Int64.Type}})
+    Solo = Table.AddColumn(Tabla, "Solo_Precip", each List.Contains(SoloPrecipitacion, [estacionid])),
+    Excl = Table.AddColumn(Solo, "Excluir_Agregados", each if List.Contains(ExcluirAgregados, [estacionid]) then 1 else 0),
+    Tipo = Table.AddColumn(Excl, "Tipo", each if List.Contains(TipoB, [estacionid]) then "B" else "A"),
+    Tipos = Table.TransformColumnTypes(Tipo, {{"estacionid", Int64.Type}, {"Solo_Precip", type logical}, {"Excluir_Agregados", Int64.Type}, {"Tipo", type text}})
 in
     Tipos
 ```

@@ -8259,6 +8259,48 @@ cultureInfo es-GT
 			          }
 			        }
 			      ]
+			    },
+			    "table_medidas.mes_preliminar_txt": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Mes_Preliminar_Txt"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "prelim": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "metodo_agregacion.método": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Metodo_Agregacion",
+			          "ConceptualProperty": "Método"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Método de agregación": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {

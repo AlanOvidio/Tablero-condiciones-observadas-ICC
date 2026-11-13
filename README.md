@@ -5,7 +5,7 @@ Modelo semántico y reporte de Power BI que muestran las condiciones meteorológ
 - **Responsable:** Alan — equipo CeH, Instituto Privado de Investigación sobre Cambio Climático (ICC)
 - **Formato:** Power BI Project (`.pbip`): modelo en TMDL y reporte en PBIR, versionados con Git
 - **Licencia de Power BI:** Pro · **Visual requerido:** Deneb
-- **Estado:** versión **v1.0** en `main` (noviembre 2026). La versión heredada (`20260108 - Power BI Guatemala.pbip`) se conserva temporalmente como referencia
+- **Estado:** versión **v1.2** en `main` (noviembre 2026). La versión heredada (`20260108 - Power BI Guatemala.pbip`) se retiró del repositorio; sigue disponible en el historial y en la etiqueta `v1.0`.
 
 ## Contenido de la carpeta
 
@@ -13,7 +13,6 @@ Modelo semántico y reporte de Power BI que muestran las condiciones meteorológ
 ├── Condiciones_observadas.pbip            ← abrir este archivo en Power BI Desktop
 ├── Condiciones_observadas.SemanticModel/  ← modelo: tablas, Power Query (M), medidas DAX (TMDL)
 ├── Condiciones_observadas.Report/         ← reporte: páginas y visuales (JSON)
-├── 20260108 - Power BI Guatemala.pbip     ← versión heredada (referencia; se retirará)
 ├── config/estaciones_region.csv           ← estación → región climática (generado)
 ├── deneb/                                 ← especificaciones Vega-Lite de las gráficas tipo R
 ├── docs/                                  ← documentación

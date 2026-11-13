@@ -104,23 +104,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "1e8660e457e706725dc9",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Estaciones_met"
-              }
-            },
-            "Property": "País"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }

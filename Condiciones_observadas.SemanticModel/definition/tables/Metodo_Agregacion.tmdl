@@ -1,0 +1,35 @@
+table Metodo_Agregacion
+	lineageTag: c97c6ef1-078e-4794-bd33-646bd929f699
+
+	column Método
+		dataType: string
+		lineageTag: e8d00f75-369b-405f-aebb-77a7c8e58006
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Método]
+		sortByColumn: Orden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4d97961f-598f-4852-b7f5-21bd386b6e4a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Orden]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Metodo_Agregacion = calculated
+		mode: import
+		source =
+				DATATABLE (
+				    "Método", STRING, "Orden", INTEGER,
+				    {
+				        {"Anomalías (tablero)", 1},
+				        {"Promedio directo (scripts R)", 2}
+				    }
+				)
+

@@ -8,7 +8,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","DaxQueryView_Desktop"]
 
 annotation PBI_QueryOrder = ["Estaciones_met","TablaEstaciones_met","Cuencas_met","Calendario","Fact_Diaria_met","RangeStart","RangeEnd","InicioAnioHidrologico","fxLecturasEstacion_met_diario","Fact_Mensual_met","fxLimpiarDiario"]
 
@@ -31,6 +31,7 @@ ref table Periodo_B
 ref table Dias_Periodo
 ref table _Medidas
 ref table Vista_Comp
+ref table Metodo_Agregacion
 
 ref cultureInfo es-GT
 

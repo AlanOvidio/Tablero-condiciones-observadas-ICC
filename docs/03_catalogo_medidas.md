@@ -1,6 +1,6 @@
 # Catálogo de medidas DAX
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-12 (108 medidas). No editar a mano.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-13 (118 medidas). No editar a mano.
 
 Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones, las variables acumulativas (precipitación, ETo, balance, radiación) **suman por estación y luego promedian entre estaciones**; los promedios se calculan por estación y luego entre estaciones; las temperaturas máxima y mínima mensuales son el extremo de cada estación, promediado. Las medidas que dependen de la variable usan `Var_Sel` (tabla `Variables`). Ver `01_arquitectura.md` y `06_decisiones_y_cambios.md`.
 
@@ -8,14 +8,14 @@ Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones,
 
 - [0 Contexto](#0-contexto) (11)
 - [1 Diario](#1-diario) (7)
-- [2 Mensual](#2-mensual) (3)
-- [3 Histórico](#3-histórico) (8)
+- [2 Mensual](#2-mensual) (4)
+- [3 Histórico](#3-histórico) (13)
 - [4 Anomalías](#4-anomalías) (8)
 - [5 Años adicionales](#5-años-adicionales) (16)
 - [6 Acumulados](#6-acumulados) (7)
-- [7 Textos y banderas](#7-textos-y-banderas) (17)
+- [7 Textos y banderas](#7-textos-y-banderas) (20)
 - [8 Páginas heredadas](#8-páginas-heredadas) (27)
-- [9 Validación](#9-validación) (4)
+- [9 Validación](#9-validación) (5)
 
 ## 0 Contexto
 
@@ -30,7 +30,7 @@ Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones,
 | `Anio_Analisis` | 0 | Año del segmentador Año de análisis; sin selección, el año del último dato |
 | `Base_Ini` | 0 | Inicio del periodo histórico (segmentador) |
 | `Base_Fin` | 0 | Fin del periodo histórico; nunca incluye el año de análisis |
-| `N_Estaciones` | 0 | Estaciones de la selección que tienen datos |
+| `N_Estaciones` | 0 | Estaciones que aportan dato de la variable seleccionada en el año de análisis (completitud por variable) |
 | `Base_Disponible` | 0 | Filtro del segmentador de periodo histórico: solo años anteriores al de análisis |
 
 <details><summary><code>Var_Sel</code></summary>
@@ -108,7 +108,13 @@ MIN ( MAX ( Anios_Base[Año] ), [Anio_Analisis] - 1 )
 <details><summary><code>N_Estaciones</code></summary>
 
 ```dax
-CALCULATE ( DISTINCTCOUNT ( Fact_Mensual_met[estacionid] ) )
+VAR _y = [Anio_Analisis]
+VAR _multi = COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) > 1
+VAR _sinElig = [_Sin_Elegibles]
+RETURN
+    COUNTROWS (
+        FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) )
+    ) + 0
 ```
 </details>
 
@@ -157,7 +163,7 @@ RETURN
 <details><summary><code>Valor_Diario</code></summary>
 
 ```dax
-AVERAGEX ( VALUES ( Estaciones_met[estacionid] ), [_Dia_Est] )
+AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Dia_Est] )
 ```
 </details>
 
@@ -202,7 +208,8 @@ VAR _y = [Anio_Analisis] RETURN CALCULATE ( MAX ( Calendario[Fecha] ), Calendari
 |---|---|---|
 | `_Mes_Est` |  | Valor de UNA estación en los meses del contexto (solo meses cerrados con ≥ 80 % de días) |
 | `_Grupo_Mes` |  | Promedio entre las estaciones seleccionadas (pool estación-año) |
-| `Valor_Mensual` | 0.0 | Variable por mes en el año de análisis; el mes en curso no se muestra |
+| `Valor_Mensual` | 0.0 | Variable por mes en el año de análisis; el mes en curso se muestra si es preliminar válido |
+| `Es_Preliminar` | 0 | 1 si el mes del contexto es el mes en curso con dato preliminar (año de análisis) |
 
 <details><summary><code>_Mes_Est</code></summary>
 
@@ -233,7 +240,7 @@ RETURN
 <details><summary><code>_Grupo_Mes</code></summary>
 
 ```dax
-AVERAGEX ( VALUES ( Estaciones_met[estacionid] ), [_Mes_Est] )
+AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Mes_Est] )
 ```
 </details>
 
@@ -241,11 +248,30 @@ AVERAGEX ( VALUES ( Estaciones_met[estacionid] ), [_Mes_Est] )
 
 ```dax
 VAR _y = [Anio_Analisis]
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 RETURN
     CALCULATE (
-        [_Grupo_Mes],
+        IF ( _uno, [_Grupo_Mes], [_B_Grupo] ),
         Fact_Mensual_met[Anio] = _y,
         TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
+    )
+```
+</details>
+
+<details><summary><code>Es_Preliminar</code></summary>
+
+```dax
+VAR _y = [Anio_Analisis]
+RETURN
+    IF (
+        CALCULATE (
+            COUNTROWS ( Fact_Mensual_met ),
+            Fact_Mensual_met[Anio] = _y,
+            Fact_Mensual_met[Mes_Preliminar] = TRUE (),
+            TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
+        ) > 0,
+        1,
+        0
     )
 ```
 </details>
@@ -254,7 +280,7 @@ RETURN
 
 | Medida | Formato | Descripción |
 |---|---|---|
-| `Hist_Media` | 0.0 | Media de los valores mensuales de la selección en el periodo histórico |
+| `Hist_Media` | 0.0 | Media histórica: una estación = promedio de sus años; grupo = promedio de las medias de cada estación (método de anomalías) |
 | `Hist_Min` | 0.0 | Mínimo histórico |
 | `Hist_Max` | 0.0 | Máximo histórico |
 | `Hist_P33` | 0.0 | Percentil 33 (igual a quantile tipo 7 de R) |
@@ -262,23 +288,33 @@ RETURN
 | `Hist_N_Anios` | 0.0 | Años con dato en el periodo histórico |
 | `Hist_Anio_Ini` | 0 | Año real con datos de la selección (para la leyenda y el subtítulo) |
 | `Hist_Anio_Fin` | 0 | Año real con datos de la selección (para la leyenda y el subtítulo) |
+| `Min_Anios_Base` | 0 | Mínimo de años en el periodo base para que una estación entre a los agregados (método de anomalías) |
+| `_B_Normal` |  | en el periodo base (estaciones con ≥ Min_Anios_Base años). Meses y estaciones según el contexto. |
+| `_B_Grupo` |  | = media del grupo + anomalía media (valor − media propia); en precipitación, media del grupo × cociente medio (valor ÷ media propia) |
+| `_Anios_Base_Est` |  | Años con dato de la estación del contexto en el periodo base, en cualquier mes (mínimo por estación) |
+| `_Sin_Elegibles` |  | entonces el grupo se calcula con promedio directo (p. ej., varias estaciones nuevas elegidas a mano) |
 
 <details><summary><code>Hist_Media</code></summary>
 
 ```dax
 VAR _meses = VALUES ( Calendario[Mes_Num] )
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 VAR _ini = [Base_Ini]
 VAR _fin = [Base_Fin]
-VAR _t =
-    FILTER (
-        ADDCOLUMNS (
-            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
-            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
-        ),
-        NOT ISBLANK ( [@v] )
-    )
+VAR _anios = FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin )
+// Una estación: serie de sus años
+VAR _t = FILTER ( ADDCOLUMNS ( _anios, "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+// Grupo (método de anomalías): estaciones con ≥ Min_Anios_Base años en el periodo base (cualquier mes); estación × año,
+// media del grupo = promedio de esas medias; serie del grupo = media del grupo + anomalía media de cada año
+VAR _el = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] )
+VAR _sy = FILTER ( ADDCOLUMNS ( CROSSJOIN ( _el, _anios ), "@v", CALCULATE ( [_Mes_Est], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+VAR _st = GROUPBY ( _sy, Estaciones_met[estacionid], "@media", AVERAGEX ( CURRENTGROUP (), [@v] ) )
+VAR _G = AVERAGEX ( _st, [@media] )
+// Precipitación: anomalía relativa (valor ÷ media propia), como Jones y Hulme; resto: diferencia
+VAR _rel = [Var_Sel] = "PCP"
+VAR _tB = GROUPBY ( NATURALINNERJOIN ( _sy, _st ), Fact_Mensual_met[Anio], "@a", AVERAGEX ( CURRENTGROUP (), IF ( _rel, DIVIDE ( [@v], [@media] ), [@v] - [@media] ) ) )
 RETURN
-    AVERAGEX ( _t, [@v] )
+    IF ( _uno, AVERAGEX ( _t, [@v] ), _G )
 ```
 </details>
 
@@ -286,18 +322,23 @@ RETURN
 
 ```dax
 VAR _meses = VALUES ( Calendario[Mes_Num] )
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 VAR _ini = [Base_Ini]
 VAR _fin = [Base_Fin]
-VAR _t =
-    FILTER (
-        ADDCOLUMNS (
-            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
-            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
-        ),
-        NOT ISBLANK ( [@v] )
-    )
+VAR _anios = FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin )
+// Una estación: serie de sus años
+VAR _t = FILTER ( ADDCOLUMNS ( _anios, "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+// Grupo (método de anomalías): estaciones con ≥ Min_Anios_Base años en el periodo base (cualquier mes); estación × año,
+// media del grupo = promedio de esas medias; serie del grupo = media del grupo + anomalía media de cada año
+VAR _el = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] )
+VAR _sy = FILTER ( ADDCOLUMNS ( CROSSJOIN ( _el, _anios ), "@v", CALCULATE ( [_Mes_Est], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+VAR _st = GROUPBY ( _sy, Estaciones_met[estacionid], "@media", AVERAGEX ( CURRENTGROUP (), [@v] ) )
+VAR _G = AVERAGEX ( _st, [@media] )
+// Precipitación: anomalía relativa (valor ÷ media propia), como Jones y Hulme; resto: diferencia
+VAR _rel = [Var_Sel] = "PCP"
+VAR _tB = GROUPBY ( NATURALINNERJOIN ( _sy, _st ), Fact_Mensual_met[Anio], "@a", AVERAGEX ( CURRENTGROUP (), IF ( _rel, DIVIDE ( [@v], [@media] ), [@v] - [@media] ) ) )
 RETURN
-    MINX ( _t, [@v] )
+    IF ( _uno, MINX ( _t, [@v] ), MINX ( _tB, IF ( _rel, _G * [@a], _G + [@a] ) ) )
 ```
 </details>
 
@@ -305,18 +346,23 @@ RETURN
 
 ```dax
 VAR _meses = VALUES ( Calendario[Mes_Num] )
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 VAR _ini = [Base_Ini]
 VAR _fin = [Base_Fin]
-VAR _t =
-    FILTER (
-        ADDCOLUMNS (
-            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
-            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
-        ),
-        NOT ISBLANK ( [@v] )
-    )
+VAR _anios = FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin )
+// Una estación: serie de sus años
+VAR _t = FILTER ( ADDCOLUMNS ( _anios, "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+// Grupo (método de anomalías): estaciones con ≥ Min_Anios_Base años en el periodo base (cualquier mes); estación × año,
+// media del grupo = promedio de esas medias; serie del grupo = media del grupo + anomalía media de cada año
+VAR _el = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] )
+VAR _sy = FILTER ( ADDCOLUMNS ( CROSSJOIN ( _el, _anios ), "@v", CALCULATE ( [_Mes_Est], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+VAR _st = GROUPBY ( _sy, Estaciones_met[estacionid], "@media", AVERAGEX ( CURRENTGROUP (), [@v] ) )
+VAR _G = AVERAGEX ( _st, [@media] )
+// Precipitación: anomalía relativa (valor ÷ media propia), como Jones y Hulme; resto: diferencia
+VAR _rel = [Var_Sel] = "PCP"
+VAR _tB = GROUPBY ( NATURALINNERJOIN ( _sy, _st ), Fact_Mensual_met[Anio], "@a", AVERAGEX ( CURRENTGROUP (), IF ( _rel, DIVIDE ( [@v], [@media] ), [@v] - [@media] ) ) )
 RETURN
-    MAXX ( _t, [@v] )
+    IF ( _uno, MAXX ( _t, [@v] ), MAXX ( _tB, IF ( _rel, _G * [@a], _G + [@a] ) ) )
 ```
 </details>
 
@@ -324,18 +370,23 @@ RETURN
 
 ```dax
 VAR _meses = VALUES ( Calendario[Mes_Num] )
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 VAR _ini = [Base_Ini]
 VAR _fin = [Base_Fin]
-VAR _t =
-    FILTER (
-        ADDCOLUMNS (
-            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
-            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
-        ),
-        NOT ISBLANK ( [@v] )
-    )
+VAR _anios = FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin )
+// Una estación: serie de sus años
+VAR _t = FILTER ( ADDCOLUMNS ( _anios, "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+// Grupo (método de anomalías): estaciones con ≥ Min_Anios_Base años en el periodo base (cualquier mes); estación × año,
+// media del grupo = promedio de esas medias; serie del grupo = media del grupo + anomalía media de cada año
+VAR _el = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] )
+VAR _sy = FILTER ( ADDCOLUMNS ( CROSSJOIN ( _el, _anios ), "@v", CALCULATE ( [_Mes_Est], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+VAR _st = GROUPBY ( _sy, Estaciones_met[estacionid], "@media", AVERAGEX ( CURRENTGROUP (), [@v] ) )
+VAR _G = AVERAGEX ( _st, [@media] )
+// Precipitación: anomalía relativa (valor ÷ media propia), como Jones y Hulme; resto: diferencia
+VAR _rel = [Var_Sel] = "PCP"
+VAR _tB = GROUPBY ( NATURALINNERJOIN ( _sy, _st ), Fact_Mensual_met[Anio], "@a", AVERAGEX ( CURRENTGROUP (), IF ( _rel, DIVIDE ( [@v], [@media] ), [@v] - [@media] ) ) )
 RETURN
-    PERCENTILEX.INC ( _t, [@v], 0.33 )
+    IF ( _uno, PERCENTILEX.INC ( _t, [@v], 0.33 ), PERCENTILEX.INC ( _tB, IF ( _rel, _G * [@a], _G + [@a] ), 0.33 ) )
 ```
 </details>
 
@@ -343,18 +394,23 @@ RETURN
 
 ```dax
 VAR _meses = VALUES ( Calendario[Mes_Num] )
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 VAR _ini = [Base_Ini]
 VAR _fin = [Base_Fin]
-VAR _t =
-    FILTER (
-        ADDCOLUMNS (
-            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
-            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
-        ),
-        NOT ISBLANK ( [@v] )
-    )
+VAR _anios = FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin )
+// Una estación: serie de sus años
+VAR _t = FILTER ( ADDCOLUMNS ( _anios, "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+// Grupo (método de anomalías): estaciones con ≥ Min_Anios_Base años en el periodo base (cualquier mes); estación × año,
+// media del grupo = promedio de esas medias; serie del grupo = media del grupo + anomalía media de cada año
+VAR _el = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] )
+VAR _sy = FILTER ( ADDCOLUMNS ( CROSSJOIN ( _el, _anios ), "@v", CALCULATE ( [_Mes_Est], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+VAR _st = GROUPBY ( _sy, Estaciones_met[estacionid], "@media", AVERAGEX ( CURRENTGROUP (), [@v] ) )
+VAR _G = AVERAGEX ( _st, [@media] )
+// Precipitación: anomalía relativa (valor ÷ media propia), como Jones y Hulme; resto: diferencia
+VAR _rel = [Var_Sel] = "PCP"
+VAR _tB = GROUPBY ( NATURALINNERJOIN ( _sy, _st ), Fact_Mensual_met[Anio], "@a", AVERAGEX ( CURRENTGROUP (), IF ( _rel, DIVIDE ( [@v], [@media] ), [@v] - [@media] ) ) )
 RETURN
-    PERCENTILEX.INC ( _t, [@v], 0.66 )
+    IF ( _uno, PERCENTILEX.INC ( _t, [@v], 0.66 ), PERCENTILEX.INC ( _tB, IF ( _rel, _G * [@a], _G + [@a] ), 0.66 ) )
 ```
 </details>
 
@@ -362,18 +418,23 @@ RETURN
 
 ```dax
 VAR _meses = VALUES ( Calendario[Mes_Num] )
+VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
 VAR _ini = [Base_Ini]
 VAR _fin = [Base_Fin]
-VAR _t =
-    FILTER (
-        ADDCOLUMNS (
-            FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ),
-            "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) )
-        ),
-        NOT ISBLANK ( [@v] )
-    )
+VAR _anios = FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin )
+// Una estación: serie de sus años
+VAR _t = FILTER ( ADDCOLUMNS ( _anios, "@v", CALCULATE ( [_Grupo_Mes], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+// Grupo (método de anomalías): estaciones con ≥ Min_Anios_Base años en el periodo base (cualquier mes); estación × año,
+// media del grupo = promedio de esas medias; serie del grupo = media del grupo + anomalía media de cada año
+VAR _el = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] )
+VAR _sy = FILTER ( ADDCOLUMNS ( CROSSJOIN ( _el, _anios ), "@v", CALCULATE ( [_Mes_Est], TREATAS ( _meses, Fact_Mensual_met[Mes] ) ) ), NOT ISBLANK ( [@v] ) )
+VAR _st = GROUPBY ( _sy, Estaciones_met[estacionid], "@media", AVERAGEX ( CURRENTGROUP (), [@v] ) )
+VAR _G = AVERAGEX ( _st, [@media] )
+// Precipitación: anomalía relativa (valor ÷ media propia), como Jones y Hulme; resto: diferencia
+VAR _rel = [Var_Sel] = "PCP"
+VAR _tB = GROUPBY ( NATURALINNERJOIN ( _sy, _st ), Fact_Mensual_met[Anio], "@a", AVERAGEX ( CURRENTGROUP (), IF ( _rel, DIVIDE ( [@v], [@media] ), [@v] - [@media] ) ) )
 RETURN
-    COUNTROWS ( _t )
+    IF ( _uno, COUNTROWS ( _t ), COUNTROWS ( _tB ) )
 ```
 </details>
 
@@ -407,11 +468,79 @@ RETURN
 ```
 </details>
 
+<details><summary><code>Min_Anios_Base</code></summary>
+
+```dax
+3
+```
+</details>
+
+<details><summary><code>_B_Normal</code></summary>
+
+```dax
+VAR _ini = [Base_Ini]
+VAR _fin = [Base_Fin]
+VAR _min = [Min_Anios_Base]
+VAR _est =
+    ADDCOLUMNS (
+        FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
+        "@nanios", [_Anios_Base_Est],
+        "@media", AVERAGEX ( FILTER ( FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ), NOT ISBLANK ( CALCULATE ( [_Mes_Est] ) ) ), CALCULATE ( [_Mes_Est] ) ),
+        "@x", [_Mes_Est]
+    )
+VAR _elig = FILTER ( _est, [@nanios] >= _min )
+RETURN
+    AVERAGEX ( _elig, [@media] )
+```
+</details>
+
+<details><summary><code>_B_Grupo</code></summary>
+
+```dax
+VAR _ini = [Base_Ini]
+VAR _fin = [Base_Fin]
+VAR _min = [Min_Anios_Base]
+VAR _est =
+    ADDCOLUMNS (
+        FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
+        "@nanios", [_Anios_Base_Est],
+        "@media", AVERAGEX ( FILTER ( FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ), NOT ISBLANK ( CALCULATE ( [_Mes_Est] ) ) ), CALCULATE ( [_Mes_Est] ) ),
+        "@x", [_Mes_Est]
+    )
+VAR _elig = FILTER ( _est, [@nanios] >= _min )
+VAR _rel = [Var_Sel] = "PCP"
+VAR _G = AVERAGEX ( _elig, [@media] )
+VAR _a = AVERAGEX ( FILTER ( _elig, NOT ISBLANK ( [@x] ) && NOT ISBLANK ( [@media] ) ), IF ( _rel, DIVIDE ( [@x], [@media] ), [@x] - [@media] ) )
+RETURN
+    IF (
+        COUNTROWS ( FILTER ( _elig, NOT ISBLANK ( [@x] ) && NOT ISBLANK ( [@media] ) ) ) > 0,
+        IF ( _rel, _G * COALESCE ( _a, 1 ), _G + _a )
+    )
+```
+</details>
+
+<details><summary><code>_Anios_Base_Est</code></summary>
+
+```dax
+VAR _ini = [Base_Ini]
+VAR _fin = [Base_Fin]
+RETURN
+    COUNTROWS ( FILTER ( FILTER ( ALL ( Fact_Mensual_met[Anio] ), Fact_Mensual_met[Anio] >= _ini && Fact_Mensual_met[Anio] <= _fin ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], REMOVEFILTERS ( Fact_Mensual_met[Mes] ) ) ) ) ) + 0
+```
+</details>
+
+<details><summary><code>_Sin_Elegibles</code></summary>
+
+```dax
+COUNTROWS ( FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), [_Anios_Base_Est] >= [Min_Anios_Base] ) ) + 0 = 0
+```
+</details>
+
 ## 4 Anomalías
 
 | Medida | Formato | Descripción |
 |---|---|---|
-| `Anomalia` | +0.0;-0.0;0.0 | Año de análisis − media histórica |
+| `Anomalia` | +0.0;-0.0;0.0 | En el mes en curso (preliminar) no se calcula para variables acumulativas: el total aún está incompleto |
 | `Anomalia_Pct` | +0.0%;-0.0%;0.0% |  |
 | `Anomalia_Etiqueta` |  | Texto como en los scripts R ('\|' = salto de línea) |
 | `Anomalia_Color` |  | Lluvia y balance: positivo azul; temperatura, ETo y radiación: positivo rojo |
@@ -423,7 +552,11 @@ RETURN
 <details><summary><code>Anomalia</code></summary>
 
 ```dax
-IF ( NOT ISBLANK ( [Valor_Mensual] ) && NOT ISBLANK ( [Hist_Media] ), [Valor_Mensual] - [Hist_Media] )
+IF (
+    NOT ISBLANK ( [Valor_Mensual] ) && NOT ISBLANK ( [Hist_Media] )
+        && NOT ( [Es_Preliminar] = 1 && [Var_Regla] = "Suma" ),
+    [Valor_Mensual] - [Hist_Media]
+)
 ```
 </details>
 
@@ -444,7 +577,7 @@ VAR _dec = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables
 RETURN
     IF (
         NOT ISBLANK ( _a ),
-        FORMAT ( _a, IF ( _dec > 0, "+0.0;-0.0;0", "+0;-0;0" ) ) & " " & [Var_Unidad]
+        FORMAT ( _a, IF ( _dec > 0 || ABS ( _a ) < 1, "+0.0;-0.0;0.0", "+0;-0;0" ) ) & " " & [Var_Unidad]
             & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Pct], "+0%;-0%;0%" ) & ")" )
     )
 ```
@@ -484,7 +617,7 @@ VAR _dec = MAXX ( FILTER ( ALL ( Variables ), Variables[Clave] = _v ), Variables
 RETURN
     IF (
         NOT ISBLANK ( _a ),
-        FORMAT ( _a, IF ( _dec > 0, "+0.0;-0.0;0", "+0;-0;0" ) ) & " " & [Var_Unidad]
+        FORMAT ( _a, IF ( _dec > 0 || ABS ( _a ) < 1, "+0.0;-0.0;0.0", "+0;-0;0" ) ) & " " & [Var_Unidad]
             & IF ( _tipo = "pct", "|(" & FORMAT ( [Anomalia_Acum_Pct], "+0%;-0%;0%" ) & ")" )
     )
 ```
@@ -547,7 +680,7 @@ VAR _y = [Anio_Comp_1]
 RETURN
     IF (
         NOT ISBLANK ( _y ),
-        CALCULATE ( [_Grupo_Mes], Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
+        CALCULATE ( IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), [_Grupo_Mes], [_B_Grupo] ), Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
     )
 ```
 </details>
@@ -568,7 +701,7 @@ VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 RETURN
     IF (
         NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
-        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+        IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
     )
 ```
 </details>
@@ -599,7 +732,7 @@ VAR _y = [Anio_Comp_2]
 RETURN
     IF (
         NOT ISBLANK ( _y ),
-        CALCULATE ( [_Grupo_Mes], Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
+        CALCULATE ( IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), [_Grupo_Mes], [_B_Grupo] ), Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
     )
 ```
 </details>
@@ -620,7 +753,7 @@ VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 RETURN
     IF (
         NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
-        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+        IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
     )
 ```
 </details>
@@ -651,7 +784,7 @@ VAR _y = [Anio_Comp_3]
 RETURN
     IF (
         NOT ISBLANK ( _y ),
-        CALCULATE ( [_Grupo_Mes], Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
+        CALCULATE ( IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), [_Grupo_Mes], [_B_Grupo] ), Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
     )
 ```
 </details>
@@ -672,7 +805,7 @@ VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 RETURN
     IF (
         NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
-        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+        IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
     )
 ```
 </details>
@@ -703,7 +836,7 @@ VAR _y = [Anio_Comp_4]
 RETURN
     IF (
         NOT ISBLANK ( _y ),
-        CALCULATE ( [_Grupo_Mes], Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
+        CALCULATE ( IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), [_Grupo_Mes], [_B_Grupo] ), Fact_Mensual_met[Anio] = _y, TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ) )
     )
 ```
 </details>
@@ -724,7 +857,7 @@ VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 RETURN
     IF (
         NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
-        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+        IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
     )
 ```
 </details>
@@ -764,7 +897,7 @@ VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 RETURN
     IF (
         NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
-        CALCULATE ( [_Grupo_Mes], TREATAS ( _pares, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) )
+        IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
     )
 ```
 </details>
@@ -875,6 +1008,9 @@ RETURN
 | `Eje_Y` |  |  |
 | `Eje_Y_Acum` |  |  |
 | `Titulo_Pentada` |  | Título dinámico del gráfico de balance por pentadas |
+| `Mes_Preliminar_Txt` |  | Texto para las gráficas tipo R (vacío si el mes está cerrado) |
+| `Subtitulo_Detalle` |  | (N = estaciones de esa delimitación con dato de la variable en el año). Si no: delimitación y n estaciones. |
+| `Paises_Txt` |  | Países de las estaciones con dato de la variable en el año ("Guatemala", "El Salvador" o "Guatemala y El Salvador") |
 
 <details><summary><code>Color_Actual</code></summary>
 
@@ -957,33 +1093,36 @@ IF ( ISFILTERED ( Capas[Capa] ), IF ( "Anomalías" IN VALUES ( Capas[Capa] ), 1,
 <details><summary><code>Delimitacion</code></summary>
 
 ```dax
-VAR _p = CALCULATETABLE ( VALUES ( Estaciones_met[País] ), Fact_Mensual_met )
-RETURN
-    IF (
-        COUNTROWS ( _p ) = 1,
-        IF ( MAXX ( _p, Estaciones_met[País] ) = "Guatemala", "Costa sur de Guatemala", MAXX ( _p, Estaciones_met[País] ) ),
-        "Red meteorológica ICC (Guatemala y El Salvador)"
-    )
+TRIM ( "Red meteorológica ICC " & [Paises_Txt] )
 ```
 </details>
 
 <details><summary><code>Titulo_Seleccion</code></summary>
 
 ```dax
-VAR _n = [N_Estaciones]
-VAR _est = CALCULATETABLE ( VALUES ( Estaciones_met[Estación] ), Fact_Mensual_met )
-VAR _estr = CALCULATETABLE ( VALUES ( Estaciones_met[Estrato] ), Fact_Mensual_met )
-VAR _reg = CALCULATETABLE ( VALUES ( Estaciones_met[Región climática] ), Fact_Mensual_met )
+VAR _y = [Anio_Analisis]
+VAR _multi = COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) > 1
+VAR _sinElig = [_Sin_Elegibles]
+VAR _ids = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) )
+VAR _n = COUNTROWS ( _ids ) + 0
+VAR _est = CALCULATETABLE ( VALUES ( Estaciones_met[Estación] ), _ids )
+VAR _estr = CALCULATETABLE ( VALUES ( Estaciones_met[Estrato] ), _ids )
+VAR _reg = CALCULATETABLE ( VALUES ( Estaciones_met[Región climática] ), _ids )
+VAR _cue = CALCULATETABLE ( VALUES ( Estaciones_met[Cuenca] ), _ids )
+VAR _fCue = ISFILTERED ( Estaciones_met[Cuenca] ) && COUNTROWS ( _cue ) = 1
 VAR _fEst = ISFILTERED ( Estaciones_met[Estación] )
 VAR _fEstr = ISFILTERED ( Estaciones_met[Estrato] ) && COUNTROWS ( _estr ) = 1
 VAR _fReg = ISFILTERED ( Estaciones_met[Región climática] ) && COUNTROWS ( _reg ) = 1
 RETURN
     SWITCH (
         TRUE (),
+        _fEst && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1, "Selección no combinable",
         _n = 1, "Estación " & MAXX ( _est, Estaciones_met[Estación] ),
-        NOT _fEst && _fEstr && _fReg, "Estrato " & MAXX ( _estr, Estaciones_met[Estrato] ) & " — Región " & MAXX ( _reg, Estaciones_met[Región climática] ),
-        NOT _fEst && _fEstr, "Estrato " & MAXX ( _estr, Estaciones_met[Estrato] ),
-        NOT _fEst && _fReg, "Región " & MAXX ( _reg, Estaciones_met[Región climática] ),
+        _fEst && _n > 1, "Estaciones seleccionadas",
+        _fCue, "Cuenca " & MAXX ( _cue, Estaciones_met[Cuenca] ),
+        _fEstr && _fReg, "Estrato " & MAXX ( _estr, Estaciones_met[Estrato] ) & " — Región " & MAXX ( _reg, Estaciones_met[Región climática] ),
+        _fEstr, "Estrato " & MAXX ( _estr, Estaciones_met[Estrato] ),
+        _fReg, "Región " & MAXX ( _reg, Estaciones_met[Región climática] ),
         [Delimitacion]
     )
 ```
@@ -992,26 +1131,14 @@ RETURN
 <details><summary><code>Subtitulo_Seleccion</code></summary>
 
 ```dax
-VAR _n = [N_Estaciones]
-VAR _t = [Titulo_Seleccion]
-VAR _d = [Delimitacion]
-RETURN
-    "Año " & [Anio_Analisis]
-        & IF ( _t <> _d && _n > 1, "  |  " & _d )
-        & "  |  " & _n & IF ( _n = 1, " estación", " estaciones" )
+"Año " & [Anio_Analisis] & [Subtitulo_Detalle]
 ```
 </details>
 
 <details><summary><code>Subtitulo_Acumulado</code></summary>
 
 ```dax
-VAR _n = [N_Estaciones]
-VAR _t = [Titulo_Seleccion]
-VAR _d = [Delimitacion]
-RETURN
-    "Año " & [Anio_Analisis] & IF ( [Modo_Hidro] = 1, " (hidrológico)", " (calendario)" )
-        & IF ( _t <> _d && _n > 1, "  |  " & _d )
-        & "  |  " & _n & IF ( _n = 1, " estación", " estaciones" )
+"Año " & [Anio_Analisis] & IF ( [Modo_Hidro] = 1, " (hidrológico)", " (calendario)" ) & [Subtitulo_Detalle]
 ```
 </details>
 
@@ -1036,11 +1163,91 @@ RETURN
 ```
 </details>
 
+<details><summary><code>Mes_Preliminar_Txt</code></summary>
+
+```dax
+IF ( [Es_Preliminar] = 1 && NOT ISBLANK ( [Valor_Mensual] ), "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" ) )
+```
+</details>
+
+<details><summary><code>Subtitulo_Detalle</code></summary>
+
+```dax
+VAR _y = [Anio_Analisis]
+VAR _multi = COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) > 1
+VAR _sinElig = [_Sin_Elegibles]
+VAR _n = [N_Estaciones]
+VAR _t = [Titulo_Seleccion]
+VAR _d = [Delimitacion]
+VAR _ids = FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) )
+VAR _sel = CALCULATETABLE ( SUMMARIZE ( Estaciones_met, Estaciones_met[estacionid], Estaciones_met[Estrato], Estaciones_met[Región climática] ), _ids )
+VAR _lEstrato = FILTER ( DISTINCT ( SELECTCOLUMNS ( _sel, "K", Estaciones_met[Estrato] ) ), NOT ISBLANK ( [K] ) )
+VAR _tEstrato =
+    SWITCH ( TRUE (),
+        COUNTROWS ( _lEstrato ) = 0, BLANK (),
+        COUNTROWS ( _lEstrato ) > 3,
+        COUNTROWS ( _lEstrato ) & " estratos",
+        "Estrato "
+            & CONCATENATEX (
+                _lEstrato,
+                VAR _k = [K]
+                RETURN
+                    _k & " " & COUNTROWS ( FILTER ( _sel, Estaciones_met[Estrato] = _k ) ) & "/"
+                        & CALCULATE ( COUNTROWS ( FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) ) ) + 0, REMOVEFILTERS ( Estaciones_met ), Estaciones_met[Estrato] = _k ),
+                ", ", [K], ASC
+            )
+    )
+VAR _lRegion = FILTER ( DISTINCT ( SELECTCOLUMNS ( _sel, "K", Estaciones_met[Región climática] ) ), NOT ISBLANK ( [K] ) )
+VAR _tRegion =
+    SWITCH ( TRUE (),
+        COUNTROWS ( _lRegion ) = 0, BLANK (),
+        COUNTROWS ( _lRegion ) > 3,
+        COUNTROWS ( _lRegion ) & " regiones",
+        "Región "
+            & CONCATENATEX (
+                _lRegion,
+                VAR _k = [K]
+                RETURN
+                    _k & " " & COUNTROWS ( FILTER ( _sel, Estaciones_met[Región climática] = _k ) ) & "/"
+                        & CALCULATE ( COUNTROWS ( FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) ) ) + 0, REMOVEFILTERS ( Estaciones_met ), Estaciones_met[Región climática] = _k ),
+                ", ", [K], ASC
+            )
+    )
+VAR _nTxt = "  |  " & _n & IF ( _n = 1, " estación", " estaciones" )
+VAR _listas = IF ( NOT ISBLANK ( _tEstrato ), "  |  " & _tEstrato ) & IF ( NOT ISBLANK ( _tRegion ), "  |  " & _tRegion )
+VAR _manual = ISFILTERED ( Estaciones_met[Estación] ) && _n > 1
+VAR _cuenca = ISFILTERED ( Estaciones_met[Cuenca] ) && _n > 1
+VAR _mezcla = ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1
+RETURN
+    SWITCH (
+        TRUE (),
+        _mezcla,
+            "  |  Estaciones tipo A (" & CALCULATE ( COUNTROWS ( Estaciones_met ), Estaciones_met[Tipo] = "A" ) + 0
+                & ") y tipo B (" & CALCULATE ( COUNTROWS ( Estaciones_met ), Estaciones_met[Tipo] = "B" ) + 0 & ")",
+        _manual, _nTxt & _listas,
+        _cuenca, "  |  " & [Paises_Txt] & _nTxt & _listas,
+        // Estrato o región: solo el país; red completa o por país: el país ya va en el título
+        IF ( _t <> _d && _n > 1, "  |  " & [Paises_Txt] ) & _nTxt
+    )
+```
+</details>
+
+<details><summary><code>Paises_Txt</code></summary>
+
+```dax
+VAR _y = [Anio_Analisis]
+VAR _multi = COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) > 1
+VAR _sinElig = [_Sin_Elegibles]
+VAR _p = CALCULATETABLE ( VALUES ( Estaciones_met[País] ), FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) ) )
+RETURN CONCATENATEX ( _p, Estaciones_met[País], " y ", Estaciones_met[País], DESC )
+```
+</details>
+
 ## 8 Páginas heredadas
 
 | Medida | Formato | Descripción |
 |---|---|---|
-| `Mensual_Por_Anio` | 0.0 | Valor mensual con el año del contexto (año en la leyenda o en el segmentador) |
+| `Mensual_Por_Anio` | 0.0 | El mes en curso (preliminar) no se muestra en variables acumulativas: su total aún está incompleto |
 | `Acum_Mes_Por_Anio` | 0.0 | Acumulado de enero al mes del contexto |
 | `Mensual_Pp` | 0.0 |  |
 | `Mensual_ETPd` | 0.0 |  |
@@ -1048,7 +1255,7 @@ RETURN
 | `Mensual_TMin` | 0.0 |  |
 | `Mensual_TMed` | 0.0 |  |
 | `Acum_Mes_Pp` | 0.0 |  |
-| `Acum_Diario` | 0.0 | Acumulado desde el 1 de enero hasta la fecha del contexto |
+| `Acum_Diario` | 0.0 | Acumulado desde el 1 de enero hasta la fecha del contexto; cada estación solo con registro diario completo |
 | `Color_Mapa` |  | Color del mapa en 5 clases relativas entre las estaciones visibles |
 | `Rad_Media_Pentada` | 0.0 | Radiación media diaria (MJ/m²) de la pentada en el año de análisis |
 | `Banda_Rad_Suboptima` | 0 |  |
@@ -1071,11 +1278,14 @@ RETURN
 <details><summary><code>Mensual_Por_Anio</code></summary>
 
 ```dax
-CALCULATE (
-    [_Grupo_Mes],
-    TREATAS ( VALUES ( Calendario[Anio] ), Fact_Mensual_met[Anio] ),
-    TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
-)
+VAR _suma = [Var_Regla] = "Suma"
+RETURN
+    CALCULATE (
+        [_Grupo_Mes],
+        TREATAS ( VALUES ( Calendario[Anio] ), Fact_Mensual_met[Anio] ),
+        TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] ),
+        FILTER ( ALL ( Fact_Mensual_met[Mes_Preliminar] ), NOT _suma || NOT Fact_Mensual_met[Mes_Preliminar] )
+    )
 ```
 </details>
 
@@ -1087,7 +1297,7 @@ VAR _y = MAX ( Calendario[Anio] )
 RETURN
     IF (
         [Var_Regla] = "Suma" && _y * 100 + _m <= [Ultimo_Mes_Completo],
-        CALCULATE ( [_Grupo_Mes], Fact_Mensual_met[Anio] = _y, Fact_Mensual_met[Mes] <= _m )
+        VAR _pm = SELECTCOLUMNS ( GENERATESERIES ( 1, _m ), "Anio", _y, "Mes", [Value] ) RETURN AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pm, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pm, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) )
     )
 ```
 </details>
@@ -1143,8 +1353,25 @@ RETURN
     IF (
         [Var_Regla] = "Suma" && _fin <= [Ultima_Fecha],
         AVERAGEX (
-            VALUES ( Estaciones_met[estacionid] ),
-            CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), DATESBETWEEN ( Calendario[Fecha], _ini, _fin ) )
+            FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
+            // La estación aporta solo si tiene dato todos los días desde el 1 de enero (sin tramos planos por faltantes)
+            VAR _dias =
+                CALCULATE (
+                    SWITCH (
+                        [Var_Sel],
+                        "PCP", COUNT ( Fact_Diaria_met[Precip_Total] ),
+                        "ETO", COUNT ( Fact_Diaria_met[ETO_Total] ),
+                        "BH", COUNT ( Fact_Diaria_met[Balance_Hidrico] ),
+                        "RAD", COUNT ( Fact_Diaria_met[Rad_MJ] )
+                    ),
+                    REMOVEFILTERS ( Calendario ),
+                    DATESBETWEEN ( Calendario[Fecha], _ini, _fin )
+                )
+            RETURN
+                IF (
+                    _dias = DATEDIFF ( _ini, _fin, DAY ) + 1,
+                    CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), DATESBETWEEN ( Calendario[Fecha], _ini, _fin ) )
+                )
         )
     )
 ```
@@ -1179,7 +1406,7 @@ RETURN
 VAR _y = [Anio_Analisis]
 RETURN
     AVERAGEX (
-        VALUES ( Estaciones_met[estacionid] ),
+        FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
         CALCULATE ( AVERAGE ( Fact_Diaria_met[Rad_MJ] ), Calendario[Anio] = _y )
     )
 ```
@@ -1226,7 +1453,7 @@ RETURN IF ( _d > _u - 7 && _d <= _u, CALCULATE ( [Valor_Diario], Variables[Clave
 
 ```dax
 AVERAGEX (
-    VALUES ( Estaciones_met[estacionid] ),
+    FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
     CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), TREATAS ( VALUES ( Periodo_A[Fecha] ), Fact_Diaria_met[Fecha] ) )
 )
 ```
@@ -1242,7 +1469,7 @@ RETURN
     IF (
         [Var_Regla] = "Suma" && _f <= _fin && _f <= [Ultima_Fecha],
         AVERAGEX (
-            VALUES ( Estaciones_met[estacionid] ),
+            FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
             CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), DATESBETWEEN ( Calendario[Fecha], _ini, _f ) )
         )
     )
@@ -1253,7 +1480,7 @@ RETURN
 
 ```dax
 AVERAGEX (
-    VALUES ( Estaciones_met[estacionid] ),
+    FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
     CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), TREATAS ( VALUES ( Periodo_B[Fecha] ), Fact_Diaria_met[Fecha] ) )
 )
 ```
@@ -1269,7 +1496,7 @@ RETURN
     IF (
         [Var_Regla] = "Suma" && _f <= _fin && _f <= [Ultima_Fecha],
         AVERAGEX (
-            VALUES ( Estaciones_met[estacionid] ),
+            FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ),
             CALCULATE ( [_Dia_Est], REMOVEFILTERS ( Calendario ), DATESBETWEEN ( Calendario[Fecha], _ini, _f ) )
         )
     )
@@ -1334,6 +1561,7 @@ IF ( SELECTEDVALUE ( Vista_Comp[Vista], "Mensual" ) = "Acumulado mensual" && NOT
 | `Val_Meses_Validos` | #,0 |  |
 | `Val_Primera_Fecha` | dd/mm/yyyy |  |
 | `Val_Ultima_Fecha` | dd/mm/yyyy |  |
+| `_Metodo_Directo` |  | Solo para validación (página Validación): TRUE = promedio directo de estaciones, como los scripts R |
 
 <details><summary><code>Val_N_Dias</code></summary>
 
@@ -1360,5 +1588,12 @@ CALCULATE ( MIN ( Fact_Diaria_met[Fecha] ) )
 
 ```dax
 CALCULATE ( MAX ( Fact_Diaria_met[Fecha] ) )
+```
+</details>
+
+<details><summary><code>_Metodo_Directo</code></summary>
+
+```dax
+SELECTEDVALUE ( Metodo_Agregacion[Método], "Anomalías (tablero)" ) = "Promedio directo (scripts R)"
 ```
 </details>

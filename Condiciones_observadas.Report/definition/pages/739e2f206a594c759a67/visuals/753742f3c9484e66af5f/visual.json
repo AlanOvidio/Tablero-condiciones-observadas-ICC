@@ -125,37 +125,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "8a9d1948eeb547c5aad7",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Estaciones_met"
-              }
-            },
-            "Property": "Estación"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "66abae895044a8510819",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Medidas"
-              }
-            },
-            "Property": "Valor_Diario"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

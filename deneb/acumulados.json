@@ -304,6 +304,78 @@
           "filter": "datum.f_anios == 1"
         },
         {
+          "joinaggregate": [
+            {
+              "op": "max",
+              "field": "valor",
+              "as": "mx_valor"
+            },
+            {
+              "op": "max",
+              "field": "h_max",
+              "as": "mx_h_max"
+            },
+            {
+              "op": "max",
+              "field": "y1",
+              "as": "mx_y1"
+            },
+            {
+              "op": "max",
+              "field": "y2",
+              "as": "mx_y2"
+            },
+            {
+              "op": "max",
+              "field": "y3",
+              "as": "mx_y3"
+            },
+            {
+              "op": "max",
+              "field": "y4",
+              "as": "mx_y4"
+            },
+            {
+              "op": "min",
+              "field": "valor",
+              "as": "mn_valor"
+            },
+            {
+              "op": "min",
+              "field": "h_min",
+              "as": "mn_h_min"
+            },
+            {
+              "op": "min",
+              "field": "y1",
+              "as": "mn_y1"
+            },
+            {
+              "op": "min",
+              "field": "y2",
+              "as": "mn_y2"
+            },
+            {
+              "op": "min",
+              "field": "y3",
+              "as": "mn_y3"
+            },
+            {
+              "op": "min",
+              "field": "y4",
+              "as": "mn_y4"
+            }
+          ]
+        },
+        {
+          "calculate": "(max(isValid(datum.mx_valor) ? datum.mx_valor : -1e12, isValid(datum.mx_h_max) ? datum.mx_h_max : -1e12, isValid(datum.mx_y1) ? datum.mx_y1 : -1e12, isValid(datum.mx_y2) ? datum.mx_y2 : -1e12, isValid(datum.mx_y3) ? datum.mx_y3 : -1e12, isValid(datum.mx_y4) ? datum.mx_y4 : -1e12)) - (min(isValid(datum.mn_valor) ? datum.mn_valor : 1e12, isValid(datum.mn_h_min) ? datum.mn_h_min : 1e12, isValid(datum.mn_y1) ? datum.mn_y1 : 1e12, isValid(datum.mn_y2) ? datum.mn_y2 : 1e12, isValid(datum.mn_y3) ? datum.mn_y3 : 1e12, isValid(datum.mn_y4) ? datum.mn_y4 : 1e12))",
+          "as": "rng_y"
+        },
+        {
+          "calculate": "datum.rng_y > 0 && datum.rng_y < 1e11 ? 0.06 * datum.rng_y : 1",
+          "as": "gap"
+        },
+        {
           "fold": [
             "y1",
             "y2",
@@ -486,6 +558,47 @@
             },
             {
               "filter": "datum.x == datum.x_fin"
+            },
+            {
+              "window": [
+                {
+                  "op": "row_number",
+                  "as": "rk"
+                }
+              ],
+              "sort": [
+                {
+                  "field": "v",
+                  "order": "ascending"
+                }
+              ]
+            },
+            {
+              "calculate": "datum.v - datum.rk * datum.gap",
+              "as": "w_lbl"
+            },
+            {
+              "window": [
+                {
+                  "op": "max",
+                  "field": "w_lbl",
+                  "as": "wm_lbl"
+                }
+              ],
+              "sort": [
+                {
+                  "field": "v",
+                  "order": "ascending"
+                }
+              ],
+              "frame": [
+                null,
+                0
+              ]
+            },
+            {
+              "calculate": "datum.wm_lbl + datum.rk * datum.gap",
+              "as": "y_lbl"
             }
           ],
           "mark": {
@@ -542,7 +655,7 @@
                 "titlePadding": 10,
                 "labelExpr": "replace(datum.label, /,/g, ' ') + ' ' + data('dataset')[0].unidad"
               },
-              "field": "v"
+              "field": "y_lbl"
             },
             "text": {
               "field": "anio"

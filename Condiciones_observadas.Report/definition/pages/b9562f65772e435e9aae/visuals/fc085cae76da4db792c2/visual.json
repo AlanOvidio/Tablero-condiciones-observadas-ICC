@@ -109,5 +109,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "cf0c74264629e1b1d47b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Estaciones_met"
+              }
+            },
+            "Property": "Estación"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

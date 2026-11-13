@@ -167,6 +167,23 @@ table Fact_Diaria_met
 
 		annotation SummarizationSetBy = Automatic
 
+	column Excluir_Agregados
+		dataType: int64
+		formatString: 0
+		lineageTag: bbe3f1e5-f078-480d-a3f0-d52766ee9a42
+		summarizeBy: sum
+		sourceColumn: Excluir_Agregados
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tipo
+		dataType: string
+		lineageTag: 7eabb876-e3a1-4c68-bf92-ba7de50f2d62
+		summarizeBy: none
+		sourceColumn: Tipo
+
+		annotation SummarizationSetBy = Automatic
+
 	partition Fact_Diaria_met = m
 		mode: import
 		source =

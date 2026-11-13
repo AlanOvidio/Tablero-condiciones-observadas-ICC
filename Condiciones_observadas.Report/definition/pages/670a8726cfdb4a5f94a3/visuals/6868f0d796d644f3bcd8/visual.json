@@ -164,23 +164,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "1d220dc869150a3d0605",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Periodo_A"
-              }
-            },
-            "Property": "Fecha"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }

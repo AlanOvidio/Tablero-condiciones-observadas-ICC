@@ -96,7 +96,7 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 
 ## 2026-11-12 · Interacción y anomalías en las gráficas tipo R
 - Gráficas Deneb: cursor como en los visuales nativos (línea vertical en el mes más cercano y tooltip con año actual, media, rango normal, mínimo–máximo, anomalía y años adicionales). Especificaciones en `deneb/` actualizadas (nuevo `balance.json`).
-- Etiquetas de anomalía sin decimales (las variables con decimales, como temperaturas y ETo diaria, conservan uno); porcentaje sin decimales y calculado sobre el valor absoluto de la media.
+- Etiquetas de anomalía sin decimales (las variables con decimales, como temperaturas y ETo diaria, conservan uno, y también las anomalías menores que 1 en valor absoluto); porcentaje sin decimales y calculado sobre el valor absoluto de la media.
 - Balance hídrico: la anomalía muestra también el porcentaje; línea del cero en rojo oscuro (#8B0000); paleta pizarra (#1B2A49 / #6B7A99 / #C9CED8) para distinguirla de la lluvia.
 - Precipitación diaria: se aclara en el subtítulo que la línea es el acumulado desde el 1 de enero, promedio de las estaciones seleccionadas.
 - Corrección del cursor: el tooltip se arma con campos calculados en la capa (con `nearest` el *datum* de un tooltip de marca es el del voronoi y salía `undefined`). Muestra mes, año actual, media, rango normal y rango histórico (separador «a» para no confundir con el signo negativo); la anomalía queda solo en la anotación y los años adicionales no se incluyen.
@@ -106,3 +106,46 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 
 ## 2026-11-12 · Segmentadores de fecha en la versión web
 - En «Publicar en la web» el informe se reduce y el segmentador «Entre» apila las cajas de inicio y fin; con 58 px de alto la fecha final quedaba oculta. Precipitación diaria, Mapa de precipitación y Mapa de radiación: segmentador de fecha de 100 px y sin deslizador. Comparación entre periodos: Periodo A y B colocados lado a lado.
+
+## 2026-11-13 · Faltantes y estaciones solo de precipitación
+- Diagnóstico (consulta DAX): las RLS reportaban temperatura (medias mensuales de 6–9 °C, sin sentido físico) y LVS-RLS tenía 133 días con 0 °C; además LVS-RLS tenía 589 días sin lluvia registrada pero 65 meses "válidos", porque la completitud contaba filas y no días con dato.
+- `TablaEstaciones_met`: lista `SoloPrecipitacion` (42, 69, 76, 77) y columna `Solo_Precip`; en `fxLimpiarDiario` esas estaciones conservan solo la precipitación.
+- `fxLimpiarDiario`: día con temperatura media, mínima y máxima en 0 → sin dato (también sensación térmica); radiación diaria 0 y ETo 0 → sin dato.
+- `Fact_Mensual_met`: completitud por variable; cada valor mensual se anula si su variable tiene dato en menos del 80 % de los días. Se actualizó también la expresión de la política de actualización incremental.
+- Mes en curso preliminar: `Fact_Mensual_met[Mes_Preliminar]`; la completitud del mes en curso se mide contra los días transcurridos. Gráficas tipo R: punto hueco y el tooltip indica "preliminar, datos al …"; en variables acumulativas no se anota anomalía (el total aún está incompleto) y en las comparativas mensuales no se muestra. Los acumulados siguen hasta el último mes cerrado y el periodo histórico excluye el año de análisis.
+- `N_Estaciones`: cuenta solo las estaciones con dato de la variable seleccionada en el año de análisis (una RLS ya no suma en temperatura); el título de estación individual usa el mismo criterio.
+
+## 2026-11-13 · Exclusión de estaciones, títulos y acumulados con faltantes
+- Las estaciones ILU, El Carmen y las RLS se excluyen en el modelo (se quitan de la lista de `TablaEstaciones_met`; quedan anotadas en un comentario) en lugar de un filtro de informe: el filtro sobre `Estación` hacía que `ISFILTERED` fuera siempre verdadero y el título nunca mostraba el estrato o la región. Se quitó el filtro de `report.json`. Quedan 43 estaciones.
+- `Titulo_Seleccion`: con estaciones elegidas a mano muestra "Estaciones A, B, C" (hasta 3) o "Estaciones seleccionadas" (el número va en el subtítulo), y añade "— Estrato X" y/o "— Región Y" según lo que compartan. Estaciones, estratos, regiones y país se toman de las estaciones con dato de la variable en el año de análisis.
+- Acumulados (`Acum_Mensual`, `Acum_Comp_1–4`, `Acum_Mes_Por_Anio`): una estación entra al promedio del grupo solo si tiene todos los meses del acumulado; antes los meses faltantes se omitían y la curva se quedaba en el último valor (caso El Carmen).
+- Títulos (ajuste): con dos o más estaciones elegidas a mano el título es "Estaciones seleccionadas"; el subtítulo (`Subtitulo_Detalle`) indica n estaciones y, por cada estrato y región presentes, n/N (N = estaciones de esa delimitación con dato de la variable en el año; con más de 3 se resume como "4 estratos"). Con solo segmentadores de estrato o región el título no cambia ("Estrato X — Región Y").
+- Delimitación: "Red meteorológica ICC Guatemala", "… El Salvador" o "… Guatemala y El Salvador" según los países con dato (se elimina "Costa sur de Guatemala"). En el subtítulo de estrato o región solo va el país o países (`Paises_Txt`).
+- Cuenca: título "Cuenca X" si se elige una cuenca en el menú (sin estaciones a mano); subtítulo con país, n estaciones y n/N por estrato y región presentes. Una sola estación conserva "Estación X".
+- Precipitación diaria: el acumulado desde el 1 de enero solo incluye estaciones con dato todos los días hasta la fecha (antes los días faltantes dejaban tramos planos).
+- Se retira la versión heredada (`20260108 - Power BI Guatemala.pbip`); queda en el historial y en la etiqueta `v1.0`.
+- Acumulados (ajuste): si el periodo incluye el inicio del registro de una estación, se acumula desde su primer mes válido (años incompletos al inicio del histórico sí se muestran, también como años adicionales); un hueco posterior sí corta la curva. En agregados, la estación no aporta antes de su inicio.
+- Estaciones (ajuste del responsable): se vuelven a incluir El Carmen (46) y las RLS (42, 69, 76, 77; solo precipitación). Quedan fuera las ILU. Total: 48 estaciones.
+
+## 2026-11-13 · Método de anomalías para agregados
+- Diagnóstico: en el estrato Alto conviven estaciones de 300–350 m con muchos años (Cengicaña, Lorena, Concepción) y de 1 200–2 300 m con pocos años; la media histórica reflejaba casi solo las bajas mientras el año actual ya incluía las altas (Alto aparecía siempre más frío y seco). En Bajo, Litoral y Medio las diferencias en temperatura eran < 0.6 °C.
+- Agregados (más de una estación): media del grupo = promedio de las medias de cada estación en el periodo base (Jones y Hulme, 1996); valor del grupo en un año = media del grupo + anomalía media (valor − media propia) de las estaciones con dato ese año. De esa serie salen P33, P66, mínimo y máximo. Aplica al año de análisis, años adicionales, históricos mensuales y acumulados. Medidas: `_B_Normal`, `_B_Grupo`; históricos `Hist_*` con tabla estación × año.
+- Mínimo de años por estación en el periodo base: 3 (`Min_Anios_Base`). Las estaciones con menos no entran a los agregados ni al contador; individualmente se muestran con sus años.
+- Una sola estación: mismo resultado que antes (su media y sus años).
+- Observación pendiente de revisar con la red: la radiación (y por ello la ETo) de las estaciones con más años es 3–6 % menor que la de las nuevas; puede ser deriva o calibración de los radiómetros.
+- Precipitación en agregados: anomalía relativa (valor ÷ media propia de la estación) en lugar de diferencia; con diferencias, en meses secos una estación lluviosa con anomalía negativa grande llevaba la serie del grupo a valores negativos. Se recomienda así en Jones y Hulme (1996).
+- Gráficas tipo R: las etiquetas de los años adicionales se ordenan por su valor final y se separan con una distancia mínima (6 % del rango del eje) para que no se traslapen.
+- Etiquetas de anomalía: si el valor absoluto es menor que 1 se muestra con un decimal (evita "0 mm (+12 %)").
+
+## 2026-11-13 · Exclusión en agregaciones y método de validación
+- Se incluyen de nuevo todas las estaciones (61; ILU incluidas). Lista `ExcluirAgregados` en `TablaEstaciones_met` (ILU 81–93 y RLS 42, 69, 76, 77) → columna `Estaciones_met[Excluir_Agregados]`. Esas estaciones no entran a los cálculos de grupo (estrato, región, cuenca, país o red completa); sí entran si se eligen a mano en el segmentador de estaciones, y se ven individualmente (mapas, una sola estación).
+- Comparación con los scripts R: diferencias por (1) método de agregación, (2) estaciones del histórico (R solo usa las que tienen dato en el año actual; se descarta replicarlo), (3) faltantes (R suma sin completitud: meses sin dato = 0), (4) periodo base, (5) fuente/QC de 15 min, (6) conjunto de estaciones y meses. En Alto, R muestra 2026 entre 2 y 4.7 °C bajo la media y la lluvia 40–80 % bajo: efecto de mezclar estaciones de 300 m y > 1 200 m, que el método de anomalías corrige. En Pacífico, R muestra la radiación de 2026 sobre la media todo el año, coherente con la diferencia de radiómetros nuevos y antiguos.
+- Método oficial: anomalías. Solo en la página Validación hay un segmentador "Método de agregación" (`Metodo_Agregacion`, medida `_Metodo_Directo`) para comparar con el promedio directo de los scripts R.
+- Si ninguna estación de la selección tiene el mínimo de años en el periodo base (p. ej., varias ILU elegidas a mano), el grupo se calcula con promedio directo y todas cuentan (`_Sin_Elegibles`); antes quedaba en blanco con 0 estaciones.
+
+## 2026-11-13 · Tipos de estación y combinaciones a mano
+- `Estaciones_met[Tipo]`: B = ILU 81–93 (lista `TipoB` en `TablaEstaciones_met`); A = el resto, RLS incluidas.
+- Agregados predefinidos (estrato, región, cuenca, país, red): solo Tipo A meteorológicas (sin RLS ni B), como antes.
+- Selección a mano: A y RLS se combinan entre sí; B solo entre B. Si se eligen A y B a la vez, la gráfica queda en blanco; título "Selección no combinable" y subtítulo "Estaciones tipo A (n) y tipo B (n)".
+- Grupos B (y cualquier grupo sin estaciones con el mínimo de años): promedio directo; cuando alcanzan el mínimo siguen la misma ruta que las A (anomalías).
+- Mínimo de años por estación (≥ 3 años con dato en el periodo base, en cualquier mes), ya no mes a mes: una estación elegible aporta todos los meses y su media de cada mes usa los años que tenga ese mes (caso La Confianza, que solo mostraba la segunda mitad del año). Los años adicionales incompletos se siguen mostrando como antes.

@@ -167,23 +167,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "332af019a996c716c625",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Umbral_Rad_Sub"
-              }
-            },
-            "Property": "MJ"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

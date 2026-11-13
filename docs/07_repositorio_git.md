@@ -6,7 +6,7 @@ Repositorio privado `Tablero-condiciones-observadas-ICC`, gestionado con GitHub 
 
 | Rama / etiqueta | Contenido |
 |---|---|
-| `main` | Versión vigente. Desde la etiqueta `v1.0` contiene el tablero reformulado (`Condiciones_observadas.pbip`); la versión heredada se conserva temporalmente como referencia. |
+| `main` | Versión vigente. Desde la etiqueta `v1.0` contiene el tablero reformulado (`Condiciones_observadas.pbip`); la versión heredada se retiró en v1.2 (disponible en la etiqueta `v1.0`). |
 | `v1.0` | Primera versión del tablero reformulado (fusión del *Pull Request* #1, rama `v2`). |
 | Ramas de trabajo | Una por tema (p. ej. `comparativas-mensuales`, `cuencas`). Se fusionan a `main` con un *Pull Request* y, si se publica, se etiqueta la versión (`v1.1`, `v1.2`…). |
 
