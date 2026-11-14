@@ -3,7 +3,7 @@ expression RangeStart = #datetime(2008, 1, 1, 0, 0, 0) meta [IsParameterQuery=tr
 
 	annotation PBI_ResultType = DateTime
 
-expression RangeEnd = #datetime(2026, 11, 9, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+expression RangeEnd = #datetime(2026, 11, 13, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
 	lineageTag: 527d5206-9bc0-45af-bf78-409969b2838c
 
 	annotation PBI_ResultType = DateTime
@@ -12,7 +12,7 @@ expression RangeEnd = #datetime(2026, 11, 9, 0, 0, 0) meta [IsParameterQuery=tru
 expression InicioAnioHidrologico = #date(2025, 11, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
 	lineageTag: 6e9493a6-ba65-47ad-bcc4-e9f9144d9204
 
-	annotation PBI_ResultType = Exception
+	annotation PBI_ResultType = Date
 
 /// Lecturas diarias de una estación (endpoint getlecturasdia)
 expression fxLecturasEstacion_met_diario =

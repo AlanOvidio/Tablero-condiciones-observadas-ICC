@@ -762,7 +762,7 @@
     {
       "transform": [
         {
-          "filter": "datum.f_act == 1 && datum.valor != null"
+          "filter": "datum.f_act == 1 && datum.valor != null && !(isValid(datum.prelim) && datum.prelim != '')"
         }
       ],
       "mark": {
@@ -770,6 +770,133 @@
         "filled": true,
         "size": 150,
         "opacity": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative",
+          "title": "Mes",
+          "scale": {
+            "domain": [
+              0.35,
+              12.65
+            ],
+            "nice": false
+          },
+          "axis": {
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12
+            ],
+            "labelExpr": "(data('dataset')[0].modo_h == 1 ? ['','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'] : ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'])[datum.value]",
+            "grid": true,
+            "labelPadding": 6
+          }
+        },
+        "y": {
+          "type": "quantitative",
+          "scale": {
+            "zero": 1,
+            "nice": true
+          },
+          "axis": {
+            "title": {
+              "expr": "data('dataset')[0].ytitulo"
+            },
+            "format": ",~r",
+            "tickCount": 8,
+            "titlePadding": 10,
+            "labelExpr": "replace(datum.label, /,/g, ' ') + ' ' + data('dataset')[0].unidad"
+          },
+          "field": "valor"
+        },
+        "color": {
+          "scale": {
+            "domain": [
+              "act",
+              "media",
+              "rango",
+              "normal"
+            ],
+            "range": [
+              {
+                "expr": "data('dataset')[0].c_act"
+              },
+              "#FFD700",
+              {
+                "expr": "data('dataset')[0].c_rango"
+              },
+              {
+                "expr": "data('dataset')[0].c_normal"
+              }
+            ]
+          },
+          "legend": {
+            "labelExpr": "datum.value == 'act' ? data('dataset')[0].lbl_act : datum.value == 'rango' ? data('dataset')[0].lbl_rango : datum.value == 'normal' ? 'Rango normal (P33–P66)' : 'Media histórica'",
+            "values": {
+              "expr": "data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','rango','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media','rango'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','media','normal'] : data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','media'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','rango','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act','rango'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['act','normal'] : data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['act'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','rango','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media','rango'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['media','normal'] : !data('dataset')[0].f_act == 1 && data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['media'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['rango','normal'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && (data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && !data('dataset')[0].f_rib >= 2 ? ['rango'] : !data('dataset')[0].f_act == 1 && !data('dataset')[0].f_med == 1 && !(data('dataset')[0].f_rib == 1 || data('dataset')[0].f_rib == 3) && data('dataset')[0].f_rib >= 2 ? ['normal'] : []"
+            }
+          },
+          "datum": "act"
+        },
+        "tooltip": [
+          {
+            "field": "valor",
+            "title": "Actual",
+            "format": ",.1f"
+          },
+          {
+            "field": "h_media",
+            "title": "Media histórica",
+            "format": ",.1f"
+          },
+          {
+            "field": "h_p33",
+            "title": "P33",
+            "format": ",.1f"
+          },
+          {
+            "field": "h_p66",
+            "title": "P66",
+            "format": ",.1f"
+          },
+          {
+            "field": "h_min",
+            "title": "Mínimo",
+            "format": ",.1f"
+          },
+          {
+            "field": "h_max",
+            "title": "Máximo",
+            "format": ",.1f"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.f_act == 1 && datum.valor != null && (isValid(datum.prelim) && datum.prelim != '')"
+        }
+      ],
+      "mark": {
+        "type": "point",
+        "filled": false,
+        "size": 150,
+        "opacity": 1,
+        "fill": "#FFFFFF",
+        "fillOpacity": 1,
+        "strokeWidth": 2.6
       },
       "encoding": {
         "x": {
@@ -1368,7 +1495,7 @@
     {
       "transform": [
         {
-          "calculate": "(data('dataset')[0].modo_h == 1 ? ['','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'] : ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'])[datum.x]",
+          "calculate": "((data('dataset')[0].modo_h == 1 ? ['','Nov','Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'] : ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'])[datum.x]) + ((isValid(datum.prelim) && datum.prelim != '') ? ' (' + datum.prelim + ')' : '')",
           "as": "t_mes"
         },
         {

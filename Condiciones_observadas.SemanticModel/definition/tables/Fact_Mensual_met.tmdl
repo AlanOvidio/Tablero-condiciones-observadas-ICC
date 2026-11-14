@@ -60,10 +60,12 @@ table Fact_Mensual_met
 			        {"IC_Min_Abs", each List.Min([IC_Min]), type nullable number}
 			    }),
 			    Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
+			    // Último día con datos descargados (en Desktop depende de RangeEnd; en el servicio, de la actualización)
+			    UltimaFecha = List.Max(Incremental[Fecha]),
 			    FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
 			    DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
-			    // Días de referencia: el mes completo si ya cerró; si está en curso, los días transcurridos (dato preliminar)
-			    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(Hoy - [Fecha_Mes])}), Int64.Type),
+			    // Días de referencia: el mes completo si ya cerró; si está en curso, los días hasta el último dato descargado (dato preliminar)
+			    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(UltimaFecha - [Fecha_Mes]) + 1}), Int64.Type),
 			    // Valor mensual solo si la variable tiene dato en ≥ 80 % de los días de referencia; si no, nulo
 			    UmbralCompletitud = 0.8,
 			    Reglas = {{"Precip", "N_P"}, {"ETo", "N_Dias_ETo"}, {"Rad_MJ", "N_R"}, {"Irradiancia", "N_R"},
@@ -355,10 +357,12 @@ table Fact_Mensual_met
 				        {"IC_Min_Abs", each List.Min([IC_Min]), type nullable number}
 				    }),
 				    Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
+				    // Último día con datos descargados (en Desktop depende de RangeEnd; en el servicio, de la actualización)
+				    UltimaFecha = List.Max(Incremental[Fecha]),
 				    FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
 				    DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
-				    // Días de referencia: el mes completo si ya cerró; si está en curso, los días transcurridos (dato preliminar)
-				    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(Hoy - [Fecha_Mes])}), Int64.Type),
+				    // Días de referencia: el mes completo si ya cerró; si está en curso, los días hasta el último dato descargado (dato preliminar)
+				    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(UltimaFecha - [Fecha_Mes]) + 1}), Int64.Type),
 				    // Valor mensual solo si la variable tiene dato en ≥ 80 % de los días de referencia; si no, nulo
 				    UmbralCompletitud = 0.8,
 				    Reglas = {{"Precip", "N_P"}, {"ETo", "N_Dias_ETo"}, {"Rad_MJ", "N_R"}, {"Irradiancia", "N_R"},

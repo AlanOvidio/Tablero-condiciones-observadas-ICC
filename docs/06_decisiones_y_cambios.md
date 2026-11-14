@@ -112,7 +112,7 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 - `TablaEstaciones_met`: lista `SoloPrecipitacion` (42, 69, 76, 77) y columna `Solo_Precip`; en `fxLimpiarDiario` esas estaciones conservan solo la precipitación.
 - `fxLimpiarDiario`: día con temperatura media, mínima y máxima en 0 → sin dato (también sensación térmica); radiación diaria 0 y ETo 0 → sin dato.
 - `Fact_Mensual_met`: completitud por variable; cada valor mensual se anula si su variable tiene dato en menos del 80 % de los días. Se actualizó también la expresión de la política de actualización incremental.
-- Mes en curso preliminar: `Fact_Mensual_met[Mes_Preliminar]`; la completitud del mes en curso se mide contra los días transcurridos. Gráficas tipo R: punto hueco y el tooltip indica "preliminar, datos al …"; en variables acumulativas no se anota anomalía (el total aún está incompleto) y en las comparativas mensuales no se muestra. Los acumulados siguen hasta el último mes cerrado y el periodo histórico excluye el año de análisis.
+- Mes en curso preliminar: `Fact_Mensual_met[Mes_Preliminar]`; la completitud del mes en curso se mide contra los días hasta el último dato descargado (antes: hasta hoy, lo que en Desktop, con RangeEnd fijo, nunca alcanzaba el 80 %). Gráficas tipo R: punto hueco y el tooltip indica "preliminar, datos al …"; en variables acumulativas no se anota anomalía (el total aún está incompleto) y en las comparativas mensuales no se muestra. Los acumulados siguen hasta el último mes cerrado y el periodo histórico excluye el año de análisis.
 - `N_Estaciones`: cuenta solo las estaciones con dato de la variable seleccionada en el año de análisis (una RLS ya no suma en temperatura); el título de estación individual usa el mismo criterio.
 
 ## 2026-11-13 · Exclusión de estaciones, títulos y acumulados con faltantes
@@ -149,3 +149,7 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 - Selección a mano: A y RLS se combinan entre sí; B solo entre B. Si se eligen A y B a la vez, la gráfica queda en blanco; título "Selección no combinable" y subtítulo "Estaciones tipo A (n) y tipo B (n)".
 - Grupos B (y cualquier grupo sin estaciones con el mínimo de años): promedio directo; cuando alcanzan el mínimo siguen la misma ruta que las A (anomalías).
 - Mínimo de años por estación (≥ 3 años con dato en el periodo base, en cualquier mes), ya no mes a mes: una estación elegible aporta todos los meses y su media de cada mes usa los años que tenga ese mes (caso La Confianza, que solo mostraba la segunda mitad del año). Los años adicionales incompletos se siguen mostrando como antes.
+
+## 2026-11-13 · Opción "Mes preliminar"
+- Nueva capa "Mes preliminar" en el menú Mostrar (`Mostrar_Preliminar`) para las gráficas tipo R. Por defecto: activada en temperaturas, sensación térmica y variables acumulativas; desactivada en precipitación, radiación, evapotranspiración y balance hídrico (en las páginas de radiación y evapotranspiración el valor por defecto sigue la variable inicial; para irradiancia o ETo media diaria se activa a mano).
+- Acumulados: con la opción activada, el acumulado del año llega al mes en curso (punto hueco y aviso en el tooltip; sin anomalía en ese punto, porque se compara con la media acumulada al fin de mes).

@@ -150,7 +150,7 @@ Tamaño 1280×720 · 16 visuales · carpeta `db33fa28d3f74f74add9`
 | Visual | Título | Campos | ID |
 |---|---|---|---|
 | card |  | Ultima_Fecha | `97bf36` |
-| Deneb (Vega-Lite) |  | Pos, Acum_Mensual, Hist_Acum_Media, Hist_Acum_Min, Hist_Acum_Max, Hist_Acum_P33, Hist_Acum_P66, Anomalia_Acum_Etiqueta, Anomalia_Acum_Color, Subtitulo_Acumulado, Eje_Y_Acum, Acum_Comp_1, Anio_Comp_1_Txt, Acum_Comp_2, Anio_Comp_2_Txt, Acum_Comp_3, Anio_Comp_3_Txt, Acum_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias | `c57951` |
+| Deneb (Vega-Lite) |  | Pos, Acum_Mensual, Hist_Acum_Media, Hist_Acum_Min, Hist_Acum_Max, Hist_Acum_P33, Hist_Acum_P66, Anomalia_Acum_Etiqueta, Anomalia_Acum_Color, Subtitulo_Acumulado, Eje_Y_Acum, Acum_Comp_1, Anio_Comp_1_Txt, Acum_Comp_2, Anio_Comp_2_Txt, Acum_Comp_3, Anio_Comp_3_Txt, Acum_Comp_4, Anio_Comp_4_Txt, Color_Actual, Color_Rango, Color_Normal, Etiqueta_Actual, Etiqueta_Rango, Var_Unidad, Modo_Hidro, Titulo_Seleccion, Mostrar_Rangos, Mostrar_Media, Mostrar_Actual, Mostrar_Anios, Mostrar_Anomalias, Mes_Preliminar_Acum_Txt | `c57951` |
 | slicer |  | Variable | `c8beba` |
 | slicer |  | Modo | `0dfdae` |
 | slicer |  | Año | `b37f05` |

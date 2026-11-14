@@ -1,19 +1,19 @@
 # Catálogo de medidas DAX
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-13 (118 medidas). No editar a mano.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-13 (121 medidas). No editar a mano.
 
 Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones, las variables acumulativas (precipitación, ETo, balance, radiación) **suman por estación y luego promedian entre estaciones**; los promedios se calculan por estación y luego entre estaciones; las temperaturas máxima y mínima mensuales son el extremo de cada estación, promediado. Las medidas que dependen de la variable usan `Var_Sel` (tabla `Variables`). Ver `01_arquitectura.md` y `06_decisiones_y_cambios.md`.
 
 ## Índice
 
-- [0 Contexto](#0-contexto) (11)
+- [0 Contexto](#0-contexto) (12)
 - [1 Diario](#1-diario) (7)
 - [2 Mensual](#2-mensual) (4)
 - [3 Histórico](#3-histórico) (13)
 - [4 Anomalías](#4-anomalías) (8)
 - [5 Años adicionales](#5-años-adicionales) (16)
 - [6 Acumulados](#6-acumulados) (7)
-- [7 Textos y banderas](#7-textos-y-banderas) (20)
+- [7 Textos y banderas](#7-textos-y-banderas) (22)
 - [8 Páginas heredadas](#8-páginas-heredadas) (27)
 - [9 Validación](#9-validación) (5)
 
@@ -32,6 +32,7 @@ Convenciones: las medidas con prefijo `_` son auxiliares. Con varias estaciones,
 | `Base_Fin` | 0 | Fin del periodo histórico; nunca incluye el año de análisis |
 | `N_Estaciones` | 0 | Estaciones que aportan dato de la variable seleccionada en el año de análisis (completitud por variable) |
 | `Base_Disponible` | 0 | Filtro del segmentador de periodo histórico: solo años anteriores al de análisis |
+| `Ultimo_Mes_Prelim` | 0 | Mes en curso con dato preliminar (AAAAMM) |
 
 <details><summary><code>Var_Sel</code></summary>
 
@@ -122,6 +123,13 @@ RETURN
 
 ```dax
 IF ( MAX ( Anios_Base[Año] ) < [Anio_Analisis], 1 )
+```
+</details>
+
+<details><summary><code>Ultimo_Mes_Prelim</code></summary>
+
+```dax
+CALCULATE ( MAXX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Preliminar] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS () )
 ```
 </details>
 
@@ -249,12 +257,13 @@ AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaci
 ```dax
 VAR _y = [Anio_Analisis]
 VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
-RETURN
+VAR _r =
     CALCULATE (
         IF ( _uno, [_Grupo_Mes], [_B_Grupo] ),
         Fact_Mensual_met[Anio] = _y,
         TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
     )
+RETURN IF ( [Es_Preliminar] = 1 && [Mostrar_Preliminar] = 0, BLANK (), _r )
 ```
 </details>
 
@@ -596,7 +605,7 @@ RETURN IF ( NOT ISBLANK ( _a ), IF ( ( _a >= 0 ) = _azul, "#4575b4", "#d73027" )
 <details><summary><code>Anomalia_Acum</code></summary>
 
 ```dax
-IF ( NOT ISBLANK ( [Acum_Mensual] ) && NOT ISBLANK ( [Hist_Acum_Media] ), [Acum_Mensual] - [Hist_Acum_Media] )
+IF ( NOT ISBLANK ( [Acum_Mensual] ) && NOT ISBLANK ( [Hist_Acum_Media] ) && ISBLANK ( [Mes_Preliminar_Acum_Txt] ), [Acum_Mensual] - [Hist_Acum_Media] )
 ```
 </details>
 
@@ -896,7 +905,7 @@ VAR _pares =
 VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 RETURN
     IF (
-        NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
+        NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && ( _ultimo <= [Ultimo_Mes_Completo] || ( _ultimo = [Ultimo_Mes_Prelim] && [Mostrar_Preliminar] = 1 ) ),
         IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
     )
 ```
@@ -1011,6 +1020,8 @@ RETURN
 | `Mes_Preliminar_Txt` |  | Texto para las gráficas tipo R (vacío si el mes está cerrado) |
 | `Subtitulo_Detalle` |  | (N = estaciones de esa delimitación con dato de la variable en el año). Si no: delimitación y n estaciones. |
 | `Paises_Txt` |  | Países de las estaciones con dato de la variable en el año ("Guatemala", "El Salvador" o "Guatemala y El Salvador") |
+| `Mostrar_Preliminar` | 0 | Capa "Mes preliminar" del menú Mostrar (sin selección: activada salvo en variables acumulativas) |
+| `Mes_Preliminar_Acum_Txt` |  | Acumulado: texto si el punto llega al mes en curso (preliminar) |
 
 <details><summary><code>Color_Actual</code></summary>
 
@@ -1166,7 +1177,7 @@ RETURN
 <details><summary><code>Mes_Preliminar_Txt</code></summary>
 
 ```dax
-IF ( [Es_Preliminar] = 1 && NOT ISBLANK ( [Valor_Mensual] ), "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" ) )
+IF ( [Es_Preliminar] = 1 && [Mostrar_Preliminar] = 1 && NOT ISBLANK ( [Valor_Mensual] ), "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" ) )
 ```
 </details>
 
@@ -1240,6 +1251,32 @@ VAR _multi = COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFIL
 VAR _sinElig = [_Sin_Elegibles]
 VAR _p = CALCULATETABLE ( VALUES ( Estaciones_met[País] ), FILTER ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), NOT ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _y ) ) && ( NOT _multi || _sinElig || [_Anios_Base_Est] >= [Min_Anios_Base] ) ) )
 RETURN CONCATENATEX ( _p, Estaciones_met[País], " y ", Estaciones_met[País], DESC )
+```
+</details>
+
+<details><summary><code>Mostrar_Preliminar</code></summary>
+
+```dax
+IF ( ISFILTERED ( Capas[Capa] ), IF ( "Mes preliminar" IN VALUES ( Capas[Capa] ), 1, 0 ), IF ( [Var_Regla] = "Suma", 0, 1 ) )
+```
+</details>
+
+<details><summary><code>Mes_Preliminar_Acum_Txt</code></summary>
+
+```dax
+VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año calendario (ene–dic)" )
+VAR _p = MAX ( Meses_Acum[Pos] )
+VAR _y = [Anio_Analisis]
+VAR _ultimo =
+    MAXX (
+        FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] = _p ),
+        ( _y - Meses_Acum[Desfase_Anio] ) * 100 + Meses_Acum[Mes_Num]
+    )
+RETURN
+    IF (
+        _ultimo = [Ultimo_Mes_Prelim] && [Mostrar_Preliminar] = 1 && NOT ISBLANK ( [Acum_Mensual] ),
+        "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" )
+    )
 ```
 </details>
 

@@ -152,7 +152,8 @@ DATATABLE (
         {"Rango histórico (mín–máx)", 3},
         {"Rango normal (P33–P66)", 4},
         {"Años adicionales", 5},
-        {"Anomalías", 6}
+        {"Anomalías", 6},
+        {"Mes preliminar", 7}
     }
 )
 ```

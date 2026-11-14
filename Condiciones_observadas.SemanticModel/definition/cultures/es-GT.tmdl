@@ -8301,6 +8301,27 @@ cultureInfo es-GT
 			          }
 			        }
 			      ]
+			    },
+			    "table_medidas.mes_preliminar_acum_txt": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Medidas",
+			          "ConceptualProperty": "Mes_Preliminar_Acum_Txt"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "prelim": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    }
 			  },
 			  "Relationships": {

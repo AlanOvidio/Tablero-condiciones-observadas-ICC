@@ -124,6 +124,13 @@
                           [
                             {
                               "Literal": {
+                                "Value": "'Mes preliminar'"
+                              }
+                            }
+                          ],
+                          [
+                            {
+                              "Literal": {
                                 "Value": "'Media histórica'"
                               }
                             }

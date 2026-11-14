@@ -190,12 +190,13 @@ table _Medidas
 	measure Valor_Mensual =
 			VAR _y = [Anio_Analisis]
 			VAR _uno = ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] )
-			RETURN
+			VAR _r =
 			    CALCULATE (
 			        IF ( _uno, [_Grupo_Mes], [_B_Grupo] ),
 			        Fact_Mensual_met[Anio] = _y,
 			        TREATAS ( VALUES ( Calendario[Mes_Num] ), Fact_Mensual_met[Mes] )
 			    )
+			RETURN IF ( [Es_Preliminar] = 1 && [Mostrar_Preliminar] = 0, BLANK (), _r )
 		formatString: 0.0
 		displayFolder: 2 Mensual
 		lineageTag: de047123-f7c9-466a-b069-dd1d99655d87
@@ -632,7 +633,7 @@ table _Medidas
 			VAR _ultimo = MAXX ( _pares, [Anio] * 100 + [Mes] )
 			RETURN
 			    IF (
-			        NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && _ultimo <= [Ultimo_Mes_Completo],
+			        NOT ISBLANK ( _y ) && [Var_Regla] = "Suma" && ( _ultimo <= [Ultimo_Mes_Completo] || ( _ultimo = [Ultimo_Mes_Prelim] && [Mostrar_Preliminar] = 1 ) ),
 			        IF ( ( COUNTROWS ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ) ) <= 1 || [_Metodo_Directo] || [_Sin_Elegibles] ), AVERAGEX ( FILTER ( VALUES ( Estaciones_met[estacionid] ), ( ISFILTERED ( Estaciones_met[Estación] ) || COUNTROWS ( VALUES ( Estaciones_met[estacionid] ) ) <= 1 || CALCULATE ( MAX ( Estaciones_met[Excluir_Agregados] ) ) = 0 ) && NOT ( ISFILTERED ( Estaciones_met[Estación] ) && COUNTROWS ( VALUES ( Estaciones_met[Tipo] ) ) > 1 ) ), VAR _ini0 = MINX ( _pares, [Anio] * 100 + [Mes] ) VAR _reg = CALCULATE ( MINX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Valido] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS ( Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) VAR _desde = MAX ( _ini0, _reg ) VAR _tramo = FILTER ( _pares, [Anio] * 100 + [Mes] >= _desde ) VAR _faltan = COUNTROWS ( FILTER ( _tramo, VAR _a = [Anio] VAR _mm = [Mes] RETURN ISBLANK ( CALCULATE ( [_Mes_Est], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) ) ) RETURN IF ( NOT ISBLANK ( _reg ) && COUNTROWS ( _tramo ) > 0 && _faltan = 0, CALCULATE ( [_Mes_Est], TREATAS ( _tramo, Fact_Mensual_met[Anio], Fact_Mensual_met[Mes] ) ) ) ), VAR _g = ADDCOLUMNS ( _pares, "@g", VAR _a = [Anio] VAR _mm = [Mes] RETURN CALCULATE ( [_B_Grupo], Fact_Mensual_met[Anio] = _a, Fact_Mensual_met[Mes] = _mm ) ) VAR _desde = MINX ( FILTER ( _g, NOT ISBLANK ( [@g] ) ), [Anio] * 100 + [Mes] ) VAR _tr = FILTER ( _g, [Anio] * 100 + [Mes] >= _desde ) RETURN IF ( NOT ISBLANK ( _desde ) && COUNTROWS ( FILTER ( _tr, ISBLANK ( [@g] ) ) ) + 0 = 0, SUMX ( _tr, [@g] ) ) )
 			    )
 		formatString: 0.0
@@ -725,7 +726,7 @@ table _Medidas
 		lineageTag: 9ece7875-77a8-407f-bb3d-f5de2ccfa428
 
 	/// Acumulado del año − acumulado medio
-	measure Anomalia_Acum = IF ( NOT ISBLANK ( [Acum_Mensual] ) && NOT ISBLANK ( [Hist_Acum_Media] ), [Acum_Mensual] - [Hist_Acum_Media] )
+	measure Anomalia_Acum = IF ( NOT ISBLANK ( [Acum_Mensual] ) && NOT ISBLANK ( [Hist_Acum_Media] ) && ISBLANK ( [Mes_Preliminar_Acum_Txt] ), [Acum_Mensual] - [Hist_Acum_Media] )
 		formatString: +0.0;-0.0;0.0
 		displayFolder: 4 Anomalías
 		lineageTag: 335787b4-0860-473c-9404-8396885bf94b
@@ -1161,7 +1162,7 @@ table _Medidas
 		lineageTag: 26109b93-5dc0-43d6-9363-c450601a7dcf
 
 	/// Texto para las gráficas tipo R (vacío si el mes está cerrado)
-	measure Mes_Preliminar_Txt = IF ( [Es_Preliminar] = 1 && NOT ISBLANK ( [Valor_Mensual] ), "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" ) )
+	measure Mes_Preliminar_Txt = IF ( [Es_Preliminar] = 1 && [Mostrar_Preliminar] = 1 && NOT ISBLANK ( [Valor_Mensual] ), "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" ) )
 		isHidden
 		displayFolder: 7 Textos y banderas
 		lineageTag: c24ca269-b2cd-4403-995a-0687567d969c
@@ -1314,6 +1315,37 @@ table _Medidas
 		isHidden
 		displayFolder: 3 Histórico
 		lineageTag: d731a829-92c6-42ec-a92e-22a6ef164de0
+
+	/// Capa "Mes preliminar" del menú Mostrar (sin selección: activada salvo en variables acumulativas)
+	measure Mostrar_Preliminar = IF ( ISFILTERED ( Capas[Capa] ), IF ( "Mes preliminar" IN VALUES ( Capas[Capa] ), 1, 0 ), IF ( [Var_Regla] = "Suma", 0, 1 ) )
+		formatString: 0
+		displayFolder: 7 Textos y banderas
+		lineageTag: 999dbfd9-9399-42bb-8c73-99235b2ea8a4
+
+	/// Mes en curso con dato preliminar (AAAAMM)
+	measure Ultimo_Mes_Prelim = CALCULATE ( MAXX ( FILTER ( Fact_Mensual_met, Fact_Mensual_met[Mes_Preliminar] ), Fact_Mensual_met[Anio] * 100 + Fact_Mensual_met[Mes] ), REMOVEFILTERS () )
+		formatString: 0
+		displayFolder: 0 Contexto
+		lineageTag: 47933546-f0eb-4440-838b-8156c538b3ec
+
+	/// Acumulado: texto si el punto llega al mes en curso (preliminar)
+	measure Mes_Preliminar_Acum_Txt =
+			VAR _modo = SELECTEDVALUE ( Meses_Acum[Modo], "Año calendario (ene–dic)" )
+			VAR _p = MAX ( Meses_Acum[Pos] )
+			VAR _y = [Anio_Analisis]
+			VAR _ultimo =
+			    MAXX (
+			        FILTER ( ALL ( Meses_Acum ), Meses_Acum[Modo] = _modo && Meses_Acum[Pos] = _p ),
+			        ( _y - Meses_Acum[Desfase_Anio] ) * 100 + Meses_Acum[Mes_Num]
+			    )
+			RETURN
+			    IF (
+			        _ultimo = [Ultimo_Mes_Prelim] && [Mostrar_Preliminar] = 1 && NOT ISBLANK ( [Acum_Mensual] ),
+			        "preliminar, datos al " & FORMAT ( [Ultima_Fecha], "d-mmm" )
+			    )
+		isHidden
+		displayFolder: 7 Textos y banderas
+		lineageTag: 5ff024eb-53ce-48c2-8756-09b165a9372f
 
 	column Column
 		isHidden

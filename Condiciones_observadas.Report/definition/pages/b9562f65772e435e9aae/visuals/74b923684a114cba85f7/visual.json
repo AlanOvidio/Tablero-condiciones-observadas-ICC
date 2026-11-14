@@ -127,6 +127,13 @@
                                 "Value": "'Anomalías'"
                               }
                             }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Mes preliminar'"
+                              }
+                            }
                           ]
                         ]
                       }
