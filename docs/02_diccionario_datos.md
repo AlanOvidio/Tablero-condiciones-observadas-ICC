@@ -1,13 +1,13 @@
 # Diccionario de datos
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-13. No editar a mano: los cambios se pierden al regenerar.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-16. No editar a mano: los cambios se pierden al regenerar.
 
 ## Parámetros y funciones de Power Query
 
 | Nombre | Descripción | Definición |
 |---|---|---|
 | `RangeStart` | Inicio del rango de carga en Desktop (en el servicio lo fija la actualización incremental). Usar 01-ene-2008 00:00 para tener el histórico completo. | `#datetime(2008, 1, 1, 0, 0, 0)` |
-| `RangeEnd` | Fin del rango de carga en Desktop, exclusivo. Una fecha futura (p. ej. 2030) carga hasta el último dato. | `#datetime(2026, 11, 9, 0, 0, 0)` |
+| `RangeEnd` | Fin del rango de carga en Desktop, exclusivo. Una fecha futura (p. ej. 2030) carga hasta el último dato. | `#datetime(2026, 11, 16, 0, 0, 0)` |
 | `InicioAnioHidrologico` | Fecha de referencia del inicio del año hidrológico (se usa el mes: noviembre). | `#date(2025, 11, 1)` |
 | `fxLecturasEstacion_met_diario` | Resumen diario de una estación (endpoint /ws/getlecturasdia). | Función (ver `expressions.tmdl`) |
 | `fxLimpiarDiario` | Control de calidad: valores diarios fuera de rango → nulo (límites editables dentro de la función). | Función (ver `expressions.tmdl`) |
@@ -486,7 +486,8 @@ let
     // Filtro de actualización incremental (particiones por mes: un mes nunca queda partido)
     Incremental = Table.SelectRows(Limpio, each
         [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
-        [Fecha] < Date.From(RangeEnd)),
+        [Fecha] < Date.From(RangeEnd) and
+        [Fecha] < Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6))),   // sin el día en curso ni fechas futuras
     Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
     Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
     // Día → mes por estación (como mensual_por_estacion() de los scripts R)
@@ -516,10 +517,12 @@ let
         {"IC_Min_Abs", each List.Min([IC_Min]), type nullable number}
     }),
     Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
+    // Último día con datos descargados (en Desktop depende de RangeEnd; en el servicio, de la actualización)
+    UltimaFecha = List.Min({List.Max(Incremental[Fecha]), Date.AddDays(Hoy, -1)}),   // nunca después de ayer (fechas futuras o día en curso)
     FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
     DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
-    // Días de referencia: el mes completo si ya cerró; si está en curso, los días transcurridos (dato preliminar)
-    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(Hoy - [Fecha_Mes])}), Int64.Type),
+    // Días de referencia: el mes completo si ya cerró; si está en curso, los días hasta el último dato descargado (dato preliminar)
+    DiasRef = Table.AddColumn(DiasMes, "Dias_Ref", each if Date.EndOfMonth([Fecha_Mes]) < Hoy then [Dias_Mes] else List.Max({1, Duration.Days(UltimaFecha - [Fecha_Mes]) + 1}), Int64.Type),
     // Valor mensual solo si la variable tiene dato en ≥ 80 % de los días de referencia; si no, nulo
     UmbralCompletitud = 0.8,
     Reglas = {{"Precip", "N_P"}, {"ETo", "N_Dias_ETo"}, {"Rad_MJ", "N_R"}, {"Irradiancia", "N_R"},

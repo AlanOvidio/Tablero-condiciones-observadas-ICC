@@ -30,7 +30,8 @@ table Fact_Mensual_met
 			    // Filtro de actualización incremental (particiones por mes: un mes nunca queda partido)
 			    Incremental = Table.SelectRows(Limpio, each
 			        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
-			        [Fecha] < Date.From(RangeEnd)),
+			        [Fecha] < Date.From(RangeEnd) and
+			        [Fecha] < Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6))),   // sin el día en curso ni fechas futuras
 			    Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
 			    Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
 			    // Día → mes por estación (como mensual_por_estacion() de los scripts R)
@@ -61,7 +62,7 @@ table Fact_Mensual_met
 			    }),
 			    Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
 			    // Último día con datos descargados (en Desktop depende de RangeEnd; en el servicio, de la actualización)
-			    UltimaFecha = List.Max(Incremental[Fecha]),
+			    UltimaFecha = List.Min({List.Max(Incremental[Fecha]), Date.AddDays(Hoy, -1)}),   // nunca después de ayer (fechas futuras o día en curso)
 			    FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
 			    DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
 			    // Días de referencia: el mes completo si ya cerró; si está en curso, los días hasta el último dato descargado (dato preliminar)
@@ -327,7 +328,8 @@ table Fact_Mensual_met
 				    // Filtro de actualización incremental (particiones por mes: un mes nunca queda partido)
 				    Incremental = Table.SelectRows(Limpio, each
 				        [Fecha] >= Date.From(List.Max({RangeStart, #datetime(2008, 1, 1, 0, 0, 0)})) and
-				        [Fecha] < Date.From(RangeEnd)),
+				        [Fecha] < Date.From(RangeEnd) and
+				        [Fecha] < Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6))),   // sin el día en curso ni fechas futuras
 				    Anio = Table.AddColumn(Incremental, "Anio", each Date.Year([Fecha]), Int64.Type),
 				    Mes = Table.AddColumn(Anio, "Mes", each Date.Month([Fecha]), Int64.Type),
 				    // Día → mes por estación (como mensual_por_estacion() de los scripts R)
@@ -358,7 +360,7 @@ table Fact_Mensual_met
 				    }),
 				    Hoy = Date.From(DateTimeZone.SwitchZone(DateTimeZone.UtcNow(), -6)),
 				    // Último día con datos descargados (en Desktop depende de RangeEnd; en el servicio, de la actualización)
-				    UltimaFecha = List.Max(Incremental[Fecha]),
+				    UltimaFecha = List.Min({List.Max(Incremental[Fecha]), Date.AddDays(Hoy, -1)}),   // nunca después de ayer (fechas futuras o día en curso)
 				    FechaMes = Table.AddColumn(Mensual, "Fecha_Mes", each #date([Anio], [Mes], 1), type date),
 				    DiasMes = Table.AddColumn(FechaMes, "Dias_Mes", each Date.DaysInMonth([Fecha_Mes]), Int64.Type),
 				    // Días de referencia: el mes completo si ya cerró; si está en curso, los días hasta el último dato descargado (dato preliminar)

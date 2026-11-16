@@ -153,3 +153,9 @@ Bitácora del proyecto. Una entrada por cambio lógico (coincide con un commit).
 ## 2026-11-13 · Opción "Mes preliminar"
 - Nueva capa "Mes preliminar" en el menú Mostrar (`Mostrar_Preliminar`) para las gráficas tipo R. Por defecto: activada en temperaturas, sensación térmica y variables acumulativas; desactivada en precipitación, radiación, evapotranspiración y balance hídrico (en las páginas de radiación y evapotranspiración el valor por defecto sigue la variable inicial; para irradiancia o ETo media diaria se activa a mano).
 - Acumulados: con la opción activada, el acumulado del año llega al mes en curso (punto hueco y aviso en el tooltip; sin anomalía en ese punto, porque se compara con la media acumulada al fin de mes).
+
+## 2026-11-16 · Optimización de las medidas históricas
+- En el servicio aparecía `rsQueryMemoryLimitExceeded` (límite de memoria por consulta). Causa: las medidas del método de anomalías evaluaban `_Mes_Est` celda por celda (estación × año × mes) y lo repetían en cada medida y mes; en los acumulados se multiplicaba por los meses acumulados.
+- `Hist_*`, `_B_Grupo` y `_Anios_Base_Est` leen ahora la tabla mensual una sola vez (estación × año × mes con la columna de la variable) y hacen el resto en memoria. Mismo resultado, mucha menos memoria. `_B_Grupo` resuelve también el caso de una estación o promedio directo; se elimina `_B_Normal`.
+- Mes preliminar en el servicio: la tabla mensual descarta el día en curso y las fechas futuras, y el último dato de referencia nunca es posterior a ayer (en el servicio, con RangeEnd al fin de mes, una fecha adelantada dejaba la completitud del mes en curso por debajo del 80 %).
+- Acumulados con ETo: el título del eje Y ("Evapotranspiración potencial (ETo) acumulada (mm)") era más largo que el alto de la gráfica y desplazaba el título fuera del visual; se acorta a "Evapotranspiración (ETo) acumulada (mm)" en `Eje_Y_Acum`.

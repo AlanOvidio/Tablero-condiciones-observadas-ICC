@@ -120,6 +120,13 @@
                                 "Value": "'Años adicionales'"
                               }
                             }
+                          ],
+                          [
+                            {
+                              "Literal": {
+                                "Value": "'Mes preliminar'"
+                              }
+                            }
                           ]
                         ]
                       }

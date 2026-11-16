@@ -22,6 +22,7 @@ __pycache__/
 
 # ── Scripts locales de figuras en R (referencia; no forman parte del repositorio) ──
 otros_archivos/*.R
+otros_archivos/r/
 .Renviron
 .Rhistory
 .RData

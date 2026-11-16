@@ -3,7 +3,7 @@ expression RangeStart = #datetime(2008, 1, 1, 0, 0, 0) meta [IsParameterQuery=tr
 
 	annotation PBI_ResultType = DateTime
 
-expression RangeEnd = #datetime(2026, 11, 13, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+expression RangeEnd = #datetime(2026, 11, 16, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
 	lineageTag: 527d5206-9bc0-45af-bf78-409969b2838c
 
 	annotation PBI_ResultType = DateTime

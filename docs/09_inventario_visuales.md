@@ -1,6 +1,6 @@
 # Inventario de páginas y visuales
 
-> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-13. No editar a mano.
+> Generado automáticamente por `tools/generar_docs_modelo.py` el 2026-11-16. No editar a mano.
 
 ## Comparativas por estación (oculta)
 
