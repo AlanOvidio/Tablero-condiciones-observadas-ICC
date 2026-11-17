@@ -56,3 +56,5 @@ Y registrar el cambio en [06 · Decisiones y cambios](docs/06_decisiones_y_cambi
 Rscript tools/generar_regiones.R
 python tools/aplicar_regiones.py
 ```
+Version publciada disponible en:
+https://app.powerbi.com/view?r=eyJrIjoiYjg1YWQwMjQtMGNmNS00NWIyLThiMzAtMDNmZGFiYjAwNGIwIiwidCI6Ijg5MTkwMzQ4LTg5MjUtNDQxOS1hNTZhLTE3ZDIxOGE3YzgwYyIsImMiOjR9
